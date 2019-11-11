@@ -6,14 +6,18 @@
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
-    "watch": "grafana-toolkit plugin:dev --watch"
+    "watch": "grafana-toolkit plugin:dev --watch",
+	"prettier:check": "prettier --check \"src/**/*.ts\"",
+	"prettier:fix": "prettier --write \"src/**/*.ts\""
   },
   "author": "Grafana Labs",
   "license": "Apache-2.0",
   "devDependencies": {
     "@grafana/data": "latest",
-    "@grafana/ui": "latest",
     "@grafana/toolkit": "latest",
-    "@types/grafana": "github:CorpGlory/types-grafana.git"
+    "@grafana/ui": "latest",
+    "@types/grafana": "github:CorpGlory/types-grafana.git",
+    "prettier": "1.19.1",
+    "tslint": "^5.20.1"
   }
 }

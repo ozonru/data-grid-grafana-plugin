@@ -11,6 +11,8 @@ interface KeyValue {
 export default class SimpleCtrl extends MetricsPanelCtrl {
   static templateUrl = 'partials/module.html';
 
+  pluginId;
+
   panelDefaults = {
     text: 'Hello World',
   };
