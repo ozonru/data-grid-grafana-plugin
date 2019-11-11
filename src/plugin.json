@@ -1,19 +1,22 @@
 {
   "type": "panel",
-  "name": "Simple Angular",
-  "id": "simple-angular-panel",
+  "name": "Simple Panel",
+  "id": "myorgid-simple-panel",
 
   "info": {
-    "description": "Simple Angular Panel",
+    "description": "Simple React Panel",
     "author": {
-      "name": "Grafana Labs"
+      "name": "Your Name"
     },
-    "keywords": [ "discrete", "events", "strings" ],
+    "keywords": ["Simple"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
     },
-    "links": [],
+    "links": [
+      {"name": "Website", "url": "https://github.com/grafana/simple-react-panel"},
+      {"name": "License", "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"}
+    ],
     "screenshots": [],
     "version": "%VERSION%",
     "updated": "%TODAY%"
@@ -21,6 +24,6 @@
 
   "dependencies": {
     "grafanaVersion": "6.3.x",
-    "plugins": [ ]
+    "plugins": []
   }
 }
