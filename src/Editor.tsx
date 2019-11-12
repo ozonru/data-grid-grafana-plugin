@@ -21,7 +21,9 @@ const optionStyle = { marginRight: '7px' };
 
 export default class Editor extends PureComponent<PanelEditorProps<Options>> {
   public static getLabelsFromSeriesRequest(data: PanelData): string[] {
-    if (data.series.length === 0) { return []; }
+    if (data.series.length === 0) {
+      return [];
+    }
 
     const labels = new Set<string>();
 

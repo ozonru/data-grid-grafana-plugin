@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Options } from 'types';
-import { Switch } from '@grafana/ui';
+import { Switch, getTheme, GrafanaThemeType } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import FormSelect from './FormSelect';
 
@@ -9,7 +9,26 @@ type ICommonOptions = Omit<Options, 'templates'>;
 type Props = {
   options: ICommonOptions;
   labels?: string[];
+  loading?: boolean;
   onChange: (options: ICommonOptions) => void;
+};
+
+const theme = getTheme(GrafanaThemeType.Dark);
+const ERROR_INFO_STYLE = {
+  color: theme.colors.critical,
+  fontSize: '14px',
+  flex: 1,
+  alignSelf: 'center',
+  marginLeft: '7px',
+};
+
+const WARN_INFO_STYLE = {
+  ...ERROR_INFO_STYLE,
+  color: theme.colors.warn,
+};
+
+const ICON_STYLE = {
+  marginRight: '7px',
 };
 
 export default class CommonOptions extends Component<Props> {
@@ -19,7 +38,7 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       hideHeaders: event ? event.target.checked : false,
     });
-  };
+  }
 
   private handleGroupBySelect = (event: React.SyntheticEvent) => {
     this.props.onChange({
@@ -27,7 +46,7 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       groupByLabel: event.target.value,
     });
-  };
+  }
 
   public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
     return (
@@ -37,8 +56,17 @@ export default class CommonOptions extends Component<Props> {
     );
   }
 
+  private renderErrorInfo(text: string, error?: boolean) {
+    return (
+      <span style={error ? ERROR_INFO_STYLE : WARN_INFO_STYLE}>
+        <i className="fa fa-exclamation-triangle" style={ICON_STYLE} />
+        {text}
+      </span>
+    );
+  }
+
   public render() {
-    const { options, labels = [] } = this.props;
+    const { options, labels = [], loading } = this.props;
     const selectOptions = labels.map(label => ({ value: label }));
 
     return (
@@ -69,6 +97,7 @@ export default class CommonOptions extends Component<Props> {
                     value={options.groupByLabel}
                     options={selectOptions}
                   />
+                  {loading ? this.renderErrorInfo('Loading series') : labels.length === 0 && this.renderErrorInfo('No series provided', true)}
                 </div>
               </div>
             </div>
