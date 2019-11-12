@@ -26,7 +26,7 @@ export default class Panel extends PureComponent<Props> {
         styles={COLUMN_STYLES}
         replaceVariables={INTERPOLATE_FUNCTION}
         data={getDerivedDataFrame(series, options)}
-        showHeader={!options.hideHeaders}
+        showHeader={options.showHeaders}
       />
     );
   }

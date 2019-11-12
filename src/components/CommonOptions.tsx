@@ -32,20 +32,28 @@ const ICON_STYLE = {
 };
 
 export default class CommonOptions extends Component<Props> {
-  private handleHideHeadersChange = (e?: React.SyntheticEvent) => {
+  private handleShowHeadersChange = (e?: React.SyntheticEvent) => {
     this.props.onChange({
       ...this.props.options,
       // @ts-ignore
-      hideHeaders: e ? e.target.checked : false,
+      showHeaders: e ? e.target.checked : false,
     });
-  };
+  }
+
+  private handleShowLabelsColumnChange = (e?: React.SyntheticEvent) => {
+    this.props.onChange({
+      ...this.props.options,
+      // @ts-ignore
+      showLabelColumn: e ? !e.target.checked : false,
+    });
+  }
 
   private handleGroupBySelect = (selected: SelectableValue<string>) => {
     this.props.onChange({
       ...this.props.options,
       groupByLabel: selected.value,
     });
-  };
+  }
 
   // public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
   //   return (
@@ -71,6 +79,7 @@ export default class CommonOptions extends Component<Props> {
       label: options.groupByLabel || '',
       value: options.groupByLabel || '',
     };
+    const switchLabelClass = `width-${LABEL_WIDTH}`;
 
     return (
       <div className="edit-tab-content">
@@ -83,14 +92,6 @@ export default class CommonOptions extends Component<Props> {
             </div>
             <div className="gf-form">
               <div className="gr-form-inline">
-                <div className="gf-form">
-                  <Switch
-                    label="Hide headers"
-                    labelClass={`width-${LABEL_WIDTH}`}
-                    onChange={this.handleHideHeadersChange}
-                    checked={options.hideHeaders}
-                  />
-                </div>
                 <div className="gf-form">
                   <FormField
                     label="Group by label"
@@ -108,6 +109,17 @@ export default class CommonOptions extends Component<Props> {
                     }
                   />
                   {loading ? this.renderInfo('Loading series') : labels.length === 0 && this.renderInfo('No series provided', true)}
+                </div>
+                <div className="gf-form">
+                  <Switch label="Show headers" labelClass={switchLabelClass} onChange={this.handleShowHeadersChange} checked={options.showHeaders} />
+                </div>
+                <div className="gf-form">
+                  <Switch
+                    label="Show Labels"
+                    labelClass={switchLabelClass}
+                    onChange={this.handleShowLabelsColumnChange}
+                    checked={options.showLabelColumn}
+                  />
                 </div>
               </div>
             </div>

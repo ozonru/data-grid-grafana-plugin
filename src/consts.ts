@@ -9,6 +9,7 @@ export const COMMON_OPTIONS_INDEX = -10;
 export const defaults: Options = {
   activeTab: COMMON_OPTIONS_INDEX,
   groupByLabel: undefined,
-  hideHeaders: false,
+  showHeaders: true,
+  showLabelColumn: true,
   templates: [],
 };
