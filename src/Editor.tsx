@@ -7,6 +7,7 @@ import Template from './components/ColumnTemplate';
 import CommonOptions from './components/CommonOptions';
 import { ColumnTemplate, Options, StatType } from './types';
 import { ADD_TEMPLATE_INDEX, COMMON_OPTIONS_INDEX, TEMPLATE_INDEX } from './consts';
+import { LoadingState } from '@grafana/data';
 
 function createTemplate(i: number): ColumnTemplate {
   return {
@@ -46,22 +47,22 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>> {
 
     templates[i] = newTemplate;
     this.props.onOptionsChange({ ...this.props.options, templates });
-  }
+  };
 
   private handleOptionChange = (options: Omit<Options, 'templates'>) => {
     this.props.onOptionsChange({
       ...this.props.options,
       ...options,
     });
-  }
+  };
 
   private handleChangeTab = (i: number) => {
     this.props.onOptionsChange({ ...this.props.options, activeTab: i });
-  }
+  };
 
   private toOptions = () => {
     this.handleChangeTab(COMMON_OPTIONS_INDEX);
-  }
+  };
 
   private addColumn = () => {
     const i = this.props.options.templates.length;
@@ -71,7 +72,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>> {
       activeTab: i,
       templates: [...this.props.options.templates, createTemplate(i + 1)],
     });
-  }
+  };
 
   private isActive(state: number) {
     return this.props.options.activeTab === state;
@@ -122,6 +123,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>> {
             key="common"
             options={options}
             onChange={this.handleOptionChange}
+            loading={this.props.data.state === LoadingState.NotStarted}
             labels={Editor.getLabelsFromSeriesRequest(this.props.data)}
           />
         )}

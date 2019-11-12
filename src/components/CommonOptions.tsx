@@ -32,13 +32,13 @@ const ICON_STYLE = {
 };
 
 export default class CommonOptions extends Component<Props> {
-  private handleHideHeadersChange = (event?: React.SyntheticEvent) => {
+  private handleHideHeadersChange = (e?: React.SyntheticEvent) => {
     this.props.onChange({
       ...this.props.options,
       // @ts-ignore
-      hideHeaders: event ? event.target.checked : false,
+      hideHeaders: e ? e.target.checked : false,
     });
-  }
+  };
 
   private handleGroupBySelect = (selected: SelectableValue<string>) => {
     this.props.onChange({
@@ -46,15 +46,15 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       groupByLabel: selected.value,
     });
-  }
+  };
 
-  public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
-    return (
-      this.props.options.hideHeaders !== nextProps.options.hideHeaders ||
-      this.props.options.groupByLabel !== nextProps.options.groupByLabel ||
-      this.props.labels !== this.props.labels
-    );
-  }
+  // public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
+  //   return (
+  //     this.props.options.hideHeaders !== nextProps.options.hideHeaders ||
+  //     this.props.options.groupByLabel !== nextProps.options.groupByLabel ||
+  //     this.props.labels !== this.props.labels
+  //   );
+  // }
 
   private renderErrorInfo(text: string, error?: boolean) {
     return (
