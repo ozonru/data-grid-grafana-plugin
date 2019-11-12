@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Options } from 'types';
-import { Switch, getTheme, GrafanaThemeType } from '@grafana/ui';
+import { Switch, getTheme, GrafanaThemeType, Select, FormField } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
-import FormSelect from './FormSelect';
+import { SelectableValue } from '@grafana/data';
 
 type ICommonOptions = Omit<Options, 'templates'>;
 
@@ -15,10 +15,10 @@ type Props = {
 
 const theme = getTheme(GrafanaThemeType.Dark);
 const ERROR_INFO_STYLE = {
-  color: theme.colors.critical,
-  fontSize: '14px',
-  flex: 1,
   alignSelf: 'center',
+  color: theme.colors.critical,
+  flex: 1,
+  fontSize: '14px',
   marginLeft: '7px',
 };
 
@@ -40,11 +40,11 @@ export default class CommonOptions extends Component<Props> {
     });
   }
 
-  private handleGroupBySelect = (event: React.SyntheticEvent) => {
+  private handleGroupBySelect = (selected: SelectableValue<string>) => {
     this.props.onChange({
       ...this.props.options,
       // @ts-ignore
-      groupByLabel: event.target.value,
+      groupByLabel: selected.value,
     });
   }
 
@@ -67,7 +67,11 @@ export default class CommonOptions extends Component<Props> {
 
   public render() {
     const { options, labels = [], loading } = this.props;
-    const selectOptions = labels.map(label => ({ value: label }));
+    const selectOptions: Array<SelectableValue<string>> = labels.map(label => ({ value: label, label }));
+    const selected: SelectableValue<string> = {
+      label: options.groupByLabel || '',
+      value: options.groupByLabel || '',
+    };
 
     return (
       <div className="edit-tab-content">
@@ -89,13 +93,20 @@ export default class CommonOptions extends Component<Props> {
                   />
                 </div>
                 <div className="gf-form">
-                  <FormSelect
+                  <FormField
                     label="Group by label"
                     labelWidth={LABEL_WIDTH}
-                    selectWidth={FORM_ELEMENT_WIDTH}
-                    onChange={this.handleGroupBySelect}
-                    value={options.groupByLabel}
-                    options={selectOptions}
+                    inputEl={
+                      <Select<string>
+                        isClearable
+                        isSearchable
+                        isMulti={false}
+                        width={FORM_ELEMENT_WIDTH}
+                        onChange={this.handleGroupBySelect}
+                        value={selected}
+                        options={selectOptions}
+                      />
+                    }
                   />
                   {loading ? this.renderErrorInfo('Loading series') : labels.length === 0 && this.renderErrorInfo('No series provided', true)}
                 </div>
