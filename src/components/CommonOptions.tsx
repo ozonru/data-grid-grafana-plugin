@@ -17,7 +17,7 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       hideHeaders: event ? event.target.checked : false,
     });
-  };
+  }
 
   private handleGroupBySelect = (event: React.SyntheticEvent) => {
     this.props.onChange({
@@ -25,7 +25,7 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       groupByLabel: event.target.value,
     });
-  };
+  }
 
   public render() {
     const { options } = this.props;

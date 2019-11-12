@@ -25,22 +25,22 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>> {
 
     templates[i] = newTemplate;
     this.props.onOptionsChange({ ...this.props.options, templates });
-  };
+  }
 
   private handleOptionChange = (options: Omit<Options, 'templates'>) => {
     this.props.onOptionsChange({
       ...this.props.options,
-      hideHeaders: options.hideHeaders,
+      ...options,
     });
-  };
+  }
 
   private handleChangeTab = (i: number) => {
     this.props.onOptionsChange({ ...this.props.options, activeTab: i });
-  };
+  }
 
   private toOptions = () => {
     this.handleChangeTab(COMMON_OPTIONS_INDEX);
-  };
+  }
 
   private addColumn = () => {
     const i = this.props.options.templates.length;
@@ -50,7 +50,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>> {
       activeTab: i,
       templates: [...this.props.options.templates, createTemplate(i + 1)],
     });
-  };
+  }
 
   private isActive(state: number) {
     return this.props.options.activeTab === state;
