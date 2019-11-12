@@ -43,7 +43,6 @@ export default class CommonOptions extends Component<Props> {
   private handleGroupBySelect = (selected: SelectableValue<string>) => {
     this.props.onChange({
       ...this.props.options,
-      // @ts-ignore
       groupByLabel: selected.value,
     });
   };
@@ -56,7 +55,7 @@ export default class CommonOptions extends Component<Props> {
   //   );
   // }
 
-  private renderErrorInfo(text: string, error?: boolean) {
+  private renderInfo(text: string, error?: boolean) {
     return (
       <span style={error ? ERROR_INFO_STYLE : WARN_INFO_STYLE}>
         <i className="fa fa-exclamation-triangle" style={ICON_STYLE} />
@@ -108,7 +107,7 @@ export default class CommonOptions extends Component<Props> {
                       />
                     }
                   />
-                  {loading ? this.renderErrorInfo('Loading series') : labels.length === 0 && this.renderErrorInfo('No series provided', true)}
+                  {loading ? this.renderInfo('Loading series') : labels.length === 0 && this.renderInfo('No series provided', true)}
                 </div>
               </div>
             </div>
