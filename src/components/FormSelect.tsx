@@ -1,4 +1,5 @@
 import cs from 'classnames';
+import { FormField } from '@grafana/ui';
 import React, { ChangeEventHandler, Component } from 'react';
 
 type Props = {
@@ -14,17 +15,20 @@ export default class FormSelect extends Component<Props> {
   public render() {
     const { label, labelWidth, selectWidth, value, onChange, options } = this.props;
 
-    return [
-      <label key="label" className={cs(['gf-form-label', `width-${labelWidth}`])}>
-        {label}
-      </label>,
-      <select key="select" className={cs(['gf-form-input', `width-${selectWidth}`])} onChange={onChange}>
-        {options.map(option => (
-          <option key={option.key || option.value} value={option.value} selected={option.value === value}>
-            {option.label || option.value}
-          </option>
-        ))}
-      </select>,
-    ];
+    return (
+      <FormField
+        label={label}
+        labelWidth={labelWidth}
+        inputEl={
+          <select className={cs(['gf-form-input', `width-${selectWidth}`])} onChange={onChange}>
+            {options.map(option => (
+              <option key={option.key || option.value} value={option.value} selected={option.value === value}>
+                {option.label || option.value}
+              </option>
+            ))}
+          </select>
+        }
+      />
+    );
   }
 }
