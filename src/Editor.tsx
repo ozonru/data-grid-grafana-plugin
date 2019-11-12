@@ -1,6 +1,7 @@
 import cs from 'classnames';
 import React, { PureComponent } from 'react';
-import { PanelEditorProps } from '@grafana/ui';
+import { getDataSourceSrv } from '@grafana/runtime';
+import { PanelData, PanelEditorProps } from '@grafana/ui';
 
 import Template from './components/ColumnTemplate';
 import CommonOptions from './components/CommonOptions';
@@ -19,6 +20,24 @@ function createTemplate(i: number): ColumnTemplate {
 const optionStyle = { marginRight: '7px' };
 
 export default class Editor extends PureComponent<PanelEditorProps<Options>> {
+  public static getLabelsFromSeriesRequest(data: PanelData): string[] {
+    if (data.series.length === 0) { return []; }
+
+    const labels = new Set<string>();
+
+    data.series.forEach(serie => Object.keys(serie.labels || {}).forEach(label => labels.add(label)));
+
+    return Array.from(labels);
+  }
+
+  public ds: any;
+
+  constructor(props, ctx) {
+    super(props, ctx);
+
+    this.ds = getDataSourceSrv();
+  }
+
   private handleTemplateChange = (newTemplate: ColumnTemplate) => {
     const templates = this.props.options.templates.slice();
     const i = this.props.options.activeTab;
@@ -97,7 +116,12 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>> {
         {isTemplateActive ? (
           <Template key="template" template={template} onChange={this.handleTemplateChange} />
         ) : (
-          <CommonOptions key="common" options={options} onChange={this.handleOptionChange} />
+          <CommonOptions
+            key="common"
+            options={options}
+            onChange={this.handleOptionChange}
+            labels={Editor.getLabelsFromSeriesRequest(this.props.data)}
+          />
         )}
       </div>
     );

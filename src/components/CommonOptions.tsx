@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Options } from 'types';
-import { FormField, Switch } from '@grafana/ui';
+import { Switch } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
+import FormSelect from './FormSelect';
 
 type ICommonOptions = Omit<Options, 'templates'>;
 
 type Props = {
   options: ICommonOptions;
+  labels?: string[];
   onChange: (options: ICommonOptions) => void;
 };
 
@@ -17,7 +19,7 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       hideHeaders: event ? event.target.checked : false,
     });
-  }
+  };
 
   private handleGroupBySelect = (event: React.SyntheticEvent) => {
     this.props.onChange({
@@ -25,10 +27,19 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       groupByLabel: event.target.value,
     });
+  };
+
+  public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
+    return (
+      this.props.options.hideHeaders !== nextProps.options.hideHeaders ||
+      this.props.options.groupByLabel !== nextProps.options.groupByLabel ||
+      this.props.labels !== this.props.labels
+    );
   }
 
   public render() {
-    const { options } = this.props;
+    const { options, labels = [] } = this.props;
+    const selectOptions = labels.map(label => ({ value: label }));
 
     return (
       <div className="edit-tab-content">
@@ -50,13 +61,13 @@ export default class CommonOptions extends Component<Props> {
                   />
                 </div>
                 <div className="gf-form">
-                  <FormField
-                    type="text"
+                  <FormSelect
                     label="Group by label"
                     labelWidth={LABEL_WIDTH}
-                    inputWidth={FORM_ELEMENT_WIDTH}
+                    selectWidth={FORM_ELEMENT_WIDTH}
                     onChange={this.handleGroupBySelect}
                     value={options.groupByLabel}
+                    options={selectOptions}
                   />
                 </div>
               </div>
