@@ -44,7 +44,7 @@ export default class CommonOptions extends Component<Props> {
     this.props.onChange({
       ...this.props.options,
       // @ts-ignore
-      showLabelColumn: e ? !e.target.checked : false,
+      showLabelColumn: e ? e.target.checked : false,
     });
   }
 

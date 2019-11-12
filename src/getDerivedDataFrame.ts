@@ -37,6 +37,10 @@ export default function getDerivedDataFrame(series: DataFrame[], options: Option
   };
   const labelColumn: Field<string, ArrayVector<string>> = createField(frame, groupByLabel /* TODO */);
 
+  if (!options.showLabelColumn) {
+    frame.fields = [];
+  }
+
   for (let i = 0; i < series.length; i++) {
     const { name, fields, labels = {} } = series[i];
 
@@ -46,9 +50,10 @@ export default function getDerivedDataFrame(series: DataFrame[], options: Option
 
     const fieldIndex = indexCache[name];
     // TODO create correct field
-    const [newIndex, fieldInResultedFrame] = fieldIndex
-      ? [fieldIndex, frame.fields[fieldIndex] as Field<string, ArrayVector<string>>]
-      : [frame.fields.length, createField(frame, name)];
+    const [newIndex, fieldInResultedFrame] =
+      fieldIndex !== undefined
+        ? [fieldIndex, frame.fields[fieldIndex] as Field<string, ArrayVector<string>>]
+        : [frame.fields.length, createField(frame, name)];
 
     indexCache[name] = newIndex;
 
