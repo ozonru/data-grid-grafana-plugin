@@ -1,6 +1,5 @@
 import cs from 'classnames';
 import React, { PureComponent } from 'react';
-import { getDataSourceSrv } from '@grafana/runtime';
 import { PanelData, PanelEditorProps } from '@grafana/ui';
 
 import Template from './components/ColumnTemplate';
@@ -42,7 +41,6 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
   constructor(props, ctx) {
     super(props, ctx);
 
-    this.ds = getDataSourceSrv();
     this.state = {
       activeTab: COMMON_OPTIONS_INDEX,
     };
