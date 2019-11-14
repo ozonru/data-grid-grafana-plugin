@@ -3,6 +3,7 @@ import { Options } from 'types';
 import { Switch, getTheme, GrafanaThemeType, Select, FormField } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import { SelectableValue } from '@grafana/data';
+import EditorTab from './EditorTab';
 
 type ICommonOptions = Omit<Options, 'templates'>;
 
@@ -10,6 +11,7 @@ type Props = {
   options: ICommonOptions;
   labels?: string[];
   loading?: boolean;
+  visible?: boolean;
   onChange: (options: ICommonOptions) => void;
 };
 
@@ -38,7 +40,7 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showHeaders: e ? e.target.checked : false,
     });
-  };
+  }
 
   private handleShowLabelsColumnChange = (e?: React.SyntheticEvent) => {
     this.props.onChange({
@@ -46,14 +48,14 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showLabelColumn: e ? e.target.checked : false,
     });
-  };
+  }
 
   private handleGroupBySelect = (selected: SelectableValue<string>) => {
     this.props.onChange({
       ...this.props.options,
       groupByLabel: selected.value,
     });
-  };
+  }
 
   // public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
   //   return (
@@ -73,7 +75,7 @@ export default class CommonOptions extends Component<Props> {
   }
 
   public render() {
-    const { options, labels = [], loading } = this.props;
+    const { options, labels = [], loading, visible } = this.props;
     const selectOptions: Array<SelectableValue<string>> = labels.map(label => ({ value: label, label }));
     const selected: SelectableValue<string> = {
       label: options.groupByLabel || '',
@@ -82,7 +84,7 @@ export default class CommonOptions extends Component<Props> {
     const switchLabelClass = `width-${LABEL_WIDTH}`;
 
     return (
-      <div className="edit-tab-content">
+      <EditorTab visible={visible}>
         <div className="editor-row">
           <div className="section gf-form-group">
             <div className="gr-form-inline">
@@ -125,7 +127,7 @@ export default class CommonOptions extends Component<Props> {
             </div>
           </div>
         </div>
-      </div>
+      </EditorTab>
     );
   }
 }

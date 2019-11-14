@@ -7,13 +7,14 @@ export enum StatType {
 
 export interface ColumnTemplate {
   columns: string[];
-  delimiter: number;
+  delimiter?: number;
   type: StatType;
-  name: string;
+  name?: string;
 }
 
 export interface Options {
   templates: ColumnTemplate[];
+  defaultTemplate: ColumnTemplate;
   showHeaders: boolean;
   showLabelColumn: boolean;
   groupByLabel?: string;

@@ -5,7 +5,7 @@ import { PanelData, PanelEditorProps } from '@grafana/ui';
 import Template from './components/ColumnTemplate';
 import CommonOptions from './components/CommonOptions';
 import { ColumnTemplate, Options, StatType } from './types';
-import { ADD_TEMPLATE_INDEX, COMMON_OPTIONS_INDEX, TEMPLATE_INDEX } from './consts';
+import { ADD_TEMPLATE_INDEX, DEFAULT_COLUMN_TEMPLATE, COMMON_OPTIONS_INDEX, TEMPLATE_INDEX } from './consts';
 import { LoadingState } from '@grafana/data';
 
 type EditorState = {
@@ -51,22 +51,26 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
 
     templates[this.state.activeTab] = newTemplate;
     this.props.onOptionsChange({ ...this.props.options, templates });
-  };
+  }
 
   private handleOptionChange = (options: Omit<Options, 'templates'>) => {
     this.props.onOptionsChange({
       ...this.props.options,
       ...options,
     });
-  };
+  }
 
   private handleChangeTab = (i: number) => {
     this.setState({ activeTab: i });
-  };
+  }
 
   private toOptions = () => {
     this.handleChangeTab(COMMON_OPTIONS_INDEX);
-  };
+  }
+
+  private toDefaultTemplate = () => {
+    this.handleChangeTab(DEFAULT_COLUMN_TEMPLATE);
+  }
 
   private addColumn = () => {
     const i = this.props.options.templates.length;
@@ -76,7 +80,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
       ...this.props.options,
       templates: [...this.props.options.templates, createTemplate(i + 1)],
     });
-  };
+  }
 
   private isActive(state: number) {
     return this.state.activeTab === state;
@@ -84,7 +88,8 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
 
   public render() {
     const { options } = this.props;
-    const isTemplateActive = this.state.activeTab > -1;
+    const isTemplateActive = this.state.activeTab >= DEFAULT_COLUMN_TEMPLATE;
+    const isDefaultTemplate = this.state.activeTab === DEFAULT_COLUMN_TEMPLATE;
     const template = options.templates[this.state.activeTab];
 
     return (
@@ -104,6 +109,11 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
                 <a onClick={() => this.handleChangeTab(i)}>{name}</a>
               </li>
             ))}
+            <li key={DEFAULT_COLUMN_TEMPLATE} className={cs({ active: this.isActive(DEFAULT_COLUMN_TEMPLATE) })}>
+              <a className="pointer" onClick={this.toDefaultTemplate}>
+                Default column
+              </a>
+            </li>
             <li key={ADD_TEMPLATE_INDEX}>
               <a className="pointer" onClick={this.addColumn}>
                 <i className="fa fa-plus" />
@@ -120,17 +130,19 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
             </li>
           </ul>
         </aside>
-        {isTemplateActive ? (
-          <Template key="template" template={template} onChange={this.handleTemplateChange} />
-        ) : (
-          <CommonOptions
-            key="common"
-            options={options}
-            onChange={this.handleOptionChange}
-            loading={this.props.data.state === LoadingState.NotStarted}
-            labels={Editor.getLabelsFromSeriesRequest(this.props.data)}
-          />
-        )}
+        <Template
+          visible={isTemplateActive}
+          template={template || options.defaultTemplate}
+          isDefault={isDefaultTemplate}
+          onChange={this.handleTemplateChange}
+        />
+        <CommonOptions
+          visible={!isTemplateActive}
+          options={options}
+          onChange={this.handleOptionChange}
+          loading={this.props.data.state === LoadingState.NotStarted}
+          labels={Editor.getLabelsFromSeriesRequest(this.props.data)}
+        />
       </div>
     );
   }

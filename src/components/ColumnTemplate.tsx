@@ -3,8 +3,11 @@ import { ColumnTemplate as IColumnTemplate, StatType } from 'types';
 import { FormField } from '@grafana/ui';
 import FormSelect from './FormSelect';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
+import EditorTab from './EditorTab';
 
 interface Props {
+  visible?: boolean;
+  isDefault: boolean;
   template: IColumnTemplate;
   onChange: (template: IColumnTemplate) => void;
 }
@@ -40,32 +43,34 @@ export default class ColumnTemplate extends Component<Props> {
   private handleDelimiterChange!: ChangeEventHandler;
 
   public render() {
-    const { template } = this.props;
+    const { template, isDefault, visible } = this.props;
 
     return (
-      <div className="edit-tab-content">
-        <div className="editor-row">
-          <div className="section gf-form-group">
-            <div className="gr-form-inline">
-              <div className="gf-form">
-                <h6 className="text-header">General</h6>
+      <EditorTab visible={visible}>
+        {!isDefault && (
+          <div className="editor-row">
+            <div className="section gf-form-group">
+              <div className="gr-form-inline">
+                <div className="gf-form">
+                  <h6 className="text-header">General</h6>
+                </div>
               </div>
-            </div>
-            <div className="gr-form-inline">
-              <div className="gf-form">
-                <FormField
-                  label="Name of the template"
-                  labelWidth={LABEL_WIDTH}
-                  inputWidth={FORM_ELEMENT_WIDTH}
-                  type="text"
-                  onChange={this.handleNameChange}
-                  value={template.name}
-                />
-                <span className="split"></span>
+              <div className="gr-form-inline">
+                <div className="gf-form">
+                  <FormField
+                    label="Name of the template"
+                    labelWidth={LABEL_WIDTH}
+                    inputWidth={FORM_ELEMENT_WIDTH}
+                    type="text"
+                    onChange={this.handleNameChange}
+                    value={template.name}
+                  />
+                  <span className="split"></span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="editor-row">
           <div className="section gf-form-group">
             <div className="gr-form-inline">
@@ -108,7 +113,7 @@ export default class ColumnTemplate extends Component<Props> {
             </div>
           </div>
         </div>
-      </div>
+      </EditorTab>
     );
   }
 }
