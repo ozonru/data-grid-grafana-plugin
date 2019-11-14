@@ -7,7 +7,6 @@ export const ADD_TEMPLATE_INDEX = -11;
 export const COMMON_OPTIONS_INDEX = -10;
 
 export const defaults: Options = {
-  activeTab: COMMON_OPTIONS_INDEX,
   groupByLabel: undefined,
   showHeaders: true,
   showLabelColumn: true,

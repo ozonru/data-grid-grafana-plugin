@@ -9,6 +9,10 @@ import { ColumnTemplate, Options, StatType } from './types';
 import { ADD_TEMPLATE_INDEX, COMMON_OPTIONS_INDEX, TEMPLATE_INDEX } from './consts';
 import { LoadingState } from '@grafana/data';
 
+type EditorState = {
+  activeTab: number;
+};
+
 function createTemplate(i: number): ColumnTemplate {
   return {
     columns: [],
@@ -20,7 +24,7 @@ function createTemplate(i: number): ColumnTemplate {
 
 const optionStyle = { marginRight: '7px' };
 
-export default class Editor extends PureComponent<PanelEditorProps<Options>> {
+export default class Editor extends PureComponent<PanelEditorProps<Options>, EditorState> {
   public static getLabelsFromSeriesRequest(data: PanelData): string[] {
     if (data.series.length === 0) {
       return [];
@@ -39,49 +43,51 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>> {
     super(props, ctx);
 
     this.ds = getDataSourceSrv();
+    this.state = {
+      activeTab: COMMON_OPTIONS_INDEX,
+    };
   }
 
   private handleTemplateChange = (newTemplate: ColumnTemplate) => {
     const templates = this.props.options.templates.slice();
-    const i = this.props.options.activeTab;
 
-    templates[i] = newTemplate;
+    templates[this.state.activeTab] = newTemplate;
     this.props.onOptionsChange({ ...this.props.options, templates });
-  }
+  };
 
   private handleOptionChange = (options: Omit<Options, 'templates'>) => {
     this.props.onOptionsChange({
       ...this.props.options,
       ...options,
     });
-  }
+  };
 
   private handleChangeTab = (i: number) => {
-    this.props.onOptionsChange({ ...this.props.options, activeTab: i });
-  }
+    this.setState({ activeTab: i });
+  };
 
   private toOptions = () => {
     this.handleChangeTab(COMMON_OPTIONS_INDEX);
-  }
+  };
 
   private addColumn = () => {
     const i = this.props.options.templates.length;
 
+    this.handleChangeTab(i);
     this.props.onOptionsChange({
       ...this.props.options,
-      activeTab: i,
       templates: [...this.props.options.templates, createTemplate(i + 1)],
     });
-  }
+  };
 
   private isActive(state: number) {
-    return this.props.options.activeTab === state;
+    return this.state.activeTab === state;
   }
 
   public render() {
     const { options } = this.props;
-    const isTemplateActive = options.activeTab > -1;
-    const template = options.templates[this.props.options.activeTab];
+    const isTemplateActive = this.state.activeTab > -1;
+    const template = options.templates[this.state.activeTab];
 
     return (
       <div className="edit-tab-with-sidemenu">

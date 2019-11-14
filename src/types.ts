@@ -14,7 +14,6 @@ export interface ColumnTemplate {
 
 export interface Options {
   templates: ColumnTemplate[];
-  activeTab: number;
   showHeaders: boolean;
   showLabelColumn: boolean;
   groupByLabel?: string;
