@@ -1,39 +1,59 @@
 import cs from 'classnames';
 import React, { PureComponent } from 'react';
-import { PanelData, PanelEditorProps } from '@grafana/ui';
+import { PanelData, PanelEditorProps, Select } from '@grafana/ui';
 
 import Template from './components/ColumnTemplate';
 import CommonOptions from './components/CommonOptions';
-import { ColumnTemplate, Options, StatType } from './types';
+import { ColumnTemplate, Options } from './types';
 import { ADD_TEMPLATE_INDEX, DEFAULT_COLUMN_TEMPLATE, COMMON_OPTIONS_INDEX, TEMPLATE_INDEX } from './consts';
-import { LoadingState } from '@grafana/data';
+import { LoadingState, SelectableValue } from '@grafana/data';
 
 type EditorState = {
   activeTab: number;
 };
 
-function createTemplate(i: number): ColumnTemplate {
+function createTemplate(name: string, defaultColumn: ColumnTemplate): ColumnTemplate {
   return {
-    columns: [],
-    delimiter: 2,
-    name: `Template #${i}`,
-    type: StatType.Total,
+    ...defaultColumn,
+    name,
   };
 }
 
 const optionStyle = { marginRight: '7px' };
 
+const addColumnStyle = {
+  marginBottom: '20px',
+  padding: '0 13px',
+};
+
+const asideStyle = {
+  minWidth: '200px',
+};
+
+const SELECT_VALUE = { label: 'Customize Column' };
+
 export default class Editor extends PureComponent<PanelEditorProps<Options>, EditorState> {
-  public static getLabelsFromSeriesRequest(data: PanelData): string[] {
+  public static getColumnsAndLabels(data: PanelData): { labels: string[]; columns: SelectableValue<string>[] } {
     if (data.series.length === 0) {
-      return [];
+      return { labels: [], columns: [] };
     }
 
     const labels = new Set<string>();
+    const columns = new Set<string>();
 
-    data.series.forEach(serie => Object.keys(serie.labels || {}).forEach(label => labels.add(label)));
+    for (let i = 0; i < data.series.length; i++) {
+      const serie = data.series[i];
 
-    return Array.from(labels);
+      if (serie.name) {
+        columns.add(serie.name);
+      }
+
+      if (serie.labels) {
+        Object.keys(serie.labels).forEach(label => labels.add(label));
+      }
+    }
+
+    return { labels: Array.from(labels), columns: Array.from(columns).map(cl => ({ value: cl, label: cl })) };
   }
 
   public ds: any;
@@ -51,36 +71,36 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
 
     templates[this.state.activeTab] = newTemplate;
     this.props.onOptionsChange({ ...this.props.options, templates });
-  }
+  };
 
   private handleOptionChange = (options: Omit<Options, 'templates'>) => {
     this.props.onOptionsChange({
       ...this.props.options,
       ...options,
     });
-  }
+  };
 
   private handleChangeTab = (i: number) => {
     this.setState({ activeTab: i });
-  }
+  };
 
   private toOptions = () => {
     this.handleChangeTab(COMMON_OPTIONS_INDEX);
-  }
+  };
 
   private toDefaultTemplate = () => {
     this.handleChangeTab(DEFAULT_COLUMN_TEMPLATE);
-  }
+  };
 
-  private addColumn = () => {
+  private addColumn = (selected: SelectableValue<string>) => {
     const i = this.props.options.templates.length;
 
     this.handleChangeTab(i);
     this.props.onOptionsChange({
       ...this.props.options,
-      templates: [...this.props.options.templates, createTemplate(i + 1)],
+      templates: [...this.props.options.templates, createTemplate(selected.value as string, this.props.options.defaultTemplate)],
     });
-  }
+  };
 
   private isActive(state: number) {
     return this.state.activeTab === state;
@@ -91,9 +111,10 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
     const isTemplateActive = this.state.activeTab >= DEFAULT_COLUMN_TEMPLATE;
     const isDefaultTemplate = this.state.activeTab === DEFAULT_COLUMN_TEMPLATE;
     const template = options.templates[this.state.activeTab];
+    const { labels, columns } = Editor.getColumnsAndLabels(this.props.data); // TODO add memoize
 
     return (
-      <div className="edit-tab-with-sidemenu">
+      <div className="edit-tab-with-sidemenu" style={asideStyle}>
         <aside className="edit-sidemenu-aside">
           <ul className="edit-sidemenu">
             <li key={TEMPLATE_INDEX}>
@@ -114,11 +135,8 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
                 Default column
               </a>
             </li>
-            <li key={ADD_TEMPLATE_INDEX}>
-              <a className="pointer" onClick={this.addColumn}>
-                <i className="fa fa-plus" />
-                &nbsp; Add Template
-              </a>
+            <li key={ADD_TEMPLATE_INDEX} style={addColumnStyle}>
+              <Select isSearchable={false} isClearable={false} options={columns} onChange={this.addColumn} value={SELECT_VALUE} />
             </li>
             <li key={COMMON_OPTIONS_INDEX} className={cs({ active: this.isActive(COMMON_OPTIONS_INDEX) })}>
               <a onClick={this.toOptions}>
@@ -141,7 +159,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
           options={options}
           onChange={this.handleOptionChange}
           loading={this.props.data.state === LoadingState.NotStarted}
-          labels={Editor.getLabelsFromSeriesRequest(this.props.data)}
+          labels={labels}
         />
       </div>
     );
