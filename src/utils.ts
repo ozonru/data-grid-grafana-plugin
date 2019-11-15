@@ -14,7 +14,7 @@ export class ColumnSetting implements ColumnOption {
   ): ColumnOption {
     return new ColumnSetting(
       type || option.type,
-      column || option.type,
+      column || option.column,
       unit || option.unit,
       delimiter || option.delimiter,
       rawDataType || option.rawDataType
