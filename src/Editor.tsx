@@ -7,16 +7,14 @@ import CommonOptions from './components/CommonOptions';
 import { ColumnTemplate, Options } from './types';
 import { ADD_TEMPLATE_INDEX, DEFAULT_COLUMN_TEMPLATE, COMMON_OPTIONS_INDEX, TEMPLATE_INDEX } from './consts';
 import { LoadingState, SelectableValue } from '@grafana/data';
+import { ColumnOptions } from './utils';
 
 type EditorState = {
   activeTab: number;
 };
 
 function createTemplate(name: string, defaultColumn: ColumnTemplate): ColumnTemplate {
-  return {
-    ...defaultColumn,
-    name,
-  };
+  return ColumnOptions.copyWith(defaultColumn, name);
 }
 
 const optionStyle = { marginRight: '7px' };
@@ -71,26 +69,26 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
 
     templates[this.state.activeTab] = newTemplate;
     this.props.onOptionsChange({ ...this.props.options, templates });
-  };
+  }
 
   private handleOptionChange = (options: Omit<Options, 'templates'>) => {
     this.props.onOptionsChange({
       ...this.props.options,
       ...options,
     });
-  };
+  }
 
   private handleChangeTab = (i: number) => {
     this.setState({ activeTab: i });
-  };
+  }
 
   private toOptions = () => {
     this.handleChangeTab(COMMON_OPTIONS_INDEX);
-  };
+  }
 
   private toDefaultTemplate = () => {
     this.handleChangeTab(DEFAULT_COLUMN_TEMPLATE);
-  };
+  }
 
   private addColumn = (selected: SelectableValue<string>) => {
     const i = this.props.options.templates.length;
@@ -100,7 +98,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
       ...this.props.options,
       templates: [...this.props.options.templates, createTemplate(selected.value as string, this.props.options.defaultTemplate)],
     });
-  };
+  }
 
   private isActive(state: number) {
     return this.state.activeTab === state;
@@ -125,9 +123,9 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
                 </h5>
               </a>
             </li>
-            {options.templates.map(({ name }, i) => (
+            {options.templates.map(({ column }, i) => (
               <li key={i} className={cs({ active: this.isActive(i) })}>
-                <a onClick={() => this.handleChangeTab(i)}>{name}</a>
+                <a onClick={() => this.handleChangeTab(i)}>{column}</a>
               </li>
             ))}
             <li key={DEFAULT_COLUMN_TEMPLATE} className={cs({ active: this.isActive(DEFAULT_COLUMN_TEMPLATE) })}>

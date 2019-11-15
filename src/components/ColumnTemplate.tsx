@@ -1,9 +1,11 @@
-import React, { ChangeEventHandler, Component } from 'react';
+import React, { Component } from 'react';
 import { ColumnTemplate as IColumnTemplate, StatType } from 'types';
-import { FormField } from '@grafana/ui';
+import { FormField, Switch, Select } from '@grafana/ui';
 import FormSelect from './FormSelect';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import EditorTab from './EditorTab';
+import { ColumnOptions, loadFormats } from '../utils';
+import { SelectableValue } from '@grafana/data';
 
 interface Props {
   visible?: boolean;
@@ -19,31 +21,47 @@ const TYPE_SELECT_OPTIONS: { value: string }[] = [
   { value: StatType.Total },
 ];
 
-function handleChange<T extends keyof IColumnTemplate>(this: Component<Props>, key: T, value: React.SyntheticEvent) {
-  this.props.onChange({
-    ...this.props.template,
-    // @ts-ignore
-    [key]: value.target.value,
-  });
-}
-
 export default class ColumnTemplate extends Component<Props> {
-  constructor(props, ctx) {
-    super(props, ctx);
+  private unitFormats = loadFormats();
 
-    // this.handleColumnsChange = handleChange.bind<Component<Props>, keyof IColumnTemplate, any, void>(this, 'columns');
-    this.handleStatChange = handleChange.bind<Component<Props>, keyof IColumnTemplate, any, void>(this, 'type');
-    this.handleNameChange = handleChange.bind<Component<Props>, keyof IColumnTemplate, any, void>(this, 'name');
-    this.handleDelimiterChange = handleChange.bind<Component<Props>, keyof IColumnTemplate, any, void>(this, 'delimiter');
-  }
+  private changeWith: <T extends keyof IColumnTemplate>(key: T, value: IColumnTemplate[T]) => void = (key, value) => {
+    const option = ColumnOptions.copyWith(this.props.template);
 
-  private handleNameChange!: ChangeEventHandler;
-  private handleStatChange!: ChangeEventHandler;
-  // private handleColumnsChange!: ChangeEventHandler;
-  private handleDelimiterChange!: ChangeEventHandler;
+    option[key] = value;
+    this.props.onChange(option);
+  };
+
+  private handleStatChange = (event: React.SyntheticEvent) => {
+    // @ts-ignore
+    const stat = event.target.value;
+
+    this.changeWith('type', stat as StatType);
+  };
+
+  private handleDelimiterChange = (event: React.SyntheticEvent) => {
+    // @ts-ignore
+    const delimiter = Number(event.target.value);
+
+    if (Number.isNaN(delimiter) || delimiter < 1) {
+      return;
+    }
+
+    this.changeWith('delimiter', delimiter);
+  };
+
+  private handleFilterableStateChange = (event?: React.SyntheticEvent) => {
+    // @ts-ignore
+    const bool = event ? Boolean(event.target.value) : false;
+
+    this.changeWith('filterable', bool);
+  };
+
+  private handleUnitChange = (item: SelectableValue<string>) => {
+    this.changeWith('unit', item.value);
+  };
 
   public render() {
-    const { template, isDefault, visible } = this.props;
+    const { template: option, isDefault, visible } = this.props;
 
     return (
       <EditorTab visible={visible}>
@@ -53,19 +71,6 @@ export default class ColumnTemplate extends Component<Props> {
               <div className="gr-form-inline">
                 <div className="gf-form">
                   <h6 className="text-header">General</h6>
-                </div>
-              </div>
-              <div className="gr-form-inline">
-                <div className="gf-form">
-                  <FormField
-                    label="Name of the template"
-                    labelWidth={LABEL_WIDTH}
-                    inputWidth={FORM_ELEMENT_WIDTH}
-                    type="text"
-                    onChange={this.handleNameChange}
-                    value={template.name}
-                  />
-                  <span className="split"></span>
                 </div>
               </div>
             </div>
@@ -82,11 +87,20 @@ export default class ColumnTemplate extends Component<Props> {
               <div className="gf-form">
                 <FormField
                   label="Delimiter"
+                  placeholder="Enter delimiter"
                   labelWidth={LABEL_WIDTH}
                   inputWidth={FORM_ELEMENT_WIDTH}
                   type="number"
                   onChange={this.handleDelimiterChange}
-                  value={template.delimiter}
+                  value={option.delimiter}
+                />
+              </div>
+              <div className="gf-form">
+                <Switch
+                  label="Filterable"
+                  labelClass={`width-${LABEL_WIDTH}`}
+                  onChange={this.handleFilterableStateChange}
+                  checked={option.filterable || false}
                 />
               </div>
             </div>
@@ -107,7 +121,25 @@ export default class ColumnTemplate extends Component<Props> {
                   selectWidth={FORM_ELEMENT_WIDTH}
                   options={TYPE_SELECT_OPTIONS}
                   onChange={this.handleStatChange}
-                  value={template.type}
+                  value={option.type}
+                />
+              </div>
+              <div className="gf-form">
+                <FormField
+                  label="Unit format"
+                  labelWidth={LABEL_WIDTH}
+                  inputEl={
+                    <Select<string>
+                      placeholder="Select unit"
+                      isClearable
+                      isSearchable
+                      isMulti={false}
+                      width={FORM_ELEMENT_WIDTH}
+                      onChange={this.handleUnitChange}
+                      value={option.unit ? { value: option.unit, label: option.unit } : undefined}
+                      options={this.unitFormats}
+                    />
+                  }
                 />
               </div>
             </div>

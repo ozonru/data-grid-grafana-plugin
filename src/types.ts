@@ -6,10 +6,11 @@ export enum StatType {
 }
 
 export interface ColumnTemplate {
-  columns: string[];
+  column?: string;
+  unit?: string;
   delimiter?: number;
+  filterable?: boolean;
   type: StatType;
-  name?: string;
 }
 
 export interface Options {
