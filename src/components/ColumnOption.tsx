@@ -19,6 +19,10 @@ const rawTypeOptions: SelectableValue<string>[] = [
   { label: 'Date', value: 'date' },
 ];
 
+const SPLIT_STYLE = {
+  marginRight: '20px',
+};
+
 export default class ColumnOptionComponent extends Component<Props> {
   private unitFormats = loadFormats();
 
@@ -79,17 +83,6 @@ export default class ColumnOptionComponent extends Component<Props> {
             <div className="gr-form-inline">
               <div className="gf-form">
                 <FormField
-                  label="Decimals"
-                  placeholder="Enter number of decimals"
-                  labelWidth={LABEL_WIDTH}
-                  inputWidth={FORM_ELEMENT_WIDTH}
-                  type="number"
-                  onChange={this.handleDelimiterChange}
-                  value={option.delimiter}
-                />
-              </div>
-              <div className="gf-form">
-                <FormField
                   label="Unit format"
                   labelWidth={LABEL_WIDTH}
                   inputEl={
@@ -105,7 +98,19 @@ export default class ColumnOptionComponent extends Component<Props> {
                     />
                   }
                 />
+                <span style={SPLIT_STYLE} />
+                <FormField
+                  label="Decimals"
+                  placeholder="Enter number of decimals"
+                  labelWidth={LABEL_WIDTH}
+                  inputWidth={FORM_ELEMENT_WIDTH}
+                  type="number"
+                  onChange={this.handleDelimiterChange}
+                  value={option.delimiter}
+                />
               </div>
+            </div>
+            <div className="gr-form-inline">
               <div className="gf-form">
                 <FormField
                   label="Data Type"
