@@ -4,7 +4,6 @@ export interface ColumnOption {
   column?: string;
   unit?: string;
   delimiter?: number;
-  filterable?: boolean;
   type: ReducerID;
   rawDataType?: 'string' | 'number' | 'date';
 }

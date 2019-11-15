@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ColumnOption } from 'types';
-import { FormField, Switch, Select, StatsPicker } from '@grafana/ui';
+import { FormField, Select, StatsPicker } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import EditorTab from './EditorTab';
 import { ColumnSetting, loadFormats } from '../utils';
@@ -44,13 +44,6 @@ export default class ColumnOptionComponent extends Component<Props> {
     this.changeWith('delimiter', delimiter);
   }
 
-  private handleFilterableStateChange = (event?: React.SyntheticEvent) => {
-    // @ts-ignore
-    const bool = event ? Boolean(event.target.value) : false;
-
-    this.changeWith('filterable', bool);
-  }
-
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value);
   }
@@ -92,14 +85,6 @@ export default class ColumnOptionComponent extends Component<Props> {
                   type="number"
                   onChange={this.handleDelimiterChange}
                   value={option.delimiter}
-                />
-              </div>
-              <div className="gf-form">
-                <Switch
-                  label="Filterable"
-                  labelClass={`width-${LABEL_WIDTH}`}
-                  onChange={this.handleFilterableStateChange}
-                  checked={option.filterable || false}
                 />
               </div>
             </div>

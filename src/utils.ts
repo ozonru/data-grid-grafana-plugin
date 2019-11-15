@@ -17,7 +17,6 @@ export class ColumnSetting implements ColumnOption {
       column || option.type,
       unit || option.unit,
       delimiter || option.delimiter,
-      filterable || option.filterable,
       rawDataType || option.rawDataType
     );
   }
@@ -26,15 +25,13 @@ export class ColumnSetting implements ColumnOption {
   public column?;
   public unit?;
   public delimiter?;
-  public filterable?;
   public rawDataType?;
 
-  constructor(type: ReducerID, column?: string, unit?: string, delimiter?: number, filterable?: boolean, rawDataType?: ColumnOption['rawDataType']) {
+  constructor(type: ReducerID, column?: string, unit?: string, delimiter?: number, rawDataType?: ColumnOption['rawDataType']) {
     this.type = type;
     this.column = column;
     this.unit = unit;
     this.delimiter = delimiter;
-    this.filterable = filterable;
     this.rawDataType = rawDataType;
   }
 }
