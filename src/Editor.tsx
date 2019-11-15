@@ -65,6 +65,11 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
   }
 
   private handleTemplateChange = (newTemplate: ColumnTemplate) => {
+    if (this.state.activeTab === DEFAULT_COLUMN_TEMPLATE) {
+      this.props.onOptionsChange({ ...this.props.options, defaultTemplate: newTemplate });
+      return;
+    }
+
     const templates = this.props.options.templates.slice();
 
     templates[this.state.activeTab] = newTemplate;
