@@ -1,17 +1,20 @@
 import { ReducerID } from '@grafana/data';
 
 export interface ColumnOption {
-  column?: string;
-  unit?: string;
+  decimals?: number;
   delimiter?: number;
-  type: ReducerID;
   colorMode?: 'value' | 'cell';
+  colors?: string[];
+  column?: string;
+  thresholds?: number[];
+  type: ReducerID;
   rawDataType?: 'string' | 'number' | 'date';
+  unit?: string;
 }
 
 export interface Options {
-  options: ColumnOption[];
   defaultColumnOption: ColumnOption;
+  options: ColumnOption[];
   showHeaders: boolean;
   showLabelColumn: boolean;
   groupByLabel?: string;

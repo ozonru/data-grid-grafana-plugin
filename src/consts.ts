@@ -10,7 +10,7 @@ export const ADD_COLUMN_OPTION_INDEX = -11;
 export const COMMON_OPTIONS_INDEX = -10;
 
 export const defaults: Options = {
-  defaultColumnOption: new ColumnSetting(ReducerID.last, undefined, 'none', undefined, 'number', 'cell'),
+  defaultColumnOption: new ColumnSetting(ReducerID.last, undefined, 'none', undefined, 'number', 'cell', undefined, undefined),
   groupByLabel: undefined,
   options: [],
   showHeaders: true,

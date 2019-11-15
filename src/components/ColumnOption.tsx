@@ -5,6 +5,7 @@ import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import EditorTab from './EditorTab';
 import { ColumnSetting, loadFormats } from '../utils';
 import { ReducerID, SelectableValue } from '@grafana/data';
+import ThresholdsForm from './ThresholdsForm';
 
 interface Props {
   visible?: boolean;
@@ -36,11 +37,11 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option[key] = value;
     this.props.onChange(option);
-  };
+  }
 
   private handleStatChange = (stat: string | string[]) => {
     this.changeWith('type', ([] as ReducerID[]).concat(stat as ReducerID)[0]);
-  };
+  }
 
   private handleDelimiterChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
@@ -52,19 +53,27 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.changeWith('delimiter', delimiter);
-  };
+  }
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value);
-  };
+  }
 
   private handleDataTypeChange = (item: SelectableValue<RawDataType>) => {
     this.changeWith('rawDataType', item.value);
-  };
+  }
 
   private handleColorModeChange = (item: SelectableValue<ColorModeType>) => {
     this.changeWith('colorMode', item.value);
-  };
+  }
+
+  private handleThresholdsChange = ({ thresholds, colors }) => {
+    const option = ColumnSetting.copyWith(this.props.option);
+
+    option.thresholds = thresholds;
+    option.colors = colors;
+    this.props.onChange(option);
+  }
 
   public render() {
     const { option: option, visible } = this.props;
@@ -153,18 +162,9 @@ export default class ColumnOptionComponent extends Component<Props> {
                     />
                   }
                 />
-                <span style={SPLIT_STYLE} />
-                <FormField
-                  label="Decimals"
-                  placeholder="Enter number of decimals"
-                  labelWidth={LABEL_WIDTH}
-                  inputWidth={FORM_ELEMENT_WIDTH}
-                  type="number"
-                  onChange={this.handleDelimiterChange}
-                  value={option.delimiter}
-                />
               </div>
             </div>
+            <ThresholdsForm thresholds={option.thresholds} colors={option.colors} onChange={this.handleThresholdsChange} />
           </div>
         </div>
         <div className="editor-row">

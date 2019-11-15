@@ -1,6 +1,7 @@
 import { ColumnOption } from './types';
 import kbn from 'grafana/app/core/utils/kbn';
 import { ReducerID } from '@grafana/data';
+import { getNamedColorPalette } from '@grafana/ui';
 
 export class ColumnSetting implements ColumnOption {
   public static copyWith(
@@ -11,7 +12,9 @@ export class ColumnSetting implements ColumnOption {
     delimiter?: number,
     filterable?: boolean,
     rawDataType?: ColumnOption['rawDataType'],
-    colorMode?: ColumnOption['colorMode']
+    colorMode?: ColumnOption['colorMode'],
+    colorsOption?: string[],
+    thresholds?: number[]
   ): ColumnOption {
     return new ColumnSetting(
       type || option.type,
@@ -19,7 +22,9 @@ export class ColumnSetting implements ColumnOption {
       unit || option.unit,
       delimiter || option.delimiter,
       rawDataType || option.rawDataType,
-      colorMode || option.colorMode
+      colorMode || option.colorMode,
+      colorsOption || option.colors,
+      thresholds || option.thresholds
     );
   }
 
@@ -29,6 +34,8 @@ export class ColumnSetting implements ColumnOption {
   public delimiter?;
   public colorMode?;
   public rawDataType?;
+  public thresholds?;
+  public colors?;
 
   constructor(
     type: ReducerID,
@@ -36,7 +43,9 @@ export class ColumnSetting implements ColumnOption {
     unit?: string,
     delimiter?: number,
     rawDataType?: ColumnOption['rawDataType'],
-    colorMode?: ColumnOption['colorMode']
+    colorMode?: ColumnOption['colorMode'],
+    colorsOption?: string[],
+    thresholds?: number[]
   ) {
     this.type = type;
     this.column = column;
@@ -44,6 +53,8 @@ export class ColumnSetting implements ColumnOption {
     this.delimiter = delimiter;
     this.rawDataType = rawDataType;
     this.colorMode = colorMode;
+    this.colors = colorsOption;
+    this.thresholds = thresholds;
   }
 }
 
@@ -58,4 +69,31 @@ export function loadFormats() {
   }
 
   return formats;
+}
+
+let colors: string[] = [];
+
+export function loadColors(): string[] {
+  if (colors.length > 0) {
+    return colors;
+  }
+
+  getNamedColorPalette().forEach(definitions => {
+    for (let i = 0; i < definitions.length; i++) {
+      if (definitions[i].variants.dark) {
+        const clrName = definitions[i].name;
+        colors.push(clrName);
+      }
+    }
+  });
+
+  return colors;
+}
+
+export function getColorsOptions(): { value: string; label: string }[] {
+  if (colors.length === 0) {
+    loadColors();
+  }
+
+  return colors.map(value => ({ value, label: value }));
 }
