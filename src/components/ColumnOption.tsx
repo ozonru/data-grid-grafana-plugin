@@ -21,7 +21,7 @@ const TYPE_SELECT_OPTIONS: { value: string }[] = [
   { value: StatType.Total },
 ];
 
-export default class ColumnTemplate extends Component<Props> {
+export default class ColumnOptionComponent extends Component<Props> {
   private unitFormats = loadFormats();
 
   private changeWith: <T extends keyof ColumnOption>(key: T, value: ColumnOption[T]) => void = (key, value) => {
@@ -29,14 +29,14 @@ export default class ColumnTemplate extends Component<Props> {
 
     option[key] = value;
     this.props.onChange(option);
-  }
+  };
 
   private handleStatChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
     const stat = event.target.value;
 
     this.changeWith('type', stat as StatType);
-  }
+  };
 
   private handleDelimiterChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
@@ -47,18 +47,18 @@ export default class ColumnTemplate extends Component<Props> {
     }
 
     this.changeWith('delimiter', delimiter);
-  }
+  };
 
   private handleFilterableStateChange = (event?: React.SyntheticEvent) => {
     // @ts-ignore
     const bool = event ? Boolean(event.target.value) : false;
 
     this.changeWith('filterable', bool);
-  }
+  };
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value);
-  }
+  };
 
   public render() {
     const { template: option, isDefault, visible } = this.props;

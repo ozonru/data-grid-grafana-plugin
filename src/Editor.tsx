@@ -2,7 +2,7 @@ import cs from 'classnames';
 import React, { PureComponent } from 'react';
 import { PanelData, PanelEditorProps, Select } from '@grafana/ui';
 
-import Template from './components/ColumnTemplate';
+import ColumnOptionComponent from './components/ColumnOption';
 import CommonOptions from './components/CommonOptions';
 import { ColumnOption, Options } from './types';
 import { ADD_TEMPLATE_INDEX, DEFAULT_COLUMN_TEMPLATE, COMMON_OPTIONS_INDEX, TEMPLATE_INDEX } from './consts';
@@ -74,26 +74,26 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
 
     templates[this.state.activeTab] = newTemplate;
     this.props.onOptionsChange({ ...this.props.options, options: templates });
-  }
+  };
 
   private handleOptionChange = (options: Omit<Options, 'options'>) => {
     this.props.onOptionsChange({
       ...this.props.options,
       ...options,
     });
-  }
+  };
 
   private handleChangeTab = (i: number) => {
     this.setState({ activeTab: i });
-  }
+  };
 
   private toOptions = () => {
     this.handleChangeTab(COMMON_OPTIONS_INDEX);
-  }
+  };
 
   private toDefaultTemplate = () => {
     this.handleChangeTab(DEFAULT_COLUMN_TEMPLATE);
-  }
+  };
 
   private addColumn = (selected: SelectableValue<string>) => {
     const i = this.props.options.options.length;
@@ -103,7 +103,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
       ...this.props.options,
       options: [...this.props.options.options, createTemplate(selected.value as string, this.props.options.defaultColumnOption)],
     });
-  }
+  };
 
   private isActive(state: number) {
     return this.state.activeTab === state;
@@ -151,7 +151,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
             </li>
           </ul>
         </aside>
-        <Template
+        <ColumnOptionComponent
           visible={isTemplateActive}
           template={template || options.defaultColumnOption}
           isDefault={isDefaultTemplate}
