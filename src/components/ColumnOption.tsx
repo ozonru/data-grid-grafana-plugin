@@ -38,6 +38,7 @@ export default class ColumnOptionComponent extends Component<Props> {
     const delimiter = Number(event.target.value);
 
     if (Number.isNaN(delimiter) || delimiter < 1) {
+      this.changeWith('delimiter', undefined);
       return;
     }
 
@@ -87,17 +88,6 @@ export default class ColumnOptionComponent extends Component<Props> {
                   value={option.delimiter}
                 />
               </div>
-            </div>
-          </div>
-        </div>
-        <div className="editor-row">
-          <div className="section gf-form-group">
-            <div className="gr-form-inline">
-              <div className="gf-form">
-                <h6 className="text-header">Stat</h6>
-              </div>
-            </div>
-            <div className="gr-form-inline">
               <div className="gf-form">
                 <FormField
                   label="Unit format"
@@ -131,6 +121,15 @@ export default class ColumnOptionComponent extends Component<Props> {
                     />
                   }
                 />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="editor-row">
+          <div className="section gf-form-group">
+            <div className="gr-form-inline">
+              <div className="gf-form">
+                <h6 className="text-header">Stat</h6>
               </div>
             </div>
             <div className="gr-form-inline">
