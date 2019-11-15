@@ -1,16 +1,11 @@
-export enum StatType {
-  Max = 'Max',
-  Min = 'Min',
-  Avg = 'Average',
-  Total = 'Total',
-}
+import { ReducerID } from '@grafana/data';
 
 export interface ColumnOption {
   column?: string;
   unit?: string;
   delimiter?: number;
   filterable?: boolean;
-  type: StatType;
+  type: ReducerID;
 }
 
 export interface Options {

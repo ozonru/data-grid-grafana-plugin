@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { ColumnOption, StatType } from 'types';
-import { FormField, Switch, Select } from '@grafana/ui';
-import FormSelect from './FormSelect';
+import { ColumnOption } from 'types';
+import { FormField, Switch, Select, StatsPicker } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import EditorTab from './EditorTab';
 import { ColumnSetting, loadFormats } from '../utils';
-import { SelectableValue } from '@grafana/data';
+import { ReducerID, SelectableValue } from '@grafana/data';
 
 interface Props {
   visible?: boolean;
@@ -13,13 +12,6 @@ interface Props {
   option: ColumnOption;
   onChange: (template: ColumnOption) => void;
 }
-
-const TYPE_SELECT_OPTIONS: { value: string }[] = [
-  { value: StatType.Avg },
-  { value: StatType.Max },
-  { value: StatType.Min },
-  { value: StatType.Total },
-];
 
 export default class ColumnOptionComponent extends Component<Props> {
   private unitFormats = loadFormats();
@@ -31,11 +23,8 @@ export default class ColumnOptionComponent extends Component<Props> {
     this.props.onChange(option);
   }
 
-  private handleStatChange = (event: React.SyntheticEvent) => {
-    // @ts-ignore
-    const stat = event.target.value;
-
-    this.changeWith('type', stat as StatType);
+  private handleStatChange = (stat: string | string[]) => {
+    this.changeWith('type', ([] as ReducerID[]).concat(stat as ReducerID)[0]);
   }
 
   private handleDelimiterChange = (event: React.SyntheticEvent) => {
@@ -115,13 +104,18 @@ export default class ColumnOptionComponent extends Component<Props> {
             </div>
             <div className="gr-form-inline">
               <div className="gf-form">
-                <FormSelect
+                <FormField
                   label="Type"
                   labelWidth={LABEL_WIDTH}
-                  selectWidth={FORM_ELEMENT_WIDTH}
-                  options={TYPE_SELECT_OPTIONS}
-                  onChange={this.handleStatChange}
-                  value={option.type}
+                  inputEl={
+                    <StatsPicker
+                      allowMultiple={false}
+                      placeholder="Select unit"
+                      width={FORM_ELEMENT_WIDTH}
+                      onChange={this.handleStatChange}
+                      stats={option.type ? [option.type] : []}
+                    />
+                  }
                 />
               </div>
               <div className="gf-form">

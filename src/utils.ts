@@ -1,11 +1,12 @@
-import { ColumnOption, StatType } from './types';
+import { ColumnOption } from './types';
 import kbn from 'grafana/app/core/utils/kbn';
+import { ReducerID } from '@grafana/data';
 
 export class ColumnSetting implements ColumnOption {
   public static copyWith(
     option: ColumnSetting,
     column?: string,
-    type?: StatType,
+    type?: ReducerID,
     unit?: string,
     delimiter?: number,
     filterable?: boolean
@@ -25,7 +26,7 @@ export class ColumnSetting implements ColumnOption {
   public delimiter?;
   public filterable?;
 
-  constructor(type: StatType, column?: string, unit?: string, delimiter?: number, filterable?: boolean) {
+  constructor(type: ReducerID, column?: string, unit?: string, delimiter?: number, filterable?: boolean) {
     this.type = type;
     this.column = column;
     this.unit = unit;
