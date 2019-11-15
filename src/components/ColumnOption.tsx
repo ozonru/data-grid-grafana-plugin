@@ -10,7 +10,7 @@ import { SelectableValue } from '@grafana/data';
 interface Props {
   visible?: boolean;
   isDefault: boolean;
-  template: ColumnOption;
+  option: ColumnOption;
   onChange: (template: ColumnOption) => void;
 }
 
@@ -25,18 +25,18 @@ export default class ColumnOptionComponent extends Component<Props> {
   private unitFormats = loadFormats();
 
   private changeWith: <T extends keyof ColumnOption>(key: T, value: ColumnOption[T]) => void = (key, value) => {
-    const option = ColumnSetting.copyWith(this.props.template);
+    const option = ColumnSetting.copyWith(this.props.option);
 
     option[key] = value;
     this.props.onChange(option);
-  };
+  }
 
   private handleStatChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
     const stat = event.target.value;
 
     this.changeWith('type', stat as StatType);
-  };
+  }
 
   private handleDelimiterChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
@@ -47,21 +47,21 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.changeWith('delimiter', delimiter);
-  };
+  }
 
   private handleFilterableStateChange = (event?: React.SyntheticEvent) => {
     // @ts-ignore
     const bool = event ? Boolean(event.target.value) : false;
 
     this.changeWith('filterable', bool);
-  };
+  }
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value);
-  };
+  }
 
   public render() {
-    const { template: option, isDefault, visible } = this.props;
+    const { option: option, isDefault, visible } = this.props;
 
     return (
       <EditorTab visible={visible}>
