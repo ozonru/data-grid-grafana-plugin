@@ -1,9 +1,16 @@
-import { ColumnTemplate, StatType } from './types';
+import { ColumnOption, StatType } from './types';
 import kbn from 'grafana/app/core/utils/kbn';
 
-export class ColumnOptions implements ColumnTemplate {
-  static copyWith(option: ColumnOptions, column?: string, type?: StatType, unit?: string, delimiter?: number, filterable?: boolean): ColumnTemplate {
-    return new ColumnOptions(
+export class ColumnSetting implements ColumnOption {
+  public static copyWith(
+    option: ColumnSetting,
+    column?: string,
+    type?: StatType,
+    unit?: string,
+    delimiter?: number,
+    filterable?: boolean
+  ): ColumnOption {
+    return new ColumnSetting(
       type || option.type,
       column || option.type,
       unit || option.unit,
@@ -12,11 +19,11 @@ export class ColumnOptions implements ColumnTemplate {
     );
   }
 
-  type;
-  column?;
-  unit?;
-  delimiter?;
-  filterable?;
+  public type;
+  public column?;
+  public unit?;
+  public delimiter?;
+  public filterable?;
 
   constructor(type: StatType, column?: string, unit?: string, delimiter?: number, filterable?: boolean) {
     this.type = type;

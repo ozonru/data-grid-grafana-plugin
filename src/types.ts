@@ -5,7 +5,7 @@ export enum StatType {
   Total = 'Total',
 }
 
-export interface ColumnTemplate {
+export interface ColumnOption {
   column?: string;
   unit?: string;
   delimiter?: number;
@@ -14,8 +14,8 @@ export interface ColumnTemplate {
 }
 
 export interface Options {
-  templates: ColumnTemplate[];
-  defaultTemplate: ColumnTemplate;
+  options: ColumnOption[];
+  defaultColumnOption: ColumnOption;
   showHeaders: boolean;
   showLabelColumn: boolean;
   groupByLabel?: string;

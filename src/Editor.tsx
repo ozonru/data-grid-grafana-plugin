@@ -4,17 +4,17 @@ import { PanelData, PanelEditorProps, Select } from '@grafana/ui';
 
 import Template from './components/ColumnTemplate';
 import CommonOptions from './components/CommonOptions';
-import { ColumnTemplate, Options } from './types';
+import { ColumnOption, Options } from './types';
 import { ADD_TEMPLATE_INDEX, DEFAULT_COLUMN_TEMPLATE, COMMON_OPTIONS_INDEX, TEMPLATE_INDEX } from './consts';
 import { LoadingState, SelectableValue } from '@grafana/data';
-import { ColumnOptions } from './utils';
+import { ColumnSetting } from './utils';
 
 type EditorState = {
   activeTab: number;
 };
 
-function createTemplate(name: string, defaultColumn: ColumnTemplate): ColumnTemplate {
-  return ColumnOptions.copyWith(defaultColumn, name);
+function createTemplate(name: string, defaultColumn: ColumnOption): ColumnOption {
+  return ColumnSetting.copyWith(defaultColumn, name);
 }
 
 const optionStyle = { marginRight: '7px' };
@@ -64,19 +64,19 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
     };
   }
 
-  private handleTemplateChange = (newTemplate: ColumnTemplate) => {
+  private handleTemplateChange = (newTemplate: ColumnOption) => {
     if (this.state.activeTab === DEFAULT_COLUMN_TEMPLATE) {
-      this.props.onOptionsChange({ ...this.props.options, defaultTemplate: newTemplate });
+      this.props.onOptionsChange({ ...this.props.options, defaultColumnOption: newTemplate });
       return;
     }
 
-    const templates = this.props.options.templates.slice();
+    const templates = this.props.options.options.slice();
 
     templates[this.state.activeTab] = newTemplate;
-    this.props.onOptionsChange({ ...this.props.options, templates });
+    this.props.onOptionsChange({ ...this.props.options, options: templates });
   }
 
-  private handleOptionChange = (options: Omit<Options, 'templates'>) => {
+  private handleOptionChange = (options: Omit<Options, 'options'>) => {
     this.props.onOptionsChange({
       ...this.props.options,
       ...options,
@@ -96,12 +96,12 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
   }
 
   private addColumn = (selected: SelectableValue<string>) => {
-    const i = this.props.options.templates.length;
+    const i = this.props.options.options.length;
 
     this.handleChangeTab(i);
     this.props.onOptionsChange({
       ...this.props.options,
-      templates: [...this.props.options.templates, createTemplate(selected.value as string, this.props.options.defaultTemplate)],
+      options: [...this.props.options.options, createTemplate(selected.value as string, this.props.options.defaultColumnOption)],
     });
   }
 
@@ -113,7 +113,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
     const { options } = this.props;
     const isTemplateActive = this.state.activeTab >= DEFAULT_COLUMN_TEMPLATE;
     const isDefaultTemplate = this.state.activeTab === DEFAULT_COLUMN_TEMPLATE;
-    const template = options.templates[this.state.activeTab];
+    const template = options.options[this.state.activeTab];
     const { labels, columns } = Editor.getColumnsAndLabels(this.props.data); // TODO add memoize
 
     return (
@@ -128,7 +128,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
                 </h5>
               </a>
             </li>
-            {options.templates.map(({ column }, i) => (
+            {options.options.map(({ column }, i) => (
               <li key={i} className={cs({ active: this.isActive(i) })}>
                 <a onClick={() => this.handleChangeTab(i)}>{column}</a>
               </li>
@@ -153,7 +153,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
         </aside>
         <Template
           visible={isTemplateActive}
-          template={template || options.defaultTemplate}
+          template={template || options.defaultColumnOption}
           isDefault={isDefaultTemplate}
           onChange={this.handleTemplateChange}
         />

@@ -5,7 +5,7 @@ import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import { SelectableValue } from '@grafana/data';
 import EditorTab from './EditorTab';
 
-type ICommonOptions = Omit<Options, 'templates'>;
+type ICommonOptions = Omit<Options, 'options'>;
 
 type Props = {
   options: ICommonOptions;
@@ -40,7 +40,7 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showHeaders: e ? e.target.checked : false,
     });
-  }
+  };
 
   private handleShowLabelsColumnChange = (e?: React.SyntheticEvent) => {
     this.props.onChange({
@@ -48,14 +48,14 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showLabelColumn: e ? e.target.checked : false,
     });
-  }
+  };
 
   private handleGroupBySelect = (selected: SelectableValue<string>) => {
     this.props.onChange({
       ...this.props.options,
       groupByLabel: selected.value,
     });
-  }
+  };
 
   // public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
   //   return (

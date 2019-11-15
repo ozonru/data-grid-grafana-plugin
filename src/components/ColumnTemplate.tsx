@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { ColumnTemplate as IColumnTemplate, StatType } from 'types';
+import { ColumnOption, StatType } from 'types';
 import { FormField, Switch, Select } from '@grafana/ui';
 import FormSelect from './FormSelect';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import EditorTab from './EditorTab';
-import { ColumnOptions, loadFormats } from '../utils';
+import { ColumnSetting, loadFormats } from '../utils';
 import { SelectableValue } from '@grafana/data';
 
 interface Props {
   visible?: boolean;
   isDefault: boolean;
-  template: IColumnTemplate;
-  onChange: (template: IColumnTemplate) => void;
+  template: ColumnOption;
+  onChange: (template: ColumnOption) => void;
 }
 
 const TYPE_SELECT_OPTIONS: { value: string }[] = [
@@ -24,19 +24,19 @@ const TYPE_SELECT_OPTIONS: { value: string }[] = [
 export default class ColumnTemplate extends Component<Props> {
   private unitFormats = loadFormats();
 
-  private changeWith: <T extends keyof IColumnTemplate>(key: T, value: IColumnTemplate[T]) => void = (key, value) => {
-    const option = ColumnOptions.copyWith(this.props.template);
+  private changeWith: <T extends keyof ColumnOption>(key: T, value: ColumnOption[T]) => void = (key, value) => {
+    const option = ColumnSetting.copyWith(this.props.template);
 
     option[key] = value;
     this.props.onChange(option);
-  };
+  }
 
   private handleStatChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
     const stat = event.target.value;
 
     this.changeWith('type', stat as StatType);
-  };
+  }
 
   private handleDelimiterChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
@@ -47,18 +47,18 @@ export default class ColumnTemplate extends Component<Props> {
     }
 
     this.changeWith('delimiter', delimiter);
-  };
+  }
 
   private handleFilterableStateChange = (event?: React.SyntheticEvent) => {
     // @ts-ignore
     const bool = event ? Boolean(event.target.value) : false;
 
     this.changeWith('filterable', bool);
-  };
+  }
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value);
-  };
+  }
 
   public render() {
     const { template: option, isDefault, visible } = this.props;

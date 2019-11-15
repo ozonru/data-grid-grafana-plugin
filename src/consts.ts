@@ -1,5 +1,5 @@
 import { Options, StatType } from './types';
-import { ColumnOptions } from './utils';
+import { ColumnSetting } from './utils';
 
 export const LABEL_WIDTH = 10;
 export const DEFAULT_COLUMN_TEMPLATE = -1;
@@ -9,9 +9,9 @@ export const ADD_TEMPLATE_INDEX = -11;
 export const COMMON_OPTIONS_INDEX = -10;
 
 export const defaults: Options = {
-  defaultTemplate: new ColumnOptions(StatType.Total, undefined, 'none', undefined, true),
+  defaultColumnOption: new ColumnSetting(StatType.Total, undefined, 'none', undefined, true),
   groupByLabel: undefined,
+  options: [],
   showHeaders: true,
   showLabelColumn: true,
-  templates: [],
 };
