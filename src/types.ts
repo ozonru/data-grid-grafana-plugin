@@ -5,6 +5,7 @@ export interface ColumnOption {
   unit?: string;
   delimiter?: number;
   type: ReducerID;
+  colorMode?: 'value' | 'cell';
   rawDataType?: 'string' | 'number' | 'date';
 }
 

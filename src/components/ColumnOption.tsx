@@ -13,11 +13,16 @@ interface Props {
   onChange: (template: ColumnOption) => void;
 }
 
-const rawTypeOptions: SelectableValue<string>[] = [
+type RawDataType = ColumnOption['rawDataType'];
+type ColorModeType = ColumnOption['colorMode'];
+
+const rawTypeOptions: SelectableValue<RawDataType>[] = [
   { label: 'Number', value: 'number' },
   { label: 'String', value: 'string' },
   { label: 'Date', value: 'date' },
 ];
+
+const colorModeOptions: SelectableValue<ColorModeType>[] = [{ label: 'Value', value: 'value' }, { label: 'Cell', value: 'cell' }];
 
 const SPLIT_STYLE = {
   marginRight: '20px',
@@ -31,11 +36,11 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option[key] = value;
     this.props.onChange(option);
-  }
+  };
 
   private handleStatChange = (stat: string | string[]) => {
     this.changeWith('type', ([] as ReducerID[]).concat(stat as ReducerID)[0]);
-  }
+  };
 
   private handleDelimiterChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
@@ -47,37 +52,30 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.changeWith('delimiter', delimiter);
-  }
+  };
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value);
-  }
+  };
 
-  private handleDataTypeChange = (item: SelectableValue<string>) => {
-    this.changeWith('rawDataType', item.value as 'string' | 'number' | 'date');
-  }
+  private handleDataTypeChange = (item: SelectableValue<RawDataType>) => {
+    this.changeWith('rawDataType', item.value);
+  };
+
+  private handleColorModeChange = (item: SelectableValue<ColorModeType>) => {
+    this.changeWith('colorMode', item.value);
+  };
 
   public render() {
-    const { option: option, isDefault, visible } = this.props;
+    const { option: option, visible } = this.props;
 
     return (
       <EditorTab visible={visible}>
-        {!isDefault && (
-          <div className="editor-row">
-            <div className="section gf-form-group">
-              <div className="gr-form-inline">
-                <div className="gf-form">
-                  <h6 className="text-header">General</h6>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
         <div className="editor-row">
           <div className="section gf-form-group">
             <div className="gr-form-inline">
               <div className="gf-form">
-                <h6 className="text-header">Appearance</h6>
+                <h6 className="text-header">Appearance: General</h6>
               </div>
             </div>
             <div className="gr-form-inline">
@@ -116,8 +114,9 @@ export default class ColumnOptionComponent extends Component<Props> {
                   label="Data Type"
                   labelWidth={LABEL_WIDTH}
                   inputEl={
-                    <Select<string>
+                    <Select<RawDataType>
                       placeholder="Select raw data type"
+                      isClearable={false}
                       isMulti={false}
                       width={FORM_ELEMENT_WIDTH}
                       onChange={this.handleDataTypeChange}
@@ -125,6 +124,44 @@ export default class ColumnOptionComponent extends Component<Props> {
                       options={rawTypeOptions}
                     />
                   }
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="editor-row">
+          <div className="section gf-form-group">
+            <div className="gr-form-inline">
+              <div className="gf-form">
+                <h6 className="text-header">Appearance: Colors</h6>
+              </div>
+            </div>
+            <div className="gr-form-inline">
+              <div className="gf-form">
+                <FormField
+                  label="Color mode"
+                  labelWidth={LABEL_WIDTH}
+                  inputEl={
+                    <Select<ColorModeType>
+                      placeholder="Select color mode"
+                      isClearable={false}
+                      isMulti={false}
+                      width={FORM_ELEMENT_WIDTH}
+                      onChange={this.handleColorModeChange}
+                      value={option.colorMode ? colorModeOptions.find(({ value }) => value === option.colorMode) : undefined}
+                      options={colorModeOptions}
+                    />
+                  }
+                />
+                <span style={SPLIT_STYLE} />
+                <FormField
+                  label="Decimals"
+                  placeholder="Enter number of decimals"
+                  labelWidth={LABEL_WIDTH}
+                  inputWidth={FORM_ELEMENT_WIDTH}
+                  type="number"
+                  onChange={this.handleDelimiterChange}
+                  value={option.delimiter}
                 />
               </div>
             </div>

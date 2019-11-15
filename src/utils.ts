@@ -10,14 +10,16 @@ export class ColumnSetting implements ColumnOption {
     unit?: string,
     delimiter?: number,
     filterable?: boolean,
-    rawDataType?: ColumnOption['rawDataType']
+    rawDataType?: ColumnOption['rawDataType'],
+    colorMode?: ColumnOption['colorMode']
   ): ColumnOption {
     return new ColumnSetting(
       type || option.type,
       column || option.column,
       unit || option.unit,
       delimiter || option.delimiter,
-      rawDataType || option.rawDataType
+      rawDataType || option.rawDataType,
+      colorMode || option.colorMode
     );
   }
 
@@ -25,14 +27,23 @@ export class ColumnSetting implements ColumnOption {
   public column?;
   public unit?;
   public delimiter?;
+  public colorMode?;
   public rawDataType?;
 
-  constructor(type: ReducerID, column?: string, unit?: string, delimiter?: number, rawDataType?: ColumnOption['rawDataType']) {
+  constructor(
+    type: ReducerID,
+    column?: string,
+    unit?: string,
+    delimiter?: number,
+    rawDataType?: ColumnOption['rawDataType'],
+    colorMode?: ColumnOption['colorMode']
+  ) {
     this.type = type;
     this.column = column;
     this.unit = unit;
     this.delimiter = delimiter;
     this.rawDataType = rawDataType;
+    this.colorMode = colorMode;
   }
 }
 
