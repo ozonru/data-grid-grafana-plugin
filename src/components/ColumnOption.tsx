@@ -13,6 +13,12 @@ interface Props {
   onChange: (template: ColumnOption) => void;
 }
 
+const rawTypeOptions: SelectableValue<string>[] = [
+  { label: 'Number', value: 'number' },
+  { label: 'String', value: 'string' },
+  { label: 'Date', value: 'date' },
+];
+
 export default class ColumnOptionComponent extends Component<Props> {
   private unitFormats = loadFormats();
 
@@ -49,6 +55,10 @@ export default class ColumnOptionComponent extends Component<Props> {
     this.changeWith('unit', item.value);
   }
 
+  private handleDataTypeChange = (item: SelectableValue<string>) => {
+    this.changeWith('rawDataType', item.value as 'string' | 'number' | 'date');
+  }
+
   public render() {
     const { option: option, isDefault, visible } = this.props;
 
@@ -75,8 +85,8 @@ export default class ColumnOptionComponent extends Component<Props> {
             <div className="gr-form-inline">
               <div className="gf-form">
                 <FormField
-                  label="Delimiter"
-                  placeholder="Enter delimiter"
+                  label="Decimals"
+                  placeholder="Enter number of decimals"
                   labelWidth={LABEL_WIDTH}
                   inputWidth={FORM_ELEMENT_WIDTH}
                   type="number"
@@ -105,21 +115,6 @@ export default class ColumnOptionComponent extends Component<Props> {
             <div className="gr-form-inline">
               <div className="gf-form">
                 <FormField
-                  label="Type"
-                  labelWidth={LABEL_WIDTH}
-                  inputEl={
-                    <StatsPicker
-                      allowMultiple={false}
-                      placeholder="Select unit"
-                      width={FORM_ELEMENT_WIDTH}
-                      onChange={this.handleStatChange}
-                      stats={option.type ? [option.type] : []}
-                    />
-                  }
-                />
-              </div>
-              <div className="gf-form">
-                <FormField
                   label="Unit format"
                   labelWidth={LABEL_WIDTH}
                   inputEl={
@@ -132,6 +127,39 @@ export default class ColumnOptionComponent extends Component<Props> {
                       onChange={this.handleUnitChange}
                       value={option.unit ? { value: option.unit, label: option.unit } : undefined}
                       options={this.unitFormats}
+                    />
+                  }
+                />
+              </div>
+              <div className="gf-form">
+                <FormField
+                  label="Data Type"
+                  labelWidth={LABEL_WIDTH}
+                  inputEl={
+                    <Select<string>
+                      placeholder="Select raw data type"
+                      isMulti={false}
+                      width={FORM_ELEMENT_WIDTH}
+                      onChange={this.handleDataTypeChange}
+                      value={option.rawDataType ? rawTypeOptions.find(({ value }) => value === option.rawDataType) : undefined}
+                      options={rawTypeOptions}
+                    />
+                  }
+                />
+              </div>
+            </div>
+            <div className="gr-form-inline">
+              <div className="gf-form">
+                <FormField
+                  label="Stat Type"
+                  labelWidth={LABEL_WIDTH}
+                  inputEl={
+                    <StatsPicker
+                      allowMultiple={false}
+                      placeholder="Select unit"
+                      width={FORM_ELEMENT_WIDTH}
+                      onChange={this.handleStatChange}
+                      stats={option.type ? [option.type] : []}
                     />
                   }
                 />

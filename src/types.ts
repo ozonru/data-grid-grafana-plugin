@@ -6,6 +6,7 @@ export interface ColumnOption {
   delimiter?: number;
   filterable?: boolean;
   type: ReducerID;
+  rawDataType?: 'string' | 'number' | 'date';
 }
 
 export interface Options {

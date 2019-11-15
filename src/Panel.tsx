@@ -3,7 +3,6 @@ import { getTheme, GrafanaThemeType, PanelProps, Table, Alert } from '@grafana/u
 import { Options } from 'types';
 import getDerivedDataFrame from './getDerivedDataFrame';
 
-const COLUMN_STYLES = [];
 const INTERPOLATE_FUNCTION = value => value;
 
 interface Props extends PanelProps<Options> {}
@@ -17,15 +16,16 @@ export default class Panel extends PureComponent<Props> {
     }
 
     const { series } = this.props.data;
+    const { frame, columns } = getDerivedDataFrame(series, options);
 
     return (
       <Table
         theme={getTheme(GrafanaThemeType.Dark)}
         width={width}
         height={height}
-        styles={COLUMN_STYLES}
+        styles={columns}
         replaceVariables={INTERPOLATE_FUNCTION}
-        data={getDerivedDataFrame(series, options)}
+        data={frame}
         showHeader={options.showHeaders}
       />
     );
