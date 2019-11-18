@@ -104,11 +104,3 @@ export function loadColors(): string[] {
 
   return colors;
 }
-
-export function getColorsOptions(): { value: string; label: string }[] {
-  if (colors.length === 0) {
-    loadColors();
-  }
-
-  return colors.map(value => ({ value, label: value }));
-}

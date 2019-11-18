@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { ColumnOption, RangeMap, ValueMap } from 'types';
-import { FormField, Select, StatsPicker, Switch, PanelOptionsGroup } from '@grafana/ui';
+import { FormField, PanelOptionsGroup, Select, StatsPicker, Switch } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import EditorTab from './EditorTab';
-import { ColumnSetting, loadFormats } from '../utils';
+import { ColumnSetting, loadColors, loadFormats } from '../utils';
 import { ReducerID, SelectableValue } from '@grafana/data';
-import ThresholdsForm from './ThresholdsForm';
 import InputOnBlur from './InputOnBlur';
 
 interface Props {
@@ -38,6 +37,10 @@ function isRangeMap(mapper: RangeOrValueMap): mapper is RangeMap {
   return false;
 }
 
+function mapArrayToString(values: number[] | string[]) {
+  return values.join(', ');
+}
+
 function mapValueMappers(mapper: RangeOrValueMap): string {
   if (isRangeMap(mapper)) {
     return mapper.map(valueMap => `${valueMap[0]}-${valueMap[1]}=${valueMap[2]}`).join(', ');
@@ -48,6 +51,7 @@ function mapValueMappers(mapper: RangeOrValueMap): string {
 
 export default class ColumnOptionComponent extends Component<Props> {
   private unitFormats = loadFormats();
+  private colors = loadColors();
 
   private changeWith: <T extends keyof ColumnOption>(key: T, value: ColumnOption[T]) => void = (key, value) => {
     const option = ColumnSetting.copyWith(this.props.option);
@@ -87,14 +91,6 @@ export default class ColumnOptionComponent extends Component<Props> {
 
   private handleColorModeChange = (item: SelectableValue<ColorModeType>) => {
     this.changeWith('colorMode', item.value);
-  };
-
-  private handleThresholdsChange = ({ thresholds, colors }) => {
-    const option = ColumnSetting.copyWith(this.props.option);
-
-    option.thresholds = thresholds;
-    option.colors = colors;
-    this.props.onChange(option);
   };
 
   private handleValueMapChange = (value: string) => {
@@ -148,6 +144,50 @@ export default class ColumnOptionComponent extends Component<Props> {
       option.valueMap = result;
     }
 
+    this.props.onChange(option);
+  };
+
+  private handleThresholdChange = (value: string) => {
+    const splitted = value.split(',');
+    const thresholds = new Set<number>();
+
+    for (let i = 0; i < splitted.length; i++) {
+      let num = parseFloat(splitted[i].trim());
+
+      if (Number.isNaN(num)) {
+        continue;
+      }
+
+      thresholds.add(num);
+    }
+
+    const option = ColumnSetting.copyWith(this.props.option);
+
+    option.thresholds = Array.from(thresholds).sort();
+    this.props.onChange(option);
+  };
+
+  private handleColorsChange = (value: string) => {
+    const splitted = value.split(',');
+    const colors = new Set<string>();
+
+    for (let i = 0; i < splitted.length; i++) {
+      const str = splitted[i].trim();
+
+      if (str[0] === '#') {
+        colors.add(str);
+      } else {
+        const existsInTheme = this.colors.indexOf(str);
+
+        if (existsInTheme === -1) continue;
+
+        colors.add(str);
+      }
+    }
+
+    const option = ColumnSetting.copyWith(this.props.option);
+
+    option.colors = Array.from(colors);
     this.props.onChange(option);
   };
 
@@ -231,6 +271,30 @@ export default class ColumnOptionComponent extends Component<Props> {
           <PanelOptionsGroup title="Appearance: Colors">
             <div className="section">
               <div className="gf-form">
+                <InputOnBlur<string[]>
+                  label="Colors"
+                  placeholder="#0f0, semi-dark-orange, red"
+                  labelWidth={LABEL_WIDTH}
+                  inputWidth={FORM_ELEMENT_WIDTH}
+                  onChange={this.handleColorsChange}
+                  value={option.colors || EMPTY_ARRAY}
+                  valueToString={mapArrayToString}
+                />
+              </div>
+              <div className="gf-form">
+                <InputOnBlur<number[]>
+                  label="Thresholds"
+                  placeholder="50, 80, 120"
+                  labelWidth={LABEL_WIDTH}
+                  inputWidth={FORM_ELEMENT_WIDTH}
+                  onChange={this.handleThresholdChange}
+                  value={option.thresholds || EMPTY_ARRAY}
+                  valueToString={mapArrayToString}
+                />
+              </div>
+            </div>
+            <div className="section">
+              <div className="gf-form">
                 <FormField
                   label="Color mode"
                   labelWidth={LABEL_WIDTH}
@@ -246,7 +310,6 @@ export default class ColumnOptionComponent extends Component<Props> {
                     />
                   }
                 />
-                <ThresholdsForm thresholds={option.thresholds} colors={option.colors} onChange={this.handleThresholdsChange} />
               </div>
             </div>
           </PanelOptionsGroup>
