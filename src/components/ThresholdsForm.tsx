@@ -44,7 +44,7 @@ export default class ThresholdsForm extends PureComponent<Props> {
       colors: this.props.colors || [],
       thresholds: Array.from(thresholds).sort(),
     });
-  }
+  };
 
   private handleColorsChange = (item: SelectableValue<string>[]) => {
     const colors = item.map(({ value }) => value as string);
@@ -53,7 +53,7 @@ export default class ThresholdsForm extends PureComponent<Props> {
       colors,
       thresholds: this.props.thresholds || [],
     });
-  }
+  };
 
   public render() {
     const { thresholds = [], colors = [] } = this.props;

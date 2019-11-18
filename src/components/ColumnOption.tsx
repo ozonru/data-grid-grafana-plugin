@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ColumnOption, RangeMap, ValueMap } from 'types';
-import { FormField, Select, StatsPicker, Switch } from '@grafana/ui';
+import { FormField, Select, StatsPicker, Switch, PanelOptionsGroup } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import EditorTab from './EditorTab';
 import { ColumnSetting, loadFormats } from '../utils';
@@ -30,10 +30,6 @@ const rawTypeOptions: SelectableValue<RawDataType>[] = [
 
 const colorModeOptions: SelectableValue<ColorModeType>[] = [{ label: 'Value', value: 'value' }, { label: 'Cell', value: 'cell' }];
 
-const splitStyle = {
-  marginRight: '20px',
-};
-
 function isRangeMap(mapper: RangeOrValueMap): mapper is RangeMap {
   if (mapper[0]) {
     return mapper[0].length === 3;
@@ -58,11 +54,11 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option[key] = value;
     this.props.onChange(option);
-  }
+  };
 
   private handleStatChange = (stat: string | string[]) => {
     this.changeWith('type', ([] as ReducerID[]).concat(stat as ReducerID)[0]);
-  }
+  };
 
   private handleDelimiterChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
@@ -74,24 +70,24 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.changeWith('delimiter', delimiter);
-  }
+  };
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value || 'none');
-  }
+  };
 
   private handleAddUnitFlagChange = (e?: React.SyntheticEvent) => {
     // @ts-ignore
     this.changeWith('addUnitToTitle', e ? e.target.checked : false);
-  }
+  };
 
   private handleDataTypeChange = (item: SelectableValue<RawDataType>) => {
     this.changeWith('rawDataType', item.value);
-  }
+  };
 
   private handleColorModeChange = (item: SelectableValue<ColorModeType>) => {
     this.changeWith('colorMode', item.value);
-  }
+  };
 
   private handleThresholdsChange = ({ thresholds, colors }) => {
     const option = ColumnSetting.copyWith(this.props.option);
@@ -99,7 +95,7 @@ export default class ColumnOptionComponent extends Component<Props> {
     option.thresholds = thresholds;
     option.colors = colors;
     this.props.onChange(option);
-  }
+  };
 
   private handleValueMapChange = (value: string) => {
     let rangeMap: undefined | boolean = undefined;
@@ -153,21 +149,33 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.props.onChange(option);
-  }
+  };
 
   public render() {
     const { option: option, visible } = this.props;
 
     return (
       <EditorTab visible={visible}>
-        <div className="editor-row">
-          <div className="section gf-form-group">
-            <div className="gr-form-inline">
+        <div>
+          <PanelOptionsGroup title="Appearance: General">
+            <div className="section">
               <div className="gf-form">
-                <h6 className="text-header">Appearance: General</h6>
+                <FormField
+                  label="Data Type"
+                  labelWidth={LABEL_WIDTH}
+                  inputEl={
+                    <Select<RawDataType>
+                      placeholder="Select raw data type"
+                      isClearable={false}
+                      isMulti={false}
+                      width={FORM_ELEMENT_WIDTH}
+                      onChange={this.handleDataTypeChange}
+                      value={option.rawDataType ? rawTypeOptions.find(({ value }) => value === option.rawDataType) : undefined}
+                      options={rawTypeOptions}
+                    />
+                  }
+                />
               </div>
-            </div>
-            <div className="gr-form-inline">
               <div className="gf-form">
                 <FormField
                   label="Unit format"
@@ -185,7 +193,29 @@ export default class ColumnOptionComponent extends Component<Props> {
                     />
                   }
                 />
-                <span style={splitStyle} />
+              </div>
+              <div className="gf-form">
+                <Switch
+                  label="Add Unit to Title"
+                  labelClass={`width-${LABEL_WIDTH}`}
+                  onChange={this.handleAddUnitFlagChange}
+                  checked={option.addUnitToTitle}
+                />
+              </div>
+            </div>
+            <div className="section">
+              <div className="gf-form">
+                <InputOnBlur<ValueMap | RangeMap>
+                  label="Value Map"
+                  placeholder="1=On,0=Off or 0-1=Fine,1-10=A lot"
+                  labelWidth={LABEL_WIDTH}
+                  inputWidth={FORM_ELEMENT_WIDTH}
+                  onChange={this.handleValueMapChange}
+                  value={option.valueMap || option.rangeMap || EMPTY_ARRAY}
+                  valueToString={mapValueMappers}
+                />
+              </div>
+              <div className="gf-form">
                 <FormField
                   label="Decimals"
                   placeholder="Enter number of decimals"
@@ -197,53 +227,9 @@ export default class ColumnOptionComponent extends Component<Props> {
                 />
               </div>
             </div>
-            <div className="gr-form-inline">
-              <div className="gf-form">
-                <Switch
-                  label="Add Unit to Title"
-                  className={`width-${LABEL_WIDTH + FORM_ELEMENT_WIDTH}`}
-                  labelClass={`width-${LABEL_WIDTH}`}
-                  onChange={this.handleAddUnitFlagChange}
-                  checked={option.addUnitToTitle}
-                />
-                <span style={splitStyle} />
-                <FormField
-                  label="Data Type"
-                  labelWidth={LABEL_WIDTH}
-                  inputEl={
-                    <Select<RawDataType>
-                      placeholder="Select raw data type"
-                      isClearable={false}
-                      isMulti={false}
-                      width={FORM_ELEMENT_WIDTH}
-                      onChange={this.handleDataTypeChange}
-                      value={option.rawDataType ? rawTypeOptions.find(({ value }) => value === option.rawDataType) : undefined}
-                      options={rawTypeOptions}
-                    />
-                  }
-                />
-                <span style={splitStyle} />
-                <InputOnBlur<ValueMap | RangeMap>
-                  label="Value Map"
-                  placeholder="1=On,0=Off or 0-1=Fine,1-10=A lot"
-                  labelWidth={LABEL_WIDTH}
-                  inputWidth={FORM_ELEMENT_WIDTH}
-                  onChange={this.handleValueMapChange}
-                  value={option.valueMap || option.rangeMap || EMPTY_ARRAY}
-                  valueToString={mapValueMappers}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="editor-row">
-          <div className="section gf-form-group">
-            <div className="gr-form-inline">
-              <div className="gf-form">
-                <h6 className="text-header">Appearance: Colors</h6>
-              </div>
-            </div>
-            <div className="gr-form-inline">
+          </PanelOptionsGroup>
+          <PanelOptionsGroup title="Appearance: Colors">
+            <div className="section">
               <div className="gf-form">
                 <FormField
                   label="Color mode"
@@ -260,19 +246,12 @@ export default class ColumnOptionComponent extends Component<Props> {
                     />
                   }
                 />
+                <ThresholdsForm thresholds={option.thresholds} colors={option.colors} onChange={this.handleThresholdsChange} />
               </div>
             </div>
-            <ThresholdsForm thresholds={option.thresholds} colors={option.colors} onChange={this.handleThresholdsChange} />
-          </div>
-        </div>
-        <div className="editor-row">
-          <div className="section gf-form-group">
-            <div className="gr-form-inline">
-              <div className="gf-form">
-                <h6 className="text-header">Stat</h6>
-              </div>
-            </div>
-            <div className="gr-form-inline">
+          </PanelOptionsGroup>
+          <PanelOptionsGroup title="Stat">
+            <div className="section">
               <div className="gf-form">
                 <FormField
                   label="Stat Type"
@@ -289,7 +268,7 @@ export default class ColumnOptionComponent extends Component<Props> {
                 />
               </div>
             </div>
-          </div>
+          </PanelOptionsGroup>
         </div>
       </EditorTab>
     );
