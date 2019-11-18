@@ -1,4 +1,5 @@
-import React, { PureComponent, ChangeEventHandler } from 'react';
+import React, { PureComponent } from 'react';
+import InputOnBlur from './InputOnBlur';
 import { FormField, Select } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import { SelectableValue } from '@grafana/data';
@@ -12,6 +13,10 @@ interface Props {
   onChange: (data: { thresholds: number[]; colors: string[] }) => void;
 }
 
+function mapThresholdsToString(values: number[]) {
+  return values.join(', ');
+}
+
 export default class ThresholdsForm extends PureComponent<Props> {
   private colors!: ColorsOptions;
 
@@ -21,24 +26,23 @@ export default class ThresholdsForm extends PureComponent<Props> {
     this.colors = getColorsOptions();
   }
 
-  private handleThresholdChange: ChangeEventHandler = (e: React.SyntheticEvent) => {
-    // @ts-ignore
-    const value = e.target.value;
-
+  private handleThresholdChange = (value: string) => {
     const splitted = value.split(',');
-    const thresholds = [] as number[];
+    const thresholds = new Set<number>();
 
     for (let i = 0; i < splitted.length; i++) {
-      let num = parseInt(splitted[i].trim(), 10);
+      let num = parseFloat(splitted[i].trim());
 
-      if (Number.isNaN(num)) { num = 0; }
+      if (Number.isNaN(num)) {
+        continue;
+      }
 
-      thresholds.push(num);
+      thresholds.add(num);
     }
 
     this.props.onChange({
       colors: this.props.colors || [],
-      thresholds,
+      thresholds: Array.from(thresholds).sort(),
     });
   }
 
@@ -71,21 +75,21 @@ export default class ThresholdsForm extends PureComponent<Props> {
                 width={FORM_ELEMENT_WIDTH}
                 // @ts-ignore
                 onChange={this.handleColorsChange}
-                value={colors.map(value => ({value, label: value}))}
+                value={colors.map(value => ({ value, label: value }))}
                 options={this.colors}
               />
             }
           />
         </div>
         <div className="gf-form">
-          <FormField
+          <InputOnBlur<number[]>
             label="Thresholds"
             placeholder="50, 80, 120"
             labelWidth={LABEL_WIDTH}
             inputWidth={FORM_ELEMENT_WIDTH}
-            type="text"
             onChange={this.handleThresholdChange}
-            value={thresholds.join(', ')}
+            value={thresholds}
+            valueToString={mapThresholdsToString}
           />
         </div>
       </div>
