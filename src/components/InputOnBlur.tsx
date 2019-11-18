@@ -42,7 +42,7 @@ export default class InputOnBlur<T> extends Component<Props<T>, State> {
       focus: true,
       value: this.state.value,
     });
-  };
+  }
 
   private handleBlur = () => {
     this.setState({
@@ -50,14 +50,14 @@ export default class InputOnBlur<T> extends Component<Props<T>, State> {
       value: this.state.value,
     });
     this.props.onChange(this.state.value);
-  };
+  }
 
   private handleChange = (e: React.SyntheticEvent) => {
     this.setState({
       // @ts-ignore
       value: e.target.value,
     });
-  };
+  }
 
   public render() {
     const { label, labelWidth, inputWidth, placeholder } = this.props;

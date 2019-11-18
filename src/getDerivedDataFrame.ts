@@ -40,7 +40,7 @@ function createField(frame: DataFrame, name: string, getColumnOption?: GetColumn
 function createColumnStyles(seriesColumns: string[], option: Options): ColumnStyle[] {
   const result = [] as ColumnStyle[];
   const defaultStyle: ColumnStyle = {
-    decimals: option.defaultColumnOption.delimiter,
+    decimals: option.defaultColumnOption.decimals,
     pattern: '',
     type: option.defaultColumnOption.rawDataType,
     unit: option.defaultColumnOption.unit,
@@ -55,10 +55,10 @@ function createColumnStyles(seriesColumns: string[], option: Options): ColumnSty
       continue;
     }
 
-    const { delimiter, unit, rawDataType } = option.options[i];
+    const { decimals, unit, rawDataType } = option.options[i];
 
     result.push({
-      decimals: delimiter,
+      decimals: decimals,
       pattern: column as string,
       type: rawDataType,
       unit,

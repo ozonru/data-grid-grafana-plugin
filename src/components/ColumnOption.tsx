@@ -58,40 +58,40 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option[key] = value;
     this.props.onChange(option);
-  };
+  }
 
   private handleStatChange = (stat: string | string[]) => {
     this.changeWith('type', ([] as ReducerID[]).concat(stat as ReducerID)[0]);
-  };
+  }
 
-  private handleDelimiterChange = (event: React.SyntheticEvent) => {
+  private handleDecimalsChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
-    const delimiter = Number(event.target.value);
+    const decimals = Number(event.target.value);
 
-    if (Number.isNaN(delimiter) || delimiter < 1) {
-      this.changeWith('delimiter', undefined);
+    if (Number.isNaN(decimals) || decimals < 1) {
+      this.changeWith('decimals', undefined);
       return;
     }
 
-    this.changeWith('delimiter', delimiter);
-  };
+    this.changeWith('decimals', decimals);
+  }
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value || 'none');
-  };
+  }
 
   private handleAddUnitFlagChange = (e?: React.SyntheticEvent) => {
     // @ts-ignore
     this.changeWith('addUnitToTitle', e ? e.target.checked : false);
-  };
+  }
 
   private handleDataTypeChange = (item: SelectableValue<RawDataType>) => {
     this.changeWith('rawDataType', item.value);
-  };
+  }
 
   private handleColorModeChange = (item: SelectableValue<ColorModeType>) => {
     this.changeWith('colorMode', item.value);
-  };
+  }
 
   private handleValueMapChange = (value: string) => {
     let rangeMap: undefined | boolean = undefined;
@@ -145,7 +145,7 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.props.onChange(option);
-  };
+  }
 
   private handleThresholdChange = (value: string) => {
     const splitted = value.split(',');
@@ -165,7 +165,7 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option.thresholds = Array.from(thresholds).sort();
     this.props.onChange(option);
-  };
+  }
 
   private handleColorsChange = (value: string) => {
     const splitted = value.split(',');
@@ -179,7 +179,7 @@ export default class ColumnOptionComponent extends Component<Props> {
       } else {
         const existsInTheme = this.colors.indexOf(str);
 
-        if (existsInTheme === -1) continue;
+        if (existsInTheme === -1) { continue; }
 
         colors.add(str);
       }
@@ -189,7 +189,7 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option.colors = Array.from(colors);
     this.props.onChange(option);
-  };
+  }
 
   public render() {
     const { option: option, visible } = this.props;
@@ -262,8 +262,8 @@ export default class ColumnOptionComponent extends Component<Props> {
                   labelWidth={LABEL_WIDTH}
                   inputWidth={FORM_ELEMENT_WIDTH}
                   type="number"
-                  onChange={this.handleDelimiterChange}
-                  value={option.delimiter}
+                  onChange={this.handleDecimalsChange}
+                  value={option.decimals}
                 />
               </div>
             </div>

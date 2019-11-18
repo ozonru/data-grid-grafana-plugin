@@ -6,7 +6,6 @@ export type RangeMap = [number, number, number | string][];
 export interface ColumnOption {
   addUnitToTitle: boolean;
   decimals?: number;
-  delimiter?: number;
   colorMode?: 'value' | 'cell';
   colors?: string[];
   column?: string;

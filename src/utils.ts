@@ -10,7 +10,7 @@ export class ColumnSetting implements ColumnOption {
     type?: ReducerID,
     unit?: string,
     addUnitToTitle?: boolean,
-    delimiter?: number,
+    decimals?: number,
     filterable?: boolean,
     rawDataType?: ColumnOption['rawDataType'],
     colorMode?: ColumnOption['colorMode'],
@@ -24,7 +24,7 @@ export class ColumnSetting implements ColumnOption {
       unit || option.unit,
       addUnitToTitle || option.addUnitToTitle,
       column || option.column,
-      delimiter || option.delimiter,
+      decimals || option.decimals,
       rawDataType || option.rawDataType,
       colorMode || option.colorMode,
       colorsOption || option.colors,
@@ -38,7 +38,7 @@ export class ColumnSetting implements ColumnOption {
   public column?;
   public unit;
   public addUnitToTitle;
-  public delimiter?;
+  public decimals?;
   public colorMode?;
   public rawDataType?;
   public thresholds?;
@@ -51,7 +51,7 @@ export class ColumnSetting implements ColumnOption {
     unit: string,
     addUnitToTitle: boolean,
     column?: string,
-    delimiter?: number,
+    decimals?: number,
     rawDataType?: ColumnOption['rawDataType'],
     colorMode?: ColumnOption['colorMode'],
     colorsOption?: string[],
@@ -63,7 +63,7 @@ export class ColumnSetting implements ColumnOption {
     this.column = column;
     this.unit = unit;
     this.addUnitToTitle = addUnitToTitle;
-    this.delimiter = delimiter;
+    this.decimals = decimals;
     this.rawDataType = rawDataType;
     this.colorMode = colorMode;
     this.colors = colorsOption;
