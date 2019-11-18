@@ -1,6 +1,7 @@
 import { ColumnOption, Options } from './types';
-import { ArrayVector, DataFrame, Field, FieldType, reduceField } from '@grafana/data';
+import { ArrayVector, DataFrame, Field, FieldType, MappingType, reduceField } from '@grafana/data';
 import { ColumnStyle } from '@grafana/ui/components/Table/TableCellBuilder';
+import { ColorDefinition, getColorByName, getColorForTheme, GrafanaThemeType } from '@grafana/ui';
 
 const EMPTY_RESULT = {
   columns: [],
@@ -37,46 +38,72 @@ function createField(frame: DataFrame, name: string, getColumnOption?: GetColumn
   return field;
 }
 
-function createColumnStyles(seriesColumns: string[], option: Options): ColumnStyle[] {
-  const result = [] as ColumnStyle[];
-  const defaultStyle: ColumnStyle = {
-    decimals: option.defaultColumnOption.decimals,
-    pattern: '',
-    type: option.defaultColumnOption.rawDataType,
-    unit: option.defaultColumnOption.unit,
-  };
-  const series = new Set(seriesColumns);
-
-  for (let i = 0; i < option.options.length; i++) {
-    const { column } = option.options[i];
-
-    // No data
-    if (!series.has(column as string)) {
-      continue;
-    }
-
-    const { decimals, unit, rawDataType } = option.options[i];
-
-    result.push({
-      decimals: decimals,
-      pattern: column as string,
-      type: rawDataType,
-      unit,
-    });
-
-    series.delete(column as string);
+function mapColors(color: string): string {
+  if (color[0] === '#') {
+    return color;
   }
 
-  const rest = Array.from(series);
+  return getColorForTheme(getColorByName(color) as ColorDefinition, GrafanaThemeType.Dark);
+}
 
-  for (let i = 0; i < rest.length; i++) {
-    result.push({
-      ...defaultStyle,
-      pattern: rest[i],
-    });
+function columnOptionToStyle({ decimals, rangeMap, valueMap, rawDataType, colorMode, colors, column, thresholds, unit }: ColumnOption): ColumnStyle {
+  const result: ColumnStyle = {
+    colorMode,
+    colors: colors && colors.length > 0 ? colors.map(mapColors) : undefined,
+    decimals,
+    pattern: column || '',
+    thresholds: thresholds && thresholds.length > 0 ? thresholds : undefined,
+    type: rawDataType,
+    unit: unit,
+  };
+
+  if (valueMap && valueMap.length > 0) {
+    result.mappingType = MappingType.ValueToText;
+    result.type = 'string';
+    result.valueMaps = valueMap.map(([value, to]) => ({ value, name: to.toString() }));
+  } else if (rangeMap && rangeMap.length > 0) {
+    result.mappingType = MappingType.RangeToText;
+    result.type = 'string';
+    result.valueMaps = rangeMap.map(([from, to, name]) => ({ from, to, name }));
   }
 
   return result;
+}
+
+function createColumnStylesHandler(option: Options) {
+  const styles = new Map<string, ColumnStyle>();
+  const defaultStyle: ColumnStyle = columnOptionToStyle(option.defaultColumnOption);
+
+  return {
+    getAll: () => Array.from(styles.values()),
+    getFor: (serie: string) => {
+      if (styles.has(serie)) {
+        return styles.get(serie);
+      }
+
+      for (let i = 0; i < option.options.length; i++) {
+        const { column } = option.options[i];
+
+        // No data
+        if (serie !== column) {
+          continue;
+        }
+
+        const resultStyle = columnOptionToStyle(option.options[i]);
+
+        styles.set(serie, resultStyle);
+        return resultStyle;
+      }
+
+      const result = {
+        ...defaultStyle,
+        pattern: serie,
+      };
+
+      styles.set(serie, result);
+      return result;
+    },
+  };
 }
 
 export default function getDerivedDataFrame(series: DataFrame[], options: Options): { frame: DataFrame; columns: ColumnStyle[] } {
@@ -92,7 +119,7 @@ export default function getDerivedDataFrame(series: DataFrame[], options: Option
 
   const indexCache: { [k: string]: number } = Object.create(null);
   const labelsSet = new Set<string>();
-  const columnsSet = new Set<string>();
+  const styles = createColumnStylesHandler(options);
   const frame: DataFrame = {
     fields: [],
     length: 0,
@@ -125,13 +152,14 @@ export default function getDerivedDataFrame(series: DataFrame[], options: Option
       reducers: [option.type],
     };
     const mapResult = data => data[option.type];
+
     fieldInResultedFrame.values.add(mapResult(reduceField(reducerData)));
     labelsSet.add(labels[groupByLabel]);
-    columnsSet.add(name);
+    styles.getFor(name);
   }
 
   labelColumn.values = new ArrayVector<string>(Array.from(labelsSet));
   frame.length = labelColumn.values.length;
 
-  return frame.fields.length === 0 ? EMPTY_RESULT : { columns: createColumnStyles(Array.from(columnsSet), options), frame };
+  return frame.fields.length === 0 ? EMPTY_RESULT : { columns: styles.getAll(), frame };
 }
