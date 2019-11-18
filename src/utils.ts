@@ -16,6 +16,7 @@ export class ColumnSetting implements ColumnOption {
     colorMode?: ColumnOption['colorMode'],
     colorsOption?: string[],
     thresholds?: number[],
+    noValue?: string,
     valueMap?: ValueMap,
     rangeMap?: RangeMap
   ): ColumnOption {
@@ -29,6 +30,7 @@ export class ColumnSetting implements ColumnOption {
       colorMode || option.colorMode,
       colorsOption || option.colors,
       thresholds || option.thresholds,
+      noValue || option.noValue,
       valueMap || option.valueMap,
       rangeMap || option.rangeMap
     );
@@ -45,6 +47,7 @@ export class ColumnSetting implements ColumnOption {
   public rangeMap?;
   public valueMap?;
   public colors?;
+  public noValue;
 
   constructor(
     type: ReducerID,
@@ -56,6 +59,7 @@ export class ColumnSetting implements ColumnOption {
     colorMode?: ColumnOption['colorMode'],
     colorsOption?: string[],
     thresholds?: number[],
+    noValue?: string,
     valueMap?: ValueMap,
     rangeMap?: RangeMap
   ) {
@@ -70,6 +74,7 @@ export class ColumnSetting implements ColumnOption {
     this.thresholds = thresholds;
     this.valueMap = valueMap;
     this.rangeMap = rangeMap;
+    this.noValue = noValue;
   }
 }
 

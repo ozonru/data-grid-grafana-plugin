@@ -14,6 +14,7 @@ export interface ColumnOption {
   rangeMap?: RangeMap;
   rawDataType?: 'string' | 'number' | 'date';
   valueMap?: ValueMap;
+  noValue?: string;
   unit: string;
 }
 
