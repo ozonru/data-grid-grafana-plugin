@@ -65,7 +65,6 @@ export default class ThresholdsForm extends PureComponent<Props> {
             label="Colors"
             labelWidth={LABEL_WIDTH}
             inputEl={
-              // @ts-ignore
               <Select<string>
                 placeholder="Select or type: red, #00f"
                 isClearable

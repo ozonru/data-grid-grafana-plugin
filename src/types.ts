@@ -1,6 +1,10 @@
 import { ReducerID } from '@grafana/data';
 
+export type ValueMap = [number | string, number | string][];
+export type RangeMap = [number, number, number | string][];
+
 export interface ColumnOption {
+  addUnitToTitle: boolean;
   decimals?: number;
   delimiter?: number;
   colorMode?: 'value' | 'cell';
@@ -8,8 +12,10 @@ export interface ColumnOption {
   column?: string;
   thresholds?: number[];
   type: ReducerID;
+  rangeMap?: RangeMap;
   rawDataType?: 'string' | 'number' | 'date';
-  unit?: string;
+  valueMap?: ValueMap;
+  unit: string;
 }
 
 export interface Options {
