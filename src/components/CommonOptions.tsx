@@ -87,11 +87,6 @@ export default class CommonOptions extends Component<Props> {
       <EditorTab visible={visible}>
         <div className="editor-row">
           <div className="section gf-form-group">
-            <div className="gr-form-inline">
-              <div className="gf-form">
-                <h6 className="text-header">Common Options</h6>
-              </div>
-            </div>
             <div className="gf-form">
               <div className="gr-form-inline">
                 <div className="gf-form">
