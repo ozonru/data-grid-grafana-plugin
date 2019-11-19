@@ -47,7 +47,7 @@ export class ColumnSetting implements ColumnOption {
   public rangeMap?;
   public valueMap?;
   public colors?;
-  public noValue;
+  public noValue?;
 
   constructor(
     type: ReducerID,
