@@ -74,6 +74,30 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
     this.props.onOptionsChange({ ...this.props.options, options });
   };
 
+  private handleOptionDelete = () => {
+    const i = this.state.activeTab;
+    const options = this.props.options.options.slice();
+
+    options.splice(i, 1);
+    this.props.onOptionsChange({ ...this.props.options, options });
+    this.setState({
+      ...this.state,
+      activeTab: options.length === 0 ? -1 : i - 1,
+    });
+  };
+
+  private handleOptionCopy = (newCol: SelectableValue<string>) => {
+    const i = this.state.activeTab;
+    const options = this.props.options.options.slice();
+
+    options.push(ColumnSetting.copyWith(options[i], newCol.value));
+    this.props.onOptionsChange({ ...this.props.options, options });
+    this.setState({
+      ...this.state,
+      activeTab: options.length - 1,
+    });
+  };
+
   private handleOptionChange = (options: Omit<Options, 'options'>) => {
     this.props.onOptionsChange({
       ...this.props.options,
@@ -155,6 +179,9 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
           option={columnOption || options.defaultColumnOption}
           isDefault={isDefaultColumn}
           onChange={this.handleColumnChange}
+          onCopy={this.handleOptionCopy}
+          onDelete={this.handleOptionDelete}
+          restColumns={restColumns}
         />
         <CommonOptions
           visible={!isColumnOptionActive}
