@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import {getTheme, GrafanaThemeType, PanelProps, Alert, ThemeContext, GrafanaTheme} from '@grafana/ui';
+import {PanelProps, Alert, ThemeContext, GrafanaTheme} from '@grafana/ui';
 import Table from './components/Table';
 import { Options } from 'types';
 import getDerivedDataFrame from './getDerivedDataFrame';
@@ -28,7 +28,7 @@ export default class Panel extends PureComponent<Props, undefined, GrafanaTheme>
         {
           theme => (
             <Table
-              theme={getTheme(GrafanaThemeType.Dark)}
+              theme={theme}
               width={width}
               height={height}
               styles={columns}
