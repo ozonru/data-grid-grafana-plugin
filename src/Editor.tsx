@@ -119,11 +119,19 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
       <div className="edit-tab-with-sidemenu" style={asideStyle}>
         <aside className="edit-sidemenu-aside">
           <ul className="edit-sidemenu">
-            <li key={COLUMNS_INDEX}>
-              <a href="#">
+            <li key={COMMON_OPTIONS_INDEX} className={cs({ active: this.isActive(COMMON_OPTIONS_INDEX) })}>
+              <a onClick={this.toOptions}>
                 <h5 className="text-warning">
                   <i className="fa fa-gear" style={optionStyle} />
-                  &nbsp; Column Options
+                  &nbsp; Common
+                </h5>
+              </a>
+            </li>
+            <li key={COLUMNS_INDEX}>
+              <a onClick={this.toDefaultColumnOption}>
+                <h5 className="text-warning">
+                  <i className="fa fa-gear" style={optionStyle} />
+                  &nbsp; Columns
                 </h5>
               </a>
             </li>
@@ -139,14 +147,6 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
             </li>
             <li key={ADD_COLUMN_OPTION_INDEX} style={addColumnStyle}>
               <Select isSearchable={false} isClearable={false} options={restColumns} onChange={this.addColumn} value={SELECT_VALUE} />
-            </li>
-            <li key={COMMON_OPTIONS_INDEX} className={cs({ active: this.isActive(COMMON_OPTIONS_INDEX) })}>
-              <a onClick={this.toOptions}>
-                <h5 className="text-warning">
-                  <i className="fa fa-gear" style={optionStyle} />
-                  &nbsp; Common Options
-                </h5>
-              </a>
             </li>
           </ul>
         </aside>
