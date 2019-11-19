@@ -3,7 +3,7 @@ import _ from 'lodash';
 import React, { ReactElement } from 'react';
 import { GridCellProps } from 'react-virtualized';
 import { ValueFormatter, getValueFormat, getColorFromHexRgbOrName, GrafanaTheme } from '@grafana/ui';
-import { Field } from '@grafana/data';
+import { Field, RangeMap, ValueMap } from '@grafana/data';
 import { ColumnStyle } from '@grafana/ui/components/Table/TableCellBuilder';
 
 type ValueMapper = (value: any) => any;
@@ -28,6 +28,24 @@ export const simpleCellBuilder: TableCellBuilder = (cell: TableCellBuilderOption
     </div>
   );
 };
+
+function valueMapper(value: number | string, style: ColumnStyle) {
+  if (style.valueMaps && style.valueMaps.length > 0) {
+    for (let i = 0; i < style.valueMaps.length; i++) {
+      const mapper = style.valueMaps[i] as ValueMap;
+
+      if (mapper.value === value) return mapper.text;
+    }
+  } else if (style.rangeMaps && style.rangeMaps.length > 0) {
+    for (let i = 0; i < style.rangeMaps.length; i++) {
+      const mapper = style.rangeMaps[i] as RangeMap;
+
+      if (mapper.from >= value && mapper.to <= value) return mapper.text;
+    }
+  }
+
+  return value;
+}
 
 export function getCellBuilder(schema: Field['config'], style: ColumnStyle | null, theme: GrafanaTheme): TableCellBuilder {
   if (!style) {
@@ -93,7 +111,7 @@ class CellBuilderWithStyle {
       }
     }
     return getColorFromHexRgbOrName(_.first(colors), this.theme.type);
-  }
+  };
 
   public build = (cell: TableCellBuilderOptions) => {
     let { props } = cell;
@@ -131,6 +149,6 @@ class CellBuilderWithStyle {
       }
     }
 
-    return simpleCellBuilder({ value, props });
-  }
+    return simpleCellBuilder({ value: valueMapper(value, this.style), props });
+  };
 }

@@ -28,7 +28,7 @@ function createColumnHandler(options: Options): GetColumnOptions {
 function createField(frame: DataFrame, name: string, getColumnOption?: GetColumnOptions) {
   const option = getColumnOption ? getColumnOption(name) : undefined;
   const field: Field<string, ArrayVector<string>> = {
-    config: {},
+    config: option ? { noValue: option.noValue } : {},
     name,
     type: option ? FieldType.number : FieldType.string,
     values: new ArrayVector(),
@@ -60,11 +60,11 @@ function columnOptionToStyle({ decimals, rangeMap, valueMap, rawDataType, colorM
   if (valueMap && valueMap.length > 0) {
     result.mappingType = MappingType.ValueToText;
     result.type = 'string';
-    result.valueMaps = valueMap.map(([value, to]) => ({ value, name: to.toString() }));
+    result.valueMaps = valueMap.map(([value, to]) => ({ value, text: to.toString() }));
   } else if (rangeMap && rangeMap.length > 0) {
     result.mappingType = MappingType.RangeToText;
     result.type = 'string';
-    result.valueMaps = rangeMap.map(([from, to, name]) => ({ from, to, name }));
+    result.valueMaps = rangeMap.map(([from, to, text]) => ({ from, to, text }));
   }
 
   return result;

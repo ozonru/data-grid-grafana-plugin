@@ -58,11 +58,11 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option[key] = value;
     this.props.onChange(option);
-  }
+  };
 
   private handleStatChange = (stat: string | string[]) => {
     this.changeWith('type', ([] as ReducerID[]).concat(stat as ReducerID)[0]);
-  }
+  };
 
   private handleDecimalsChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
@@ -74,24 +74,24 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.changeWith('decimals', decimals);
-  }
+  };
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value || 'none');
-  }
+  };
 
   private handleAddUnitFlagChange = (e?: React.SyntheticEvent) => {
     // @ts-ignore
     this.changeWith('addUnitToTitle', e ? e.target.checked : false);
-  }
+  };
 
   private handleDataTypeChange = (item: SelectableValue<RawDataType>) => {
     this.changeWith('rawDataType', item.value);
-  }
+  };
 
   private handleColorModeChange = (item: SelectableValue<ColorModeType>) => {
     this.changeWith('colorMode', item.value);
-  }
+  };
 
   private handleValueMapChange = (value: string) => {
     let rangeMap: undefined | boolean = undefined;
@@ -150,7 +150,7 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.props.onChange(option);
-  }
+  };
 
   private handleThresholdChange = (value: string) => {
     const splitted = value.split(',');
@@ -170,7 +170,7 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option.thresholds = Array.from(thresholds).sort();
     this.props.onChange(option);
-  }
+  };
 
   private handleColorsChange = (value: string) => {
     const splitted = value.split(',');
@@ -196,7 +196,7 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option.colors = Array.from(colors);
     this.props.onChange(option);
-  }
+  };
 
   public render() {
     const { option: option, visible } = this.props;

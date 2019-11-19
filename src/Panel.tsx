@@ -22,7 +22,7 @@ export default class Panel extends PureComponent<Props> {
 
     const { series } = this.props.data;
     const { frame, columns } = getDerivedDataFrame(series, options);
-
+    frame.length++;
     return (
       <ThemeContext.Consumer>
         {theme => <Table theme={theme} width={width} height={height} styles={columns} data={frame} showHeader={options.showHeaders} />}
