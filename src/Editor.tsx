@@ -72,26 +72,26 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
 
     options[this.state.activeTab] = newOption;
     this.props.onOptionsChange({ ...this.props.options, options });
-  }
+  };
 
   private handleOptionChange = (options: Omit<Options, 'options'>) => {
     this.props.onOptionsChange({
       ...this.props.options,
       ...options,
     });
-  }
+  };
 
   private handleChangeTab = (i: number) => {
     this.setState({ activeTab: i });
-  }
+  };
 
   private toOptions = () => {
     this.handleChangeTab(COMMON_OPTIONS_INDEX);
-  }
+  };
 
   private toDefaultColumnOption = () => {
     this.handleChangeTab(DEFAULT_COLUMN_OPTIONS);
-  }
+  };
 
   private addColumn = (selected: SelectableValue<string>) => {
     const i = this.props.options.options.length;
@@ -101,7 +101,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
       ...this.props.options,
       options: [...this.props.options.options, createColumnOption(selected.value as string, this.props.options.defaultColumnOption)],
     });
-  }
+  };
 
   private isActive(state: number) {
     return this.state.activeTab === state;
@@ -113,6 +113,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
     const isDefaultColumn = this.state.activeTab === DEFAULT_COLUMN_OPTIONS;
     const columnOption = options.options[this.state.activeTab];
     const { labels, columns } = Editor.getColumnsAndLabels(this.props.data); // TODO add memoize
+    const restColumns = columns.filter(({ value }) => !options.options.find(({ column: name }) => name === value));
 
     return (
       <div className="edit-tab-with-sidemenu" style={asideStyle}>
@@ -137,7 +138,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
               </a>
             </li>
             <li key={ADD_COLUMN_OPTION_INDEX} style={addColumnStyle}>
-              <Select isSearchable={false} isClearable={false} options={columns} onChange={this.addColumn} value={SELECT_VALUE} />
+              <Select isSearchable={false} isClearable={false} options={restColumns} onChange={this.addColumn} value={SELECT_VALUE} />
             </li>
             <li key={COMMON_OPTIONS_INDEX} className={cs({ active: this.isActive(COMMON_OPTIONS_INDEX) })}>
               <a onClick={this.toOptions}>
