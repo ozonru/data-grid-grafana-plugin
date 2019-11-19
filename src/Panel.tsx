@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
-import { getTheme, GrafanaThemeType, PanelProps, Table, Alert } from '@grafana/ui';
+import {getTheme, GrafanaThemeType, PanelProps, Alert, ThemeContext, GrafanaTheme} from '@grafana/ui';
+import Table from './components/Table';
 import { Options } from 'types';
 import getDerivedDataFrame from './getDerivedDataFrame';
 
-const INTERPOLATE_FUNCTION = value => value;
 const NO_GROUPBY_LABEL = `Assign valid label to "Group by label" setting`;
 
 interface Props extends PanelProps<Options> {}
 
-export default class Panel extends PureComponent<Props> {
+export default class Panel extends PureComponent<Props, undefined, GrafanaTheme> {
   public componentDidCatch(error, info) {
     console.error(error);
   }
@@ -24,15 +24,20 @@ export default class Panel extends PureComponent<Props> {
     const { frame, columns } = getDerivedDataFrame(series, options);
 
     return (
-      <Table
-        theme={getTheme(GrafanaThemeType.Dark)}
-        width={width}
-        height={height}
-        styles={columns}
-        replaceVariables={INTERPOLATE_FUNCTION}
-        data={frame}
-        showHeader={options.showHeaders}
-      />
+      <ThemeContext.Consumer>
+        {
+          theme => (
+            <Table
+              theme={getTheme(GrafanaThemeType.Dark)}
+              width={width}
+              height={height}
+              styles={columns}
+              data={frame}
+              showHeader={options.showHeaders}
+            />
+          )
+        }
+      </ThemeContext.Consumer>
     );
   }
 }
