@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react';
 import { GridCellProps } from 'react-virtualized';
 import { ValueFormatter, getValueFormat, getColorFromHexRgbOrName, GrafanaTheme } from '@grafana/ui';
 import { Field } from '@grafana/data';
-import {ColumnStyle} from '@grafana/ui/components/Table/TableCellBuilder';
+import { ColumnStyle } from '@grafana/ui/components/Table/TableCellBuilder';
 
 type ValueMapper = (value: any) => any;
 export interface TableCellBuilderOptions {
@@ -23,9 +23,9 @@ export const simpleCellBuilder: TableCellBuilder = (cell: TableCellBuilderOption
   const { style } = props;
 
   return (
-      <div style={style} className={'gf-table-cell ' + className}>
+    <div style={style} className={'gf-table-cell ' + className}>
       {value}
-      </div>
+    </div>
   );
 };
 
@@ -42,13 +42,13 @@ export function getCellBuilder(schema: Field['config'], style: ColumnStyle | nul
         }
 
         if (v === null || v === undefined) {
-          return schema.noValue || EMPTY_VALUE
+          return schema.noValue || EMPTY_VALUE;
         }
         return v;
       },
       style,
       theme,
-      schema,
+      schema
     ).build;
   }
 
@@ -81,7 +81,7 @@ class CellBuilderWithStyle {
     private fmt?: ValueFormatter
   ) {}
 
-  getColorForValue = (value: any): string | null => {
+  public getColorForValue = (value: any): string | null => {
     const { thresholds, colors } = this.style;
     if (!thresholds || !colors) {
       return null;
@@ -93,9 +93,9 @@ class CellBuilderWithStyle {
       }
     }
     return getColorFromHexRgbOrName(_.first(colors), this.theme.type);
-  };
+  }
 
-  build = (cell: TableCellBuilderOptions) => {
+  public build = (cell: TableCellBuilderOptions) => {
     let { props } = cell;
     let value = this.mapper(cell.value);
 
@@ -132,5 +132,5 @@ class CellBuilderWithStyle {
     }
 
     return simpleCellBuilder({ value, props });
-  };
+  }
 }
