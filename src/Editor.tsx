@@ -72,26 +72,26 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
 
     options[this.state.activeTab] = newOption;
     this.props.onOptionsChange({ ...this.props.options, options });
-  }
+  };
 
   private handleOptionChange = (options: Omit<Options, 'options'>) => {
     this.props.onOptionsChange({
       ...this.props.options,
       ...options,
     });
-  }
+  };
 
   private handleChangeTab = (i: number) => {
     this.setState({ activeTab: i });
-  }
+  };
 
   private toOptions = () => {
     this.handleChangeTab(COMMON_OPTIONS_INDEX);
-  }
+  };
 
   private toDefaultColumnOption = () => {
     this.handleChangeTab(DEFAULT_COLUMN_OPTIONS);
-  }
+  };
 
   private addColumn = (selected: SelectableValue<string>) => {
     const i = this.props.options.options.length;
@@ -101,7 +101,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
       ...this.props.options,
       options: [...this.props.options.options, createColumnOption(selected.value as string, this.props.options.defaultColumnOption)],
     });
-  }
+  };
 
   private isActive(state: number) {
     return this.state.activeTab === state;

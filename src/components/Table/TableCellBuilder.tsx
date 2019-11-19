@@ -34,13 +34,17 @@ function valueMapper(value: number | string, style: ColumnStyle) {
     for (let i = 0; i < style.valueMaps.length; i++) {
       const mapper = style.valueMaps[i] as ValueMap;
 
-      if (mapper.value === value) return mapper.text;
+      if (mapper.value === value) {
+        return mapper.text;
+      }
     }
   } else if (style.rangeMaps && style.rangeMaps.length > 0) {
     for (let i = 0; i < style.rangeMaps.length; i++) {
       const mapper = style.rangeMaps[i] as RangeMap;
 
-      if (mapper.from >= value && mapper.to <= value) return mapper.text;
+      if (mapper.from >= value && mapper.to <= value) {
+        return mapper.text;
+      }
     }
   }
 
