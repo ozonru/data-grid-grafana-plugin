@@ -24,7 +24,6 @@ export class ColumnSetting implements ColumnOption {
     return new ColumnSetting(
       type || option.type,
       unit || option.unit,
-      addUnitToTitle || option.addUnitToTitle,
       column || option.column,
       decimals || option.decimals,
       rawDataType || option.rawDataType,
@@ -41,7 +40,6 @@ export class ColumnSetting implements ColumnOption {
   constructor(
     public type: ReducerID,
     public unit: string,
-    public addUnitToTitle: boolean,
     public column?: string,
     public decimals?: number,
     public rawDataType?: ColumnOption['rawDataType'],

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ColumnOption, RangeMap, ValueMap } from 'types';
-import { Button, ButtonSelect, FormField, PanelOptionsGroup, Select, StatsPicker, Switch } from '@grafana/ui';
+import { Button, ButtonSelect, FormField, PanelOptionsGroup, Select, StatsPicker } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import EditorTab from './EditorTab';
 import { ColumnSetting, loadColors, loadFormats } from '../utils';
@@ -87,11 +87,6 @@ export default class ColumnOptionComponent extends Component<Props> {
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value || 'none');
-  };
-
-  private handleAddUnitFlagChange = (e?: React.SyntheticEvent) => {
-    // @ts-ignore
-    this.changeWith('addUnitToTitle', e ? e.target.checked : false);
   };
 
   private handleDataTypeChange = (item: SelectableValue<RawDataType>) => {
@@ -261,14 +256,6 @@ export default class ColumnOptionComponent extends Component<Props> {
                       options={this.unitFormats}
                     />
                   }
-                />
-              </div>
-              <div className="gf-form">
-                <Switch
-                  label="Add Unit to Title"
-                  labelClass={`width-${LABEL_WIDTH}`}
-                  onChange={this.handleAddUnitFlagChange}
-                  checked={option.addUnitToTitle}
                 />
               </div>
             </div>
