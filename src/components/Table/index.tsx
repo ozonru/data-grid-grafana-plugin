@@ -164,7 +164,7 @@ export class Table extends Component<Props, State> {
 
     return (
       <div className="gf-table-header" style={style} onClick={() => this.onCellClick(rowIndex, columnIndex)}>
-        {col.name}
+        {col.config.title || col.name}
         {sorting && <SortIndicator sortDirection={sortDirection} />}
       </div>
     );
