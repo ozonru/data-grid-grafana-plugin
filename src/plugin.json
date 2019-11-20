@@ -1,21 +1,21 @@
 {
   "type": "panel",
-  "name": "Simple Panel",
-  "id": "myorgid-simple-panel",
+  "name": "Grouped Data Grid",
+  "id": "grouped-series-grid-panel",
 
   "info": {
-    "description": "Simple React Panel",
+    "description": "Grid for grouped series",
     "author": {
-      "name": "Your Name"
+      "name": "OZON frontend infrastructure team"
     },
-    "keywords": ["Simple"],
+    "keywords": ["Grid", "Table", "Grouped metrics", "Labels"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
     },
     "links": [
-      {"name": "Website", "url": "https://github.com/grafana/simple-react-panel"},
-      {"name": "License", "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"}
+      {"name": "Website", "url": "https://github.com/ozonru/data-grid-grafana-plugin"},
+      {"name": "License", "url": "https://github.com/ozonru/data-grid-grafana-plugin/blob/master/LICENSE"}
     ],
     "screenshots": [],
     "version": "%VERSION%",

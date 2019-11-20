@@ -1,9 +1,10 @@
-## Simple Angular Panel
-[![CircleCI](https://circleci.com/gh/grafana/simple-angular-panel.svg?style=svg)](https://circleci.com/gh/grafana/simple-angular-panel)
+## Grouped Data Table
 
-Hello world showing series in grafana panel
+Grouped data table
 
-### Building this plugin
+### Usage example
+
+### Development
 
 This plugin leverages the grafana-toolkit to simplify building and packaging a plugin.
 

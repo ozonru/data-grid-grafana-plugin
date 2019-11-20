@@ -1,7 +1,7 @@
 {
-  "name": "simple-angular-panel",
-  "version": "0.0.1",
-  "description": "Simple Angular Grafana",
+  "name": "grouped-series-grid-panel",
+  "version": "0.1.0",
+  "description": "Grid for grouped series",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
@@ -10,8 +10,8 @@
     "prettier:check": "prettier --check \"src/**/*.ts\"",
     "prettier:fix": "prettier --write \"src/**/*.ts\""
   },
-  "author": "Grafana Labs",
-  "license": "Apache-2.0",
+  "author": "OZON frontend infrastructure team",
+  "license": "MIT",
   "devDependencies": {
     "@grafana/data": "latest",
     "@grafana/runtime": "^6.4.4",
