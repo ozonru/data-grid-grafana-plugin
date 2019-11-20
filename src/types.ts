@@ -25,5 +25,6 @@ export interface Options {
   showHeaders: boolean;
   showLabelColumn: boolean;
   groupByLabel?: string;
+  firstColumnSize?: number;
   minColumnSizePx?: number;
 }

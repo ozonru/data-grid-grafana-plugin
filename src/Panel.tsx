@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { PanelProps, Alert, ThemeContext } from '@grafana/ui';
 import Table from './components/Table';
@@ -33,7 +34,16 @@ export default class Panel extends PureComponent<Props> {
             styles={columns}
             data={frame}
             showHeader={options.showHeaders}
-            fixedColumnsWidth={options.options.map(({ width }) => width || options.defaultColumnOption.width)}
+            fixedColumnsWidth={options.options.reduce(
+              (acc: { [k: string]: number }, { width: w, column }) => {
+                if (column && _.isNumber(w)) {
+                  acc[column] = w as number;
+                }
+
+                return acc;
+              },
+              _.isNumber(options.firstColumnSize) ? { [options.groupByLabel as string]: options.firstColumnSize as number } : {}
+            )}
             minColumnWidth={options.minColumnSizePx}
           />
         )}

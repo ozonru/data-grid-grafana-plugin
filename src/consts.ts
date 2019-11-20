@@ -14,6 +14,7 @@ export const NO_GROUPBY_LABEL = `Please, add at least one query and choose "Grou
 
 export const defaults: Options = {
   defaultColumnOption: new ColumnSetting(ReducerID.last, 'none', undefined, undefined, 'number', 'cell', undefined, undefined, 'No data'),
+  firstColumnSize: 150,
   groupByLabel: undefined,
   options: [],
   showHeaders: true,

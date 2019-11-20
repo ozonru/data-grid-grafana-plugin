@@ -67,11 +67,11 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option[key] = value;
     this.props.onChange(option);
-  };
+  }
 
   private handleStatChange = (stat: string | string[]) => {
     this.changeWith('type', ([] as ReducerID[]).concat(stat as ReducerID)[0]);
-  };
+  }
 
   private handleDecimalsChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
@@ -83,36 +83,36 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.changeWith('decimals', decimals);
-  };
+  }
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value || 'none');
-  };
+  }
 
   private handleDataTypeChange = (item: SelectableValue<RawDataType>) => {
     this.changeWith('rawDataType', item.value);
-  };
+  }
 
   private handleColorModeChange = (item: SelectableValue<ColorModeType>) => {
     this.changeWith('colorMode', item.value);
-  };
+  }
 
   private handleNoValueChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
     this.changeWith('noValue', e.target.value);
-  };
+  }
 
   private handleWidthChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
     const val = e.target.value;
     const num = parseInt(val, 10);
 
-    if (Number.isNaN(num) || num === 0) {
+    if (Number.isNaN(num)) {
       this.changeWith('width', undefined);
+    } else {
+      this.changeWith('width', num);
     }
-
-    this.changeWith('width', num);
-  };
+  }
 
   private handleValueMapChange = (value: string) => {
     let rangeMap: undefined | boolean = undefined;
@@ -181,7 +181,7 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.props.onChange(option);
-  };
+  }
 
   private handleThresholdChange = (value: string) => {
     const splitted = value.split(',');
@@ -201,7 +201,7 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option.thresholds = Array.from(thresholds);
     this.props.onChange(option);
-  };
+  }
 
   private handleColorsChange = (value: string) => {
     const splitted = value.split(',');
@@ -227,7 +227,7 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option.colors = Array.from(colors);
     this.props.onChange(option);
-  };
+  }
 
   private handleTitleChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
@@ -241,10 +241,10 @@ export default class ColumnOptionComponent extends Component<Props> {
       delete option.title;
     }
     this.props.onChange(option);
-  };
+  }
 
   public render() {
-    const { option: option, visible, onDelete, restColumns, onCopy } = this.props;
+    const { option: option, visible, onDelete, restColumns, onCopy, isDefault } = this.props;
 
     return (
       <EditorTab visible={visible}>
@@ -258,7 +258,7 @@ export default class ColumnOptionComponent extends Component<Props> {
                   placeholder="Query legend will be default title"
                   labelWidth={LABEL_WIDTH}
                   inputWidth={FORM_ELEMENT_WIDTH}
-                  value={option.title}
+                  value={option.title || ''}
                   onChange={this.handleTitleChange}
                 />
               </div>
@@ -301,7 +301,7 @@ export default class ColumnOptionComponent extends Component<Props> {
                   inputWidth={FORM_ELEMENT_WIDTH}
                   type="number"
                   onChange={this.handleDecimalsChange}
-                  value={option.decimals}
+                  value={option.decimals || ''}
                 />
               </div>
               <div className="gf-form">
@@ -312,7 +312,7 @@ export default class ColumnOptionComponent extends Component<Props> {
                   inputWidth={FORM_ELEMENT_WIDTH}
                   type="text"
                   onChange={this.handleNoValueChange}
-                  value={option.noValue}
+                  value={option.noValue || ''}
                 />
               </div>
             </div>
@@ -383,21 +383,23 @@ export default class ColumnOptionComponent extends Component<Props> {
               </div>
             </div>
           </PanelOptionsGroup>
-          <PanelOptionsGroup title="Column">
-            <div className="section">
-              <div className="gf-form">
-                <FormField
-                  type="text"
-                  label="Width (px)"
-                  placeholder="auto"
-                  labelWidth={LABEL_WIDTH}
-                  inputWidth={FORM_ELEMENT_WIDTH}
-                  value={option.width}
-                  onChange={this.handleWidthChange}
-                />
+          {!isDefault && (
+            <PanelOptionsGroup title="Column">
+              <div className="section">
+                <div className="gf-form">
+                  <FormField
+                    type="text"
+                    label="Width (px)"
+                    placeholder="auto"
+                    labelWidth={LABEL_WIDTH}
+                    inputWidth={FORM_ELEMENT_WIDTH}
+                    value={option.width || ''}
+                    onChange={this.handleWidthChange}
+                  />
+                </div>
               </div>
-            </div>
-          </PanelOptionsGroup>
+            </PanelOptionsGroup>
+          )}
           <PanelOptionsGroup title="Stat">
             <div className="section">
               <div className="gf-form">
