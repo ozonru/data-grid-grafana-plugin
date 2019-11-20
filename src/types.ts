@@ -13,6 +13,7 @@ export interface ColumnOption {
   type: ReducerID;
   rangeMap?: RangeMap;
   rawDataType?: 'string' | 'number' | 'date';
+  title?: string;
   valueMap?: ValueMap;
   noValue?: string;
   unit: string;

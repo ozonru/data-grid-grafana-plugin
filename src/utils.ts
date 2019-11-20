@@ -18,7 +18,8 @@ export class ColumnSetting implements ColumnOption {
     thresholds?: number[],
     noValue?: string,
     valueMap?: ValueMap,
-    rangeMap?: RangeMap
+    rangeMap?: RangeMap,
+    title?: string
   ): ColumnOption {
     return new ColumnSetting(
       type || option.type,
@@ -32,50 +33,26 @@ export class ColumnSetting implements ColumnOption {
       thresholds || option.thresholds,
       noValue || option.noValue,
       valueMap || option.valueMap,
-      rangeMap || option.rangeMap
+      rangeMap || option.rangeMap,
+      title || option.title
     );
   }
 
-  public type;
-  public column?;
-  public unit;
-  public addUnitToTitle;
-  public decimals?;
-  public colorMode?;
-  public rawDataType?;
-  public thresholds?;
-  public rangeMap?;
-  public valueMap?;
-  public colors?;
-  public noValue?;
-
   constructor(
-    type: ReducerID,
-    unit: string,
-    addUnitToTitle: boolean,
-    column?: string,
-    decimals?: number,
-    rawDataType?: ColumnOption['rawDataType'],
-    colorMode?: ColumnOption['colorMode'],
-    colorsOption?: string[],
-    thresholds?: number[],
-    noValue?: string,
-    valueMap?: ValueMap,
-    rangeMap?: RangeMap
-  ) {
-    this.type = type;
-    this.column = column;
-    this.unit = unit;
-    this.addUnitToTitle = addUnitToTitle;
-    this.decimals = decimals;
-    this.rawDataType = rawDataType;
-    this.colorMode = colorMode;
-    this.colors = colorsOption;
-    this.thresholds = thresholds;
-    this.valueMap = valueMap;
-    this.rangeMap = rangeMap;
-    this.noValue = noValue;
-  }
+    public type: ReducerID,
+    public unit: string,
+    public addUnitToTitle: boolean,
+    public column?: string,
+    public decimals?: number,
+    public rawDataType?: ColumnOption['rawDataType'],
+    public colorMode?: ColumnOption['colorMode'],
+    public colors?: string[],
+    public thresholds?: number[],
+    public noValue?: string,
+    public valueMap?: ValueMap,
+    public rangeMap?: RangeMap,
+    public title?: string
+  ) {}
 }
 
 let formats;
