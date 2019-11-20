@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ColumnOption, RangeMap, ValueMap } from 'types';
 import { Button, ButtonSelect, FormField, PanelOptionsGroup, Select, StatsPicker } from '@grafana/ui';
-import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
+import {FORM_ELEMENT_WIDTH, LABEL_WIDTH, THRESHOLDS_COUNT_DOES_NOT_FIT} from '../consts';
 import EditorTab from './EditorTab';
 import { ColumnSetting, loadColors, loadFormats } from '../utils';
 import { ReducerID, SelectableValue } from '@grafana/data';
@@ -331,6 +331,7 @@ export default class ColumnOptionComponent extends Component<Props> {
               <div className="gf-form">
                 <InputOnBlur<number[]>
                   label="Thresholds"
+                  tooltip={THRESHOLDS_COUNT_DOES_NOT_FIT}
                   placeholder="50, 80"
                   labelWidth={LABEL_WIDTH}
                   inputWidth={FORM_ELEMENT_WIDTH}

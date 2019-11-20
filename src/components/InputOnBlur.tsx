@@ -3,6 +3,7 @@ import { FormField } from '@grafana/ui';
 
 interface Props<T> {
   label: string;
+  tooltip?: string;
   labelWidth?: number;
   inputWidth?: number;
   placeholder?: string;
@@ -60,12 +61,13 @@ export default class InputOnBlur<T> extends Component<Props<T>, State> {
   };
 
   public render() {
-    const { label, labelWidth, inputWidth, placeholder } = this.props;
+    const { label, labelWidth, inputWidth, placeholder, tooltip } = this.props;
 
     return (
       <FormField
         type="text"
         label={label}
+        tooltip={tooltip}
         placeholder={placeholder}
         labelWidth={labelWidth}
         inputWidth={inputWidth}
