@@ -137,7 +137,7 @@ export class Table extends Component<Props, State> {
       sort = null;
     }
     this.setState({ sortBy: sort, sortDirection: dir });
-  };
+  }
 
   /** Converts the grid coordinates to DataFrame coordinates */
   public getCellRef = (rowIndex: number, columnIndex: number): DataIndex => {
@@ -145,14 +145,14 @@ export class Table extends Component<Props, State> {
     const rowOffset = showHeader ? -1 : 0;
 
     return { column: columnIndex, row: rowIndex + rowOffset };
-  };
+  }
 
   public onCellClick = (rowIndex: number, columnIndex: number) => {
     const { row, column } = this.getCellRef(rowIndex, columnIndex);
     if (row < 0) {
       this.doSort(column);
     }
-  };
+  }
 
   public headerBuilder = (cell: TableCellBuilderOptions): ReactElement<'div'> => {
     const { data, sortBy, sortDirection } = this.state;
@@ -168,7 +168,7 @@ export class Table extends Component<Props, State> {
         {sorting && <SortIndicator sortDirection={sortDirection} />}
       </div>
     );
-  };
+  }
 
   public getTableCellBuilder = (column: number): TableCellBuilder => {
     const render = this.renderer[column];
@@ -176,7 +176,7 @@ export class Table extends Component<Props, State> {
       return render.builder;
     }
     return simpleCellBuilder; // the default
-  };
+  }
 
   public cellRenderer = (props: GridCellProps): React.ReactNode => {
     const { rowIndex, columnIndex, key, parent } = props;
@@ -195,11 +195,11 @@ export class Table extends Component<Props, State> {
         })}
       </CellMeasurer>
     );
-  };
+  }
 
   public getColumnWidth = (col: Index): number => {
     return this.renderer[col.index].width;
-  };
+  }
 
   public render() {
     const { showHeader, fixedHeader, fixedColumns, width, height } = this.props;

@@ -29,6 +29,7 @@ const asideStyle = {
 };
 
 const SELECT_VALUE = { label: 'Customize Column' };
+const COLUMN_SELECT_NO_OPTION = () => 'All columns already customized';
 
 export default class Editor extends PureComponent<PanelEditorProps<Options>, EditorState> {
   public static getColumnsAndLabels(data: PanelData): { labels: string[]; columns: SelectableValue<string>[] } {
@@ -170,7 +171,14 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
               </a>
             </li>
             <li key={ADD_COLUMN_OPTION_INDEX} style={addColumnStyle}>
-              <Select isSearchable={false} isClearable={false} options={restColumns} onChange={this.addColumn} value={SELECT_VALUE} />
+              <Select
+                isSearchable={false}
+                isClearable={false}
+                options={restColumns}
+                onChange={this.addColumn}
+                value={SELECT_VALUE}
+                noOptionsMessage={COLUMN_SELECT_NO_OPTION}
+              />
             </li>
           </ul>
         </aside>

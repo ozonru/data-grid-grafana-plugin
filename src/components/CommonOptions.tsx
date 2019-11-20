@@ -15,6 +15,7 @@ type Props = {
   onChange: (options: ICommonOptions) => void;
 };
 
+const COMMON_OPTIONS_LABEL_WIDTH = LABEL_WIDTH + 4;
 const theme = getTheme(GrafanaThemeType.Dark);
 const ERROR_INFO_STYLE = {
   alignSelf: 'center',
@@ -23,12 +24,10 @@ const ERROR_INFO_STYLE = {
   fontSize: '14px',
   marginLeft: '7px',
 };
-
 const WARN_INFO_STYLE = {
   ...ERROR_INFO_STYLE,
   color: theme.colors.warn,
 };
-
 const ICON_STYLE = {
   marginRight: '7px',
 };
@@ -40,7 +39,7 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showHeaders: e ? e.target.checked : false,
     });
-  };
+  }
 
   private handleShowLabelsColumnChange = (e?: React.SyntheticEvent) => {
     this.props.onChange({
@@ -48,14 +47,14 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showLabelColumn: e ? e.target.checked : false,
     });
-  };
+  }
 
   private handleGroupBySelect = (selected: SelectableValue<string>) => {
     this.props.onChange({
       ...this.props.options,
       groupByLabel: selected.value,
     });
-  };
+  }
 
   private handleColumnWidthChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
@@ -75,7 +74,7 @@ export default class CommonOptions extends Component<Props> {
       ...this.props.options,
       minColumnSizePx: widthNumber,
     });
-  };
+  }
 
   // public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
   //   return (
@@ -101,7 +100,7 @@ export default class CommonOptions extends Component<Props> {
       label: options.groupByLabel || '',
       value: options.groupByLabel || '',
     };
-    const switchLabelClass = `width-${LABEL_WIDTH}`;
+    const switchLabelClass = `width-${COMMON_OPTIONS_LABEL_WIDTH}`;
 
     return (
       <EditorTab visible={visible}>
@@ -112,7 +111,8 @@ export default class CommonOptions extends Component<Props> {
                 <div className="gf-form">
                   <FormField
                     label="Group by label"
-                    labelWidth={LABEL_WIDTH}
+                    labelWidth={COMMON_OPTIONS_LABEL_WIDTH}
+                    tooltip="This option is required to select rows for table"
                     inputEl={
                       <Select<string>
                         isClearable
@@ -122,6 +122,7 @@ export default class CommonOptions extends Component<Props> {
                         onChange={this.handleGroupBySelect}
                         value={selected}
                         options={selectOptions}
+                        isLoading={loading}
                       />
                     }
                   />
@@ -130,14 +131,13 @@ export default class CommonOptions extends Component<Props> {
                 <div className="gf-form">
                   <FormField
                     type="number"
-                    label="Minimum column width (px)"
+                    label="Min Column width (px)"
                     placeholder="Default is 150px"
-                    labelWidth={LABEL_WIDTH}
+                    labelWidth={COMMON_OPTIONS_LABEL_WIDTH}
                     inputWidth={FORM_ELEMENT_WIDTH}
                     value={options.minColumnSizePx}
                     onChange={this.handleColumnWidthChange}
                   />
-                  {loading ? this.renderInfo('Loading series') : labels.length === 0 && this.renderInfo('No series provided', true)}
                 </div>
                 <div className="gf-form">
                   <Switch label="Show headers" labelClass={switchLabelClass} onChange={this.handleShowHeadersChange} checked={options.showHeaders} />

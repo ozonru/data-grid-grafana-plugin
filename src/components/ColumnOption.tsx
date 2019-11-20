@@ -223,6 +223,7 @@ export default class ColumnOptionComponent extends Component<Props> {
               <div className="gf-form">
                 <FormField
                   label="Data Type"
+                  tooltip="Type of raw data returned from source (e.g. Prometheus), in most cases Number"
                   labelWidth={LABEL_WIDTH}
                   inputEl={
                     <Select<RawDataType>
@@ -368,9 +369,11 @@ export default class ColumnOptionComponent extends Component<Props> {
             <Button onClick={onDelete} size="xs" variant="danger">
               Delete
             </Button>
-            <div className="width-15">
-              <ButtonSelect<string> className="width-15" options={restColumns} value={COPY_VALUE} onChange={onCopy} label={COPY_VALUE.label} />
-            </div>
+            {restColumns.length > 0 && (
+              <div className="width-15">
+                <ButtonSelect<string> className="width-15" options={restColumns} value={COPY_VALUE} onChange={onCopy} label={COPY_VALUE.label} />
+              </div>
+            )}
           </div>
         </div>
       </EditorTab>
