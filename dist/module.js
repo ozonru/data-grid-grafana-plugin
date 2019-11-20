@@ -16547,12 +16547,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _grafana_ui__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _components_Table__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Table */ "./components/Table/index.tsx");
 /* harmony import */ var _getDerivedDataFrame__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./getDerivedDataFrame */ "./getDerivedDataFrame.ts");
+/* harmony import */ var _validateOptions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./validateOptions */ "./validateOptions.ts");
 
 
 
 
 
-var NO_GROUPBY_LABEL = "Assign valid label to \"Group by label\" setting";
+
 
 var Panel =
 /** @class */
@@ -16568,14 +16569,15 @@ function (_super) {
   };
 
   Panel.prototype.render = function () {
+    var validationError;
     var _a = this.props,
         options = _a.options,
         width = _a.width,
         height = _a.height;
 
-    if (!options.groupByLabel) {
+    if (validationError = Object(_validateOptions__WEBPACK_IMPORTED_MODULE_5__["default"])(options)) {
       return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["Alert"], {
-        title: NO_GROUPBY_LABEL
+        title: validationError
       });
     }
 
@@ -16707,9 +16709,9 @@ function (_super) {
 
     _this.handleDecimalsChange = function (event) {
       // @ts-ignore
-      var decimals = Number(event.target.value);
+      var decimals = parseInt(event.target.value, 10);
 
-      if (Number.isNaN(decimals) || decimals < 1) {
+      if (Number.isNaN(decimals)) {
         _this.changeWith('decimals', undefined);
 
         return;
@@ -16720,11 +16722,6 @@ function (_super) {
 
     _this.handleUnitChange = function (item) {
       _this.changeWith('unit', item.value || 'none');
-    };
-
-    _this.handleAddUnitFlagChange = function (e) {
-      // @ts-ignore
-      _this.changeWith('addUnitToTitle', e ? e.target.checked : false);
     };
 
     _this.handleDataTypeChange = function (item) {
@@ -16767,13 +16764,17 @@ function (_super) {
         } else {
           currentMap = VALUE_MAP_REGEX.exec(str);
 
-          if (!currentMap || rangeMap === true) {
+          if (!currentMap) {
             continue;
           }
 
           var val1 = parseFloat(currentMap[1]);
 
           if (Number.isNaN(val1)) {
+            if (rangeMap === true) {
+              continue;
+            }
+
             val1 = currentMap[1];
           }
 
@@ -16783,8 +16784,12 @@ function (_super) {
             continue;
           }
 
-          rangeMap = false;
-          result.push([val1, val2]);
+          if (rangeMap) {
+            result.push([val1, val1, val2]);
+          } else {
+            rangeMap = false;
+            result.push([val1, val2]);
+          }
         }
       }
 
@@ -16792,8 +16797,10 @@ function (_super) {
 
       if (isRangeMap(result)) {
         option.rangeMap = result;
+        delete option.valueMap;
       } else {
         option.valueMap = result;
+        delete option.rangeMap;
       }
 
       _this.props.onChange(option);
@@ -16814,7 +16821,7 @@ function (_super) {
       }
 
       var option = _utils__WEBPACK_IMPORTED_MODULE_5__["ColumnSetting"].copyWith(_this.props.option);
-      option.thresholds = Array.from(thresholds).sort();
+      option.thresholds = Array.from(thresholds);
 
       _this.props.onChange(option);
     };
@@ -16903,13 +16910,6 @@ function (_super) {
         } : undefined,
         options: this.unitFormats
       })
-    })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "gf-form"
-    }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["Switch"], {
-      label: "Add Unit to Title",
-      labelClass: "width-" + _consts__WEBPACK_IMPORTED_MODULE_3__["LABEL_WIDTH"],
-      onChange: this.handleAddUnitFlagChange,
-      checked: option.addUnitToTitle
     }))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "section"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -16926,7 +16926,7 @@ function (_super) {
       className: "gf-form"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["FormField"], {
       label: "Decimals",
-      placeholder: "Enter number of decimals",
+      placeholder: "auto",
       labelWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["LABEL_WIDTH"],
       inputWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["FORM_ELEMENT_WIDTH"],
       type: "number",
@@ -16980,7 +16980,8 @@ function (_super) {
       className: "gf-form"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_InputOnBlur__WEBPACK_IMPORTED_MODULE_6__["default"], {
       label: "Thresholds",
-      placeholder: "50, 80, 120",
+      tooltip: _consts__WEBPACK_IMPORTED_MODULE_3__["THRESHOLDS_COUNT_DOES_NOT_FIT"],
+      placeholder: "50, 80",
       labelWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["LABEL_WIDTH"],
       inputWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["FORM_ELEMENT_WIDTH"],
       onChange: this.handleThresholdChange,
@@ -17331,10 +17332,12 @@ function (_super) {
         label = _a.label,
         labelWidth = _a.labelWidth,
         inputWidth = _a.inputWidth,
-        placeholder = _a.placeholder;
+        placeholder = _a.placeholder,
+        tooltip = _a.tooltip;
     return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["FormField"], {
       type: "text",
       label: label,
+      tooltip: tooltip,
       placeholder: placeholder,
       labelWidth: labelWidth,
       inputWidth: inputWidth,
@@ -17402,7 +17405,7 @@ function valueMapper(value, style) {
     for (var i = 0; i < style.rangeMaps.length; i++) {
       var mapper = style.rangeMaps[i];
 
-      if (mapper.from >= value && mapper.to <= value) {
+      if (mapper.from <= value && mapper.to >= value) {
         return mapper.text;
       }
     }
@@ -17482,7 +17485,8 @@ function () {
 
       if (lodash__WEBPACK_IMPORTED_MODULE_1___default.a.isNumber(value)) {
         if (_this.fmt) {
-          value = _this.fmt(value, _this.style.decimals);
+          var decimals = Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_3__["getDecimalsForValue"])(value, _this.style.decimals).decimals;
+          value = _this.fmt(value, decimals);
         } // For numeric values set the color
 
 
@@ -17617,7 +17621,7 @@ function (_super) {
         onClick: function onClick() {
           return _this.onCellClick(rowIndex, columnIndex);
         }
-      }, col.name, sorting && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_virtualized__WEBPACK_IMPORTED_MODULE_2__["SortIndicator"], {
+      }, col.config.title || col.name, sorting && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_virtualized__WEBPACK_IMPORTED_MODULE_2__["SortIndicator"], {
         sortDirection: sortDirection
       }));
     };
@@ -17816,7 +17820,7 @@ function (_super) {
 /*!*******************!*\
   !*** ./consts.ts ***!
   \*******************/
-/*! exports provided: LABEL_WIDTH, DEFAULT_COLUMN_OPTIONS, FORM_ELEMENT_WIDTH, COLUMNS_INDEX, ADD_COLUMN_OPTION_INDEX, COMMON_OPTIONS_INDEX, defaults */
+/*! exports provided: LABEL_WIDTH, DEFAULT_COLUMN_OPTIONS, FORM_ELEMENT_WIDTH, COLUMNS_INDEX, ADD_COLUMN_OPTION_INDEX, COMMON_OPTIONS_INDEX, THRESHOLDS_COUNT_DOES_NOT_FIT, NO_GROUPBY_LABEL, defaults */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17827,6 +17831,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "COLUMNS_INDEX", function() { return COLUMNS_INDEX; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_COLUMN_OPTION_INDEX", function() { return ADD_COLUMN_OPTION_INDEX; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "COMMON_OPTIONS_INDEX", function() { return COMMON_OPTIONS_INDEX; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "THRESHOLDS_COUNT_DOES_NOT_FIT", function() { return THRESHOLDS_COUNT_DOES_NOT_FIT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NO_GROUPBY_LABEL", function() { return NO_GROUPBY_LABEL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaults", function() { return defaults; });
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./utils.ts");
 /* harmony import */ var _grafana_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @grafana/data */ "@grafana/data");
@@ -17839,8 +17845,10 @@ var FORM_ELEMENT_WIDTH = 15;
 var COLUMNS_INDEX = -12;
 var ADD_COLUMN_OPTION_INDEX = -11;
 var COMMON_OPTIONS_INDEX = -10;
+var THRESHOLDS_COUNT_DOES_NOT_FIT = 'Number of thresholds must be less then number of colors by 1';
+var NO_GROUPBY_LABEL = "Please, add at least one query and choose \"Group by label\" in panel settings";
 var defaults = {
-  defaultColumnOption: new _utils__WEBPACK_IMPORTED_MODULE_0__["ColumnSetting"](_grafana_data__WEBPACK_IMPORTED_MODULE_1__["ReducerID"].last, 'none', true, undefined, undefined, 'number', 'cell', undefined, undefined, 'No data'),
+  defaultColumnOption: new _utils__WEBPACK_IMPORTED_MODULE_0__["ColumnSetting"](_grafana_data__WEBPACK_IMPORTED_MODULE_1__["ReducerID"].last, 'none', undefined, undefined, 'number', 'cell', undefined, undefined, 'No data'),
   groupByLabel: undefined,
   options: [],
   showHeaders: true,
@@ -17893,9 +17901,10 @@ function createField(frame, name, getColumnOption) {
   var option = getColumnOption ? getColumnOption(name) : undefined;
   var field = {
     config: option ? {
-      noValue: option.noValue
+      noValue: option.noValue,
+      title: option.title
     } : {},
-    name: option ? option.addUnitToTitle ? option.unit !== 'none' ? name + " [" + option.unit + "]" : name : name : name,
+    name: name,
     type: option ? _grafana_data__WEBPACK_IMPORTED_MODULE_1__["FieldType"].number : _grafana_data__WEBPACK_IMPORTED_MODULE_1__["FieldType"].string,
     values: new _grafana_data__WEBPACK_IMPORTED_MODULE_1__["ArrayVector"]()
   };
@@ -17947,7 +17956,7 @@ function columnOptionToStyle(_a) {
   } else if (rangeMap && rangeMap.length > 0) {
     result.mappingType = _grafana_data__WEBPACK_IMPORTED_MODULE_1__["MappingType"].RangeToText;
     result.type = 'string';
-    result.valueMaps = rangeMap.map(function (_a) {
+    result.rangeMaps = rangeMap.map(function (_a) {
       var _b = tslib__WEBPACK_IMPORTED_MODULE_0__["__read"](_a, 3),
           from = _b[0],
           to = _b[1],
@@ -18115,10 +18124,9 @@ __webpack_require__.r(__webpack_exports__);
 var ColumnSetting =
 /** @class */
 function () {
-  function ColumnSetting(type, unit, addUnitToTitle, column, decimals, rawDataType, colorMode, colors, thresholds, noValue, valueMap, rangeMap, title) {
+  function ColumnSetting(type, unit, column, decimals, rawDataType, colorMode, colors, thresholds, noValue, valueMap, rangeMap, title) {
     this.type = type;
     this.unit = unit;
-    this.addUnitToTitle = addUnitToTitle;
     this.column = column;
     this.decimals = decimals;
     this.rawDataType = rawDataType;
@@ -18132,7 +18140,7 @@ function () {
   }
 
   ColumnSetting.copyWith = function (option, column, type, unit, addUnitToTitle, decimals, filterable, rawDataType, colorMode, colorsOption, thresholds, noValue, valueMap, rangeMap, title) {
-    return new ColumnSetting(type || option.type, unit || option.unit, addUnitToTitle || option.addUnitToTitle, column || option.column, decimals || option.decimals, rawDataType || option.rawDataType, colorMode || option.colorMode, colorsOption || option.colors, thresholds || option.thresholds, noValue || option.noValue, valueMap || option.valueMap, rangeMap || option.rangeMap, title || option.title);
+    return new ColumnSetting(type || option.type, unit || option.unit, column || option.column, decimals || option.decimals, rawDataType || option.rawDataType, colorMode || option.colorMode, colorsOption || option.colors, thresholds || option.thresholds, noValue || option.noValue, valueMap || option.valueMap, rangeMap || option.rangeMap, title || option.title);
   };
 
   return ColumnSetting;
@@ -18177,6 +18185,45 @@ function loadColors() {
   });
   return colorsCache;
 }
+
+/***/ }),
+
+/***/ "./validateOptions.ts":
+/*!****************************!*\
+  !*** ./validateOptions.ts ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./consts */ "./consts.ts");
+
+
+function validateColumnOption(option) {
+  if (option.thresholds && option.colors && option.thresholds.length > 0 && option.colors.length < option.thresholds.length + 1) {
+    return _consts__WEBPACK_IMPORTED_MODULE_0__["THRESHOLDS_COUNT_DOES_NOT_FIT"];
+  }
+
+  return null;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (function (options) {
+  if (!options.groupByLabel) {
+    return _consts__WEBPACK_IMPORTED_MODULE_0__["NO_GROUPBY_LABEL"];
+  }
+
+  for (var i = 0; i < options.options.length; i++) {
+    var valid = void 0;
+    var column = options.options[i];
+
+    if (valid = validateColumnOption(column)) {
+      return (column.column || 'Default column') + ":" + valid;
+    }
+  }
+
+  return null;
+});
 
 /***/ }),
 
