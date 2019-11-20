@@ -17,6 +17,7 @@ export class ColumnSetting implements ColumnOption {
     colorsOption?: string[],
     thresholds?: number[],
     noValue?: string,
+    width?: number,
     valueMap?: ValueMap,
     rangeMap?: RangeMap,
     title?: string
@@ -31,6 +32,7 @@ export class ColumnSetting implements ColumnOption {
       colorsOption || option.colors,
       thresholds || option.thresholds,
       noValue || option.noValue,
+      width || option.width,
       valueMap || option.valueMap,
       rangeMap || option.rangeMap,
       title || option.title
@@ -47,6 +49,7 @@ export class ColumnSetting implements ColumnOption {
     public colors?: string[],
     public thresholds?: number[],
     public noValue?: string,
+    public width?: number,
     public valueMap?: ValueMap,
     public rangeMap?: RangeMap,
     public title?: string

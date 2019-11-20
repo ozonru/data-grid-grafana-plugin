@@ -33,6 +33,7 @@ export default class Panel extends PureComponent<Props> {
             styles={columns}
             data={frame}
             showHeader={options.showHeaders}
+            fixedColumnsWidth={options.options.map(({ width }) => width || options.defaultColumnOption.width)}
             minColumnWidth={options.minColumnSizePx}
           />
         )}

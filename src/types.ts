@@ -16,6 +16,7 @@ export interface ColumnOption {
   valueMap?: ValueMap;
   noValue?: string;
   unit: string;
+  width?: number;
 }
 
 export interface Options {

@@ -39,7 +39,7 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showHeaders: e ? e.target.checked : false,
     });
-  };
+  }
 
   private handleShowLabelsColumnChange = (e?: React.SyntheticEvent) => {
     this.props.onChange({
@@ -47,14 +47,14 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showLabelColumn: e ? e.target.checked : false,
     });
-  };
+  }
 
   private handleGroupBySelect = (selected: SelectableValue<string>) => {
     this.props.onChange({
       ...this.props.options,
       groupByLabel: selected.value,
     });
-  };
+  }
 
   private handleColumnWidthChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
@@ -74,7 +74,7 @@ export default class CommonOptions extends Component<Props> {
       ...this.props.options,
       minColumnSizePx: widthNumber,
     });
-  };
+  }
 
   // public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
   //   return (
