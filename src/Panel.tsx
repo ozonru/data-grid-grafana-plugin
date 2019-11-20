@@ -4,7 +4,7 @@ import Table from './components/Table';
 import { Options } from 'types';
 import getDerivedDataFrame from './getDerivedDataFrame';
 
-const NO_GROUPBY_LABEL = `Assign valid label to "Group by label" setting`;
+const NO_GROUPBY_LABEL = `Please, add at least one query and choose "Group by label" in panel settings`;
 
 interface Props extends PanelProps<Options> {}
 
