@@ -68,21 +68,21 @@ export function loadFormats() {
   return formats;
 }
 
-let colors: string[] = [];
+let colorsCache: string[] = [];
 
 export function loadColors(): string[] {
-  if (colors.length > 0) {
-    return colors;
+  if (colorsCache.length > 0) {
+    return colorsCache;
   }
 
   getNamedColorPalette().forEach(definitions => {
     for (let i = 0; i < definitions.length; i++) {
       if (definitions[i].variants.dark) {
         const clrName = definitions[i].name;
-        colors.push(clrName);
+        colorsCache.push(clrName);
       }
     }
   });
 
-  return colors;
+  return colorsCache;
 }

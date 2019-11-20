@@ -1,0 +1,29 @@
+{
+  "type": "panel",
+  "name": "Grouped Data Grid",
+  "id": "grouped-series-grid-panel",
+
+  "info": {
+    "description": "Grid for grouped series",
+    "author": {
+      "name": "OZON frontend infrastructure team"
+    },
+    "keywords": ["Grid", "Table", "Grouped metrics", "Labels"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {"name": "Website", "url": "https://github.com/ozonru/data-grid-grafana-plugin"},
+      {"name": "License", "url": "https://github.com/ozonru/data-grid-grafana-plugin/blob/master/LICENSE"}
+    ],
+    "screenshots": [],
+    "version": "0.1.0",
+    "updated": "2019-11-20"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "6.3.x",
+    "plugins": []
+  }
+}
