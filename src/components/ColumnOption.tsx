@@ -331,7 +331,7 @@ export default class ColumnOptionComponent extends Component<Props> {
               <div className="gf-form">
                 <InputOnBlur<number[]>
                   label="Thresholds"
-                  placeholder="50, 80, 120"
+                  placeholder="50, 80"
                   labelWidth={LABEL_WIDTH}
                   inputWidth={FORM_ELEMENT_WIDTH}
                   onChange={this.handleThresholdChange}
