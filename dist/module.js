@@ -16541,13 +16541,16 @@ function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _grafana_ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @grafana/ui */ "@grafana/ui");
-/* harmony import */ var _grafana_ui__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _components_Table__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Table */ "./components/Table/index.tsx");
-/* harmony import */ var _getDerivedDataFrame__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./getDerivedDataFrame */ "./getDerivedDataFrame.ts");
-/* harmony import */ var _validateOptions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./validateOptions */ "./validateOptions.ts");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "lodash");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _grafana_ui__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @grafana/ui */ "@grafana/ui");
+/* harmony import */ var _grafana_ui__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_grafana_ui__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _components_Table__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Table */ "./components/Table/index.tsx");
+/* harmony import */ var _getDerivedDataFrame__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./getDerivedDataFrame */ "./getDerivedDataFrame.ts");
+/* harmony import */ var _validateOptions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./validateOptions */ "./validateOptions.ts");
+
 
 
 
@@ -16575,33 +16578,45 @@ function (_super) {
         width = _a.width,
         height = _a.height;
 
-    if (validationError = Object(_validateOptions__WEBPACK_IMPORTED_MODULE_5__["default"])(options)) {
-      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["Alert"], {
+    if (validationError = Object(_validateOptions__WEBPACK_IMPORTED_MODULE_6__["default"])(options)) {
+      return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_3__["Alert"], {
         title: validationError
       });
     }
 
     var series = this.props.data.series;
 
-    var _b = Object(_getDerivedDataFrame__WEBPACK_IMPORTED_MODULE_4__["default"])(series, options),
+    var _b = Object(_getDerivedDataFrame__WEBPACK_IMPORTED_MODULE_5__["default"])(series, options),
         frame = _b.frame,
         columns = _b.columns;
 
-    return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["ThemeContext"].Consumer, null, function (theme) {
-      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Table__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_3__["ThemeContext"].Consumer, null, function (theme) {
+      var _a;
+
+      return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_components_Table__WEBPACK_IMPORTED_MODULE_4__["default"], {
         theme: theme,
         width: width,
         height: height,
         styles: columns,
         data: frame,
         showHeader: options.showHeaders,
+        fixedColumnsWidth: options.options.reduce(function (acc, _a) {
+          var w = _a.width,
+              column = _a.column;
+
+          if (column && lodash__WEBPACK_IMPORTED_MODULE_1___default.a.isNumber(w)) {
+            acc[column] = w;
+          }
+
+          return acc;
+        }, lodash__WEBPACK_IMPORTED_MODULE_1___default.a.isNumber(options.firstColumnSize) ? (_a = {}, _a[options.groupByLabel] = options.firstColumnSize, _a) : {}),
         minColumnWidth: options.minColumnSizePx
       });
     });
   };
 
   return Panel;
-}(react__WEBPACK_IMPORTED_MODULE_1__["PureComponent"]);
+}(react__WEBPACK_IMPORTED_MODULE_2__["PureComponent"]);
 
 /* harmony default export */ __webpack_exports__["default"] = (Panel);
 
@@ -16735,6 +16750,18 @@ function (_super) {
     _this.handleNoValueChange = function (e) {
       // @ts-ignore
       _this.changeWith('noValue', e.target.value);
+    };
+
+    _this.handleWidthChange = function (e) {
+      // @ts-ignore
+      var val = e.target.value;
+      var num = parseInt(val, 10);
+
+      if (Number.isNaN(num)) {
+        _this.changeWith('width', undefined);
+      } else {
+        _this.changeWith('width', num);
+      }
     };
 
     _this.handleValueMapChange = function (value) {
@@ -16875,7 +16902,8 @@ function (_super) {
         visible = _a.visible,
         onDelete = _a.onDelete,
         restColumns = _a.restColumns,
-        onCopy = _a.onCopy;
+        onCopy = _a.onCopy,
+        isDefault = _a.isDefault;
     return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_EditorTab__WEBPACK_IMPORTED_MODULE_4__["default"], {
       visible: visible
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["PanelOptionsGroup"], {
@@ -16890,7 +16918,7 @@ function (_super) {
       placeholder: "Query legend will be default title",
       labelWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["LABEL_WIDTH"],
       inputWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["FORM_ELEMENT_WIDTH"],
-      value: option.title,
+      value: option.title || '',
       onChange: this.handleTitleChange
     })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "gf-form"
@@ -16931,7 +16959,7 @@ function (_super) {
       inputWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["FORM_ELEMENT_WIDTH"],
       type: "number",
       onChange: this.handleDecimalsChange,
-      value: option.decimals
+      value: option.decimals || ''
     })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "gf-form"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["FormField"], {
@@ -16941,7 +16969,7 @@ function (_super) {
       inputWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["FORM_ELEMENT_WIDTH"],
       type: "text",
       onChange: this.handleNoValueChange,
-      value: option.noValue
+      value: option.noValue || ''
     }))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "section"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -17006,6 +17034,20 @@ function (_super) {
         }) : undefined,
         options: colorModeOptions
       })
+    })))), !isDefault && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["PanelOptionsGroup"], {
+      title: "Column"
+    }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      className: "section"
+    }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      className: "gf-form"
+    }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["FormField"], {
+      type: "text",
+      label: "Width (px)",
+      placeholder: "auto",
+      labelWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["LABEL_WIDTH"],
+      inputWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["FORM_ELEMENT_WIDTH"],
+      value: option.width || '',
+      onChange: this.handleWidthChange
     })))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["PanelOptionsGroup"], {
       title: "Stat"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -17113,21 +17155,23 @@ function (_super) {
       }));
     };
 
+    _this.handleFirstColumnWidthChange = function (e) {
+      // @ts-ignore
+      var width = e.target.value;
+      var widthNumber = parseInt(width, 10);
+
+      _this.props.onChange(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, _this.props.options, {
+        firstColumnSize: Number.isNaN(widthNumber) ? undefined : widthNumber
+      }));
+    };
+
     _this.handleColumnWidthChange = function (e) {
       // @ts-ignore
       var width = e.target.value;
       var widthNumber = parseInt(width, 10);
 
-      if (Number.isNaN(widthNumber) || widthNumber < 10) {
-        var newOptions = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, _this.props.options);
-
-        delete newOptions.minColumnSizePx;
-
-        _this.props.onChange(newOptions);
-      }
-
       _this.props.onChange(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, _this.props.options, {
-        minColumnSizePx: widthNumber
+        minColumnSizePx: Number.isNaN(widthNumber) ? undefined : widthNumber
       }));
     };
 
@@ -17195,6 +17239,16 @@ function (_super) {
         isLoading: loading
       })
     }), loading ? this.renderInfo('Loading series') : labels.length === 0 && this.renderInfo('No series provided', true)), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      className: "gf-form"
+    }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["FormField"], {
+      type: "number",
+      label: "First Column width (px)",
+      placeholder: "Fixed size",
+      labelWidth: COMMON_OPTIONS_LABEL_WIDTH,
+      inputWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["FORM_ELEMENT_WIDTH"],
+      value: options.firstColumnSize,
+      onChange: this.handleFirstColumnWidthChange
+    })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "gf-form"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["FormField"], {
       type: "number",
@@ -17715,13 +17769,18 @@ function (_super) {
     var styles = props.styles,
         data = props.data,
         width = props.width,
-        minColumnWidth = props.minColumnWidth;
+        minColumnWidth = props.minColumnWidth,
+        fixedColumnsWidth = props.fixedColumnsWidth;
 
     if (!data || !data.fields || !data.fields.length || !styles) {
       return [];
     }
 
-    var columnWidth = Math.max(width / data.fields.length, minColumnWidth);
+    var fixedColumns = Object.keys(fixedColumnsWidth);
+    var fixedWidth = fixedColumns.reduce(function (acc, key) {
+      return acc + fixedColumnsWidth[key];
+    }, 0);
+    var columnWidth = Math.max((width - fixedWidth) / (data.fields.length - fixedColumns.length), minColumnWidth);
     return data.fields.map(function (col, index) {
       var title = col.name;
       var style = null; // ColumnStyle
@@ -17745,7 +17804,7 @@ function (_super) {
       return {
         builder: Object(_TableCellBuilder__WEBPACK_IMPORTED_MODULE_4__["getCellBuilder"])(col.config, style, _this.props.theme),
         header: title,
-        width: columnWidth
+        width: fixedColumnsWidth[col.name] || columnWidth
       };
     });
   };
@@ -17849,6 +17908,7 @@ var THRESHOLDS_COUNT_DOES_NOT_FIT = 'Number of thresholds must be less then numb
 var NO_GROUPBY_LABEL = "Please, add at least one query and choose \"Group by label\" in panel settings";
 var defaults = {
   defaultColumnOption: new _utils__WEBPACK_IMPORTED_MODULE_0__["ColumnSetting"](_grafana_data__WEBPACK_IMPORTED_MODULE_1__["ReducerID"].last, 'none', undefined, undefined, 'number', 'cell', undefined, undefined, 'No data'),
+  firstColumnSize: 150,
   groupByLabel: undefined,
   options: [],
   showHeaders: true,
@@ -18124,7 +18184,7 @@ __webpack_require__.r(__webpack_exports__);
 var ColumnSetting =
 /** @class */
 function () {
-  function ColumnSetting(type, unit, column, decimals, rawDataType, colorMode, colors, thresholds, noValue, valueMap, rangeMap, title) {
+  function ColumnSetting(type, unit, column, decimals, rawDataType, colorMode, colors, thresholds, noValue, width, valueMap, rangeMap, title) {
     this.type = type;
     this.unit = unit;
     this.column = column;
@@ -18134,13 +18194,14 @@ function () {
     this.colors = colors;
     this.thresholds = thresholds;
     this.noValue = noValue;
+    this.width = width;
     this.valueMap = valueMap;
     this.rangeMap = rangeMap;
     this.title = title;
   }
 
-  ColumnSetting.copyWith = function (option, column, type, unit, addUnitToTitle, decimals, filterable, rawDataType, colorMode, colorsOption, thresholds, noValue, valueMap, rangeMap, title) {
-    return new ColumnSetting(type || option.type, unit || option.unit, column || option.column, decimals || option.decimals, rawDataType || option.rawDataType, colorMode || option.colorMode, colorsOption || option.colors, thresholds || option.thresholds, noValue || option.noValue, valueMap || option.valueMap, rangeMap || option.rangeMap, title || option.title);
+  ColumnSetting.copyWith = function (option, column, type, unit, addUnitToTitle, decimals, filterable, rawDataType, colorMode, colorsOption, thresholds, noValue, width, valueMap, rangeMap, title) {
+    return new ColumnSetting(type || option.type, unit || option.unit, column || option.column, decimals || option.decimals, rawDataType || option.rawDataType, colorMode || option.colorMode, colorsOption || option.colors, thresholds || option.thresholds, noValue || option.noValue, width || option.width, valueMap || option.valueMap, rangeMap || option.rangeMap, title || option.title);
   };
 
   return ColumnSetting;
