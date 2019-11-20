@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ColumnOption, RangeMap, ValueMap } from 'types';
 import { Button, ButtonSelect, FormField, PanelOptionsGroup, Select, StatsPicker } from '@grafana/ui';
-import {FORM_ELEMENT_WIDTH, LABEL_WIDTH, THRESHOLDS_COUNT_DOES_NOT_FIT} from '../consts';
+import { FORM_ELEMENT_WIDTH, LABEL_WIDTH, THRESHOLDS_COUNT_DOES_NOT_FIT } from '../consts';
 import EditorTab from './EditorTab';
 import { ColumnSetting, loadColors, loadFormats } from '../utils';
 import { ReducerID, SelectableValue } from '@grafana/data';
@@ -67,11 +67,11 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option[key] = value;
     this.props.onChange(option);
-  }
+  };
 
   private handleStatChange = (stat: string | string[]) => {
     this.changeWith('type', ([] as ReducerID[]).concat(stat as ReducerID)[0]);
-  }
+  };
 
   private handleDecimalsChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
@@ -83,24 +83,24 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.changeWith('decimals', decimals);
-  }
+  };
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value || 'none');
-  }
+  };
 
   private handleDataTypeChange = (item: SelectableValue<RawDataType>) => {
     this.changeWith('rawDataType', item.value);
-  }
+  };
 
   private handleColorModeChange = (item: SelectableValue<ColorModeType>) => {
     this.changeWith('colorMode', item.value);
-  }
+  };
 
   private handleNoValueChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
     this.changeWith('noValue', e.target.value);
-  }
+  };
 
   private handleValueMapChange = (value: string) => {
     let rangeMap: undefined | boolean = undefined;
@@ -129,13 +129,17 @@ export default class ColumnOptionComponent extends Component<Props> {
       } else {
         currentMap = VALUE_MAP_REGEX.exec(str);
 
-        if (!currentMap || rangeMap === true) {
+        if (!currentMap) {
           continue;
         }
 
         let val1: string | number = parseFloat(currentMap[1]);
 
         if (Number.isNaN(val1)) {
+          if (rangeMap === true) {
+            continue;
+          }
+
           val1 = currentMap[1];
         }
 
@@ -145,8 +149,12 @@ export default class ColumnOptionComponent extends Component<Props> {
           continue;
         }
 
-        rangeMap = false;
-        (result as ValueMap).push([val1, val2]);
+        if (rangeMap) {
+          (result as RangeMap).push([val1 as number, val1 as number, val2]);
+        } else {
+          rangeMap = false;
+          (result as ValueMap).push([val1, val2]);
+        }
       }
     }
 
@@ -154,12 +162,14 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     if (isRangeMap(result)) {
       option.rangeMap = result;
+      delete option.valueMap;
     } else {
       option.valueMap = result;
+      delete option.rangeMap;
     }
 
     this.props.onChange(option);
-  }
+  };
 
   private handleThresholdChange = (value: string) => {
     const splitted = value.split(',');
@@ -179,7 +189,7 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option.thresholds = Array.from(thresholds);
     this.props.onChange(option);
-  }
+  };
 
   private handleColorsChange = (value: string) => {
     const splitted = value.split(',');
@@ -205,7 +215,7 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option.colors = Array.from(colors);
     this.props.onChange(option);
-  }
+  };
 
   private handleTitleChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
@@ -219,7 +229,7 @@ export default class ColumnOptionComponent extends Component<Props> {
       delete option.title;
     }
     this.props.onChange(option);
-  }
+  };
 
   public render() {
     const { option: option, visible, onDelete, restColumns, onCopy } = this.props;

@@ -42,7 +42,7 @@ function valueMapper(value: number | string, style: ColumnStyle) {
     for (let i = 0; i < style.rangeMaps.length; i++) {
       const mapper = style.rangeMaps[i] as RangeMap;
 
-      if (mapper.from >= value && mapper.to <= value) {
+      if (mapper.from <= value && mapper.to >= value) {
         return mapper.text;
       }
     }
@@ -115,7 +115,7 @@ class CellBuilderWithStyle {
       }
     }
     return getColorFromHexRgbOrName(_.first(colors), this.theme.type);
-  };
+  }
 
   public build = (cell: TableCellBuilderOptions) => {
     let { props } = cell;
@@ -154,5 +154,5 @@ class CellBuilderWithStyle {
     }
 
     return simpleCellBuilder({ value: valueMapper(value, this.style), props });
-  };
+  }
 }

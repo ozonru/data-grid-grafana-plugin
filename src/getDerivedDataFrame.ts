@@ -69,7 +69,7 @@ function columnOptionToStyle({ decimals, rangeMap, valueMap, rawDataType, colorM
   } else if (rangeMap && rangeMap.length > 0) {
     result.mappingType = MappingType.RangeToText;
     result.type = 'string';
-    result.valueMaps = rangeMap.map(([from, to, text]) => ({ from, to, text }));
+    result.rangeMaps = rangeMap.map(([from, to, text]) => ({ from, to, text }));
   }
 
   return result;
