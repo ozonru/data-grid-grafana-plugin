@@ -284,7 +284,7 @@ export default class ColumnOptionComponent extends Component<Props> {
               <div className="gf-form">
                 <FormField
                   label="Decimals"
-                  placeholder="Enter number of decimals"
+                  placeholder="auto"
                   labelWidth={LABEL_WIDTH}
                   inputWidth={FORM_ELEMENT_WIDTH}
                   type="number"

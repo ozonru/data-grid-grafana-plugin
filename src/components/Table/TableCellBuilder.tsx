@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import React, { ReactElement } from 'react';
 import { GridCellProps } from 'react-virtualized';
-import { ValueFormatter, getValueFormat, getColorFromHexRgbOrName, GrafanaTheme } from '@grafana/ui';
+import { ValueFormatter, getValueFormat, getColorFromHexRgbOrName, GrafanaTheme, getDecimalsForValue } from '@grafana/ui';
 import { Field, RangeMap, ValueMap } from '@grafana/data';
 import { ColumnStyle } from '@grafana/ui/components/Table/TableCellBuilder';
 
@@ -123,7 +123,8 @@ class CellBuilderWithStyle {
 
     if (_.isNumber(value)) {
       if (this.fmt) {
-        value = this.fmt(value, this.style.decimals);
+        const {decimals} = getDecimalsForValue(value, this.style.decimals);
+        value = this.fmt(value, decimals);
       }
 
       // For numeric values set the color
