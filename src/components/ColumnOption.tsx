@@ -177,7 +177,7 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     const option = ColumnSetting.copyWith(this.props.option);
 
-    option.thresholds = Array.from(thresholds).sort();
+    option.thresholds = Array.from(thresholds).sort((a, b) => a - b);
     this.props.onChange(option);
   };
 
