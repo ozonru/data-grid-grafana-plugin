@@ -3,8 +3,7 @@ import { PanelProps, Alert, ThemeContext } from '@grafana/ui';
 import Table from './components/Table';
 import { Options } from 'types';
 import getDerivedDataFrame from './getDerivedDataFrame';
-
-const NO_GROUPBY_LABEL = `Please, add at least one query and choose "Group by label" in panel settings`;
+import validateOptions from './validateOptions';
 
 interface Props extends PanelProps<Options> {}
 
@@ -14,10 +13,11 @@ export default class Panel extends PureComponent<Props> {
   }
 
   public render() {
+    let validationError;
     const { options, width, height } = this.props;
 
-    if (!options.groupByLabel) {
-      return <Alert title={NO_GROUPBY_LABEL} />;
+    if ((validationError = validateOptions(options))) {
+      return <Alert title={validationError} />;
     }
 
     const { series } = this.props.data;
