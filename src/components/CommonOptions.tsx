@@ -40,7 +40,7 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showHeaders: e ? e.target.checked : false,
     });
-  }
+  };
 
   private handleShowLabelsColumnChange = (e?: React.SyntheticEvent) => {
     this.props.onChange({
@@ -48,14 +48,34 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showLabelColumn: e ? e.target.checked : false,
     });
-  }
+  };
 
   private handleGroupBySelect = (selected: SelectableValue<string>) => {
     this.props.onChange({
       ...this.props.options,
       groupByLabel: selected.value,
     });
-  }
+  };
+
+  private handleColumnWidthChange = (e: React.SyntheticEvent) => {
+    // @ts-ignore
+    const width = e.target.value;
+    const widthNumber = parseInt(width, 10);
+
+    if (Number.isNaN(widthNumber) || widthNumber < 10) {
+      const newOptions = {
+        ...this.props.options,
+      };
+
+      delete newOptions.minColumnSizePx;
+      this.props.onChange(newOptions);
+    }
+
+    this.props.onChange({
+      ...this.props.options,
+      minColumnSizePx: widthNumber,
+    });
+  };
 
   // public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
   //   return (
@@ -104,6 +124,18 @@ export default class CommonOptions extends Component<Props> {
                         options={selectOptions}
                       />
                     }
+                  />
+                  {loading ? this.renderInfo('Loading series') : labels.length === 0 && this.renderInfo('No series provided', true)}
+                </div>
+                <div className="gf-form">
+                  <FormField
+                    type="number"
+                    label="Minimum column width (px)"
+                    placeholder="Default is 150px"
+                    labelWidth={LABEL_WIDTH}
+                    inputWidth={FORM_ELEMENT_WIDTH}
+                    value={options.minColumnSizePx}
+                    onChange={this.handleColumnWidthChange}
                   />
                   {loading ? this.renderInfo('Loading series') : labels.length === 0 && this.renderInfo('No series provided', true)}
                 </div>
