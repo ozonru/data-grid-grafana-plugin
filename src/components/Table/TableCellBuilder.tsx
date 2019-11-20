@@ -115,7 +115,7 @@ class CellBuilderWithStyle {
       }
     }
     return getColorFromHexRgbOrName(_.first(colors), this.theme.type);
-  }
+  };
 
   public build = (cell: TableCellBuilderOptions) => {
     let { props } = cell;
@@ -123,7 +123,7 @@ class CellBuilderWithStyle {
 
     if (_.isNumber(value)) {
       if (this.fmt) {
-        const {decimals} = getDecimalsForValue(value, this.style.decimals);
+        const { decimals } = getDecimalsForValue(value, this.style.decimals);
         value = this.fmt(value, decimals);
       }
 
@@ -155,5 +155,5 @@ class CellBuilderWithStyle {
     }
 
     return simpleCellBuilder({ value: valueMapper(value, this.style), props });
-  }
+  };
 }
