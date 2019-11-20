@@ -28,10 +28,12 @@ function createColumnHandler(options: Options): GetColumnOptions {
 function createField(frame: DataFrame, name: string, getColumnOption?: GetColumnOptions) {
   const option = getColumnOption ? getColumnOption(name) : undefined;
   const field: Field<string, ArrayVector<string>> = {
-    config: option ? {
-      noValue: option.noValue,
-      title: option.title
-    } : {},
+    config: option
+      ? {
+          noValue: option.noValue,
+          title: option.title,
+        }
+      : {},
     name,
     type: option ? FieldType.number : FieldType.string,
     values: new ArrayVector(),
