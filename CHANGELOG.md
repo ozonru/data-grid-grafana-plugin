@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.3.0
+
+- Feat(Editor): add column width option
+- Feat(Panel): take column width for each cell if possible
+
 ## 0.2.0
 
 -   Feat: add validation for number of thresholds and colors
