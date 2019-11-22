@@ -1,7 +1,7 @@
 import { ColumnOption, Options } from './types';
 import { ArrayVector, DataFrame, Field, FieldType, MappingType, reduceField } from '@grafana/data';
 import { ColumnStyle } from '@grafana/ui/components/Table/TableCellBuilder';
-import { ColorDefinition, getColorByName, getColorForTheme, GrafanaThemeType } from '@grafana/ui';
+import { ColorDefinition, getColorByName, getColorForTheme, GrafanaTheme } from '@grafana/ui';
 
 const EMPTY_RESULT = {
   columns: [],
@@ -43,18 +43,21 @@ function createField(frame: DataFrame, name: string, getColumnOption?: GetColumn
   return field;
 }
 
-function mapColors(color: string): string {
+function mapColors(theme: GrafanaTheme, color: string): string {
   if (color[0] === '#') {
     return color;
   }
 
-  return getColorForTheme(getColorByName(color) as ColorDefinition, GrafanaThemeType.Dark);
+  return getColorForTheme(getColorByName(color) as ColorDefinition, theme.type);
 }
 
-function columnOptionToStyle({ decimals, rangeMap, valueMap, rawDataType, colorMode, colors, column, thresholds, unit }: ColumnOption): ColumnStyle {
+function columnOptionToStyle(
+  theme: GrafanaTheme,
+  { decimals, rangeMap, valueMap, rawDataType, colorMode, colors, column, thresholds, unit }: ColumnOption
+): ColumnStyle {
   const result: ColumnStyle = {
     colorMode,
-    colors: colors && colors.length > 0 ? colors.map(mapColors) : undefined,
+    colors: colors && colors.length > 0 ? colors.map(color => mapColors(theme, color)) : undefined,
     decimals,
     pattern: column || '',
     thresholds: thresholds && thresholds.length > 0 ? thresholds : undefined,
@@ -75,9 +78,9 @@ function columnOptionToStyle({ decimals, rangeMap, valueMap, rawDataType, colorM
   return result;
 }
 
-function createColumnStylesHandler(option: Options) {
+function createColumnStylesHandler(theme: GrafanaTheme, option: Options) {
   const styles = new Map<string, ColumnStyle>();
-  const defaultStyle: ColumnStyle = columnOptionToStyle(option.defaultColumnOption);
+  const defaultStyle: ColumnStyle = columnOptionToStyle(theme, option.defaultColumnOption);
 
   return {
     getAll: () => Array.from(styles.values()),
@@ -94,7 +97,7 @@ function createColumnStylesHandler(option: Options) {
           continue;
         }
 
-        const resultStyle = columnOptionToStyle(option.options[i]);
+        const resultStyle = columnOptionToStyle(theme, option.options[i]);
 
         styles.set(serie, resultStyle);
         return resultStyle;
@@ -111,7 +114,11 @@ function createColumnStylesHandler(option: Options) {
   };
 }
 
-export default function getDerivedDataFrame(series: DataFrame[], options: Options): { frame: DataFrame; columns: ColumnStyle[] } {
+export default function getDerivedDataFrame(
+  theme: GrafanaTheme,
+  series: DataFrame[],
+  options: Options
+): { frame: DataFrame; columns: ColumnStyle[] } {
   if (series.length === 0) {
     return EMPTY_RESULT;
   }
@@ -124,7 +131,7 @@ export default function getDerivedDataFrame(series: DataFrame[], options: Option
 
   const indexCache: { [k: string]: number } = Object.create(null);
   const labelsSet = new Set<string>();
-  const styles = createColumnStylesHandler(options);
+  const styles = createColumnStylesHandler(theme, options);
   const frame: DataFrame = {
     fields: [],
     length: 0,

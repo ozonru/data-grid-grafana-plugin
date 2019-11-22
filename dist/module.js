@@ -16540,6 +16540,7 @@ function (_super) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return PanelWithTheme; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "lodash");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
@@ -16572,11 +16573,14 @@ function (_super) {
   };
 
   Panel.prototype.render = function () {
+    var _a;
+
     var validationError;
-    var _a = this.props,
-        options = _a.options,
-        width = _a.width,
-        height = _a.height;
+    var _b = this.props,
+        options = _b.options,
+        width = _b.width,
+        height = _b.height,
+        theme = _b.theme;
 
     if (validationError = Object(_validateOptions__WEBPACK_IMPORTED_MODULE_6__["default"])(options)) {
       return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_3__["Alert"], {
@@ -16586,39 +16590,41 @@ function (_super) {
 
     var series = this.props.data.series;
 
-    var _b = Object(_getDerivedDataFrame__WEBPACK_IMPORTED_MODULE_5__["default"])(series, options),
-        frame = _b.frame,
-        columns = _b.columns;
+    var _c = Object(_getDerivedDataFrame__WEBPACK_IMPORTED_MODULE_5__["default"])(theme, series, options),
+        frame = _c.frame,
+        columns = _c.columns;
 
-    return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_3__["ThemeContext"].Consumer, null, function (theme) {
-      var _a;
+    return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_components_Table__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      theme: theme,
+      width: width,
+      height: height,
+      styles: columns,
+      data: frame,
+      showHeader: options.showHeaders,
+      fixedColumnsWidth: options.options.reduce(function (acc, _a) {
+        var w = _a.width,
+            column = _a.column;
 
-      return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_components_Table__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        theme: theme,
-        width: width,
-        height: height,
-        styles: columns,
-        data: frame,
-        showHeader: options.showHeaders,
-        fixedColumnsWidth: options.options.reduce(function (acc, _a) {
-          var w = _a.width,
-              column = _a.column;
+        if (column && lodash__WEBPACK_IMPORTED_MODULE_1___default.a.isNumber(w)) {
+          acc[column] = w;
+        }
 
-          if (column && lodash__WEBPACK_IMPORTED_MODULE_1___default.a.isNumber(w)) {
-            acc[column] = w;
-          }
-
-          return acc;
-        }, lodash__WEBPACK_IMPORTED_MODULE_1___default.a.isNumber(options.firstColumnSize) ? (_a = {}, _a[options.groupByLabel] = options.firstColumnSize, _a) : {}),
-        minColumnWidth: options.minColumnSizePx
-      });
+        return acc;
+      }, lodash__WEBPACK_IMPORTED_MODULE_1___default.a.isNumber(options.firstColumnSize) ? (_a = {}, _a[options.groupByLabel] = options.firstColumnSize, _a) : {}),
+      minColumnWidth: options.minColumnSizePx
     });
   };
 
   return Panel;
 }(react__WEBPACK_IMPORTED_MODULE_2__["PureComponent"]);
 
-/* harmony default export */ __webpack_exports__["default"] = (Panel);
+function PanelWithTheme(props) {
+  return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_3__["ThemeContext"].Consumer, null, function (theme) {
+    return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(Panel, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, props, {
+      theme: theme
+    }));
+  });
+}
 
 /***/ }),
 
@@ -17110,18 +17116,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var COMMON_OPTIONS_LABEL_WIDTH = _consts__WEBPACK_IMPORTED_MODULE_3__["LABEL_WIDTH"] + 4;
-var theme = Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["getTheme"])(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["GrafanaThemeType"].Dark);
-var ERROR_INFO_STYLE = {
-  alignSelf: 'center',
-  color: theme.colors.critical,
-  flex: 1,
-  fontSize: '14px',
-  marginLeft: '7px'
+
+var ERROR_INFO_STYLE = function ERROR_INFO_STYLE(theme) {
+  return {
+    alignSelf: 'center',
+    color: theme.colors.critical,
+    flex: 1,
+    fontSize: '14px',
+    marginLeft: '7px'
+  };
 };
 
-var WARN_INFO_STYLE = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, ERROR_INFO_STYLE, {
-  color: theme.colors.warn
-});
+var WARN_INFO_STYLE = function WARN_INFO_STYLE(theme) {
+  return tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, ERROR_INFO_STYLE, {
+    color: theme.colors.warn
+  });
+};
 
 var ICON_STYLE = {
   marginRight: '7px'
@@ -17185,9 +17195,9 @@ function (_super) {
   // }
 
 
-  CommonOptions.prototype.renderInfo = function (text, error) {
+  CommonOptions.prototype.renderInfo = function (theme, text, error) {
     return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
-      style: error ? ERROR_INFO_STYLE : WARN_INFO_STYLE
+      style: error ? ERROR_INFO_STYLE(theme) : WARN_INFO_STYLE(theme)
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
       className: "fa fa-exclamation-triangle",
       style: ICON_STYLE
@@ -17195,6 +17205,8 @@ function (_super) {
   };
 
   CommonOptions.prototype.render = function () {
+    var _this = this;
+
     var _a = this.props,
         options = _a.options,
         _b = _a.labels,
@@ -17238,7 +17250,9 @@ function (_super) {
         options: selectOptions,
         isLoading: loading
       })
-    }), loading ? this.renderInfo('Loading series') : labels.length === 0 && this.renderInfo('No series provided', true)), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["ThemeContext"].Consumer, null, function (theme) {
+      return loading ? _this.renderInfo(theme, 'Loading series') : labels.length === 0 && _this.renderInfo(theme, 'No series provided', true);
+    })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "gf-form"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["FormField"], {
       type: "number",
@@ -17972,15 +17986,15 @@ function createField(frame, name, getColumnOption) {
   return field;
 }
 
-function mapColors(color) {
+function mapColors(theme, color) {
   if (color[0] === '#') {
     return color;
   }
 
-  return Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["getColorForTheme"])(Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["getColorByName"])(color), _grafana_ui__WEBPACK_IMPORTED_MODULE_2__["GrafanaThemeType"].Dark);
+  return Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["getColorForTheme"])(Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["getColorByName"])(color), theme.type);
 }
 
-function columnOptionToStyle(_a) {
+function columnOptionToStyle(theme, _a) {
   var decimals = _a.decimals,
       rangeMap = _a.rangeMap,
       valueMap = _a.valueMap,
@@ -17992,7 +18006,9 @@ function columnOptionToStyle(_a) {
       unit = _a.unit;
   var result = {
     colorMode: colorMode,
-    colors: colors && colors.length > 0 ? colors.map(mapColors) : undefined,
+    colors: colors && colors.length > 0 ? colors.map(function (color) {
+      return mapColors(theme, color);
+    }) : undefined,
     decimals: decimals,
     pattern: column || '',
     thresholds: thresholds && thresholds.length > 0 ? thresholds : undefined,
@@ -18033,9 +18049,9 @@ function columnOptionToStyle(_a) {
   return result;
 }
 
-function createColumnStylesHandler(option) {
+function createColumnStylesHandler(theme, option) {
   var styles = new Map();
-  var defaultStyle = columnOptionToStyle(option.defaultColumnOption);
+  var defaultStyle = columnOptionToStyle(theme, option.defaultColumnOption);
   return {
     getAll: function getAll() {
       return Array.from(styles.values());
@@ -18052,7 +18068,7 @@ function createColumnStylesHandler(option) {
           continue;
         }
 
-        var resultStyle = columnOptionToStyle(option.options[i]);
+        var resultStyle = columnOptionToStyle(theme, option.options[i]);
         styles.set(serie, resultStyle);
         return resultStyle;
       }
@@ -18067,7 +18083,7 @@ function createColumnStylesHandler(option) {
   };
 }
 
-function getDerivedDataFrame(series, options) {
+function getDerivedDataFrame(theme, series, options) {
   if (series.length === 0) {
     return EMPTY_RESULT;
   }
@@ -18080,7 +18096,7 @@ function getDerivedDataFrame(series, options) {
 
   var indexCache = Object.create(null);
   var labelsSet = new Set();
-  var styles = createColumnStylesHandler(options);
+  var styles = createColumnStylesHandler(theme, options);
   var frame = {
     fields: [],
     length: 0

@@ -1,53 +1,55 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
-import { PanelProps, Alert, ThemeContext } from '@grafana/ui';
+import { PanelProps, Alert, ThemeContext, GrafanaTheme } from '@grafana/ui';
 import Table from './components/Table';
 import { Options } from 'types';
 import getDerivedDataFrame from './getDerivedDataFrame';
 import validateOptions from './validateOptions';
 
-interface Props extends PanelProps<Options> {}
+interface Props extends PanelProps<Options> {
+  theme: GrafanaTheme;
+}
 
-export default class Panel extends PureComponent<Props> {
+class Panel extends PureComponent<Props> {
   public componentDidCatch(error, info) {
     console.error(error);
   }
 
   public render() {
     let validationError;
-    const { options, width, height } = this.props;
+    const { options, width, height, theme } = this.props;
 
     if ((validationError = validateOptions(options))) {
       return <Alert title={validationError} />;
     }
 
     const { series } = this.props.data;
-    const { frame, columns } = getDerivedDataFrame(series, options);
+    const { frame, columns } = getDerivedDataFrame(theme, series, options);
 
     return (
-      <ThemeContext.Consumer>
-        {theme => (
-          <Table
-            theme={theme}
-            width={width}
-            height={height}
-            styles={columns}
-            data={frame}
-            showHeader={options.showHeaders}
-            fixedColumnsWidth={options.options.reduce(
-              (acc: { [k: string]: number }, { width: w, column }) => {
-                if (column && _.isNumber(w)) {
-                  acc[column] = w as number;
-                }
+      <Table
+        theme={theme}
+        width={width}
+        height={height}
+        styles={columns}
+        data={frame}
+        showHeader={options.showHeaders}
+        fixedColumnsWidth={options.options.reduce(
+          (acc: { [k: string]: number }, { width: w, column }) => {
+            if (column && _.isNumber(w)) {
+              acc[column] = w as number;
+            }
 
-                return acc;
-              },
-              _.isNumber(options.firstColumnSize) ? { [options.groupByLabel as string]: options.firstColumnSize as number } : {}
-            )}
-            minColumnWidth={options.minColumnSizePx}
-          />
+            return acc;
+          },
+          _.isNumber(options.firstColumnSize) ? { [options.groupByLabel as string]: options.firstColumnSize as number } : {}
         )}
-      </ThemeContext.Consumer>
+        minColumnWidth={options.minColumnSizePx}
+      />
     );
   }
+}
+
+export default function PanelWithTheme(props) {
+  return <ThemeContext.Consumer>{theme => <Panel {...props} theme={theme} />}</ThemeContext.Consumer>;
 }

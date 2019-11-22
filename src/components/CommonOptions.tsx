@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Options } from 'types';
-import { Switch, getTheme, GrafanaThemeType, Select, FormField } from '@grafana/ui';
+import { Switch, Select, FormField, GrafanaTheme, ThemeContext } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import { SelectableValue } from '@grafana/data';
 import EditorTab from './EditorTab';
@@ -16,18 +16,19 @@ type Props = {
 };
 
 const COMMON_OPTIONS_LABEL_WIDTH = LABEL_WIDTH + 4;
-const theme = getTheme(GrafanaThemeType.Dark);
-const ERROR_INFO_STYLE = {
+
+const ERROR_INFO_STYLE = (theme: GrafanaTheme) => ({
   alignSelf: 'center',
   color: theme.colors.critical,
   flex: 1,
   fontSize: '14px',
   marginLeft: '7px',
-};
-const WARN_INFO_STYLE = {
+});
+
+const WARN_INFO_STYLE = (theme: GrafanaTheme) => ({
   ...ERROR_INFO_STYLE,
   color: theme.colors.warn,
-};
+});
 const ICON_STYLE = {
   marginRight: '7px',
 };
@@ -39,7 +40,7 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showHeaders: e ? e.target.checked : false,
     });
-  };
+  }
 
   private handleShowLabelsColumnChange = (e?: React.SyntheticEvent) => {
     this.props.onChange({
@@ -47,14 +48,14 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showLabelColumn: e ? e.target.checked : false,
     });
-  };
+  }
 
   private handleGroupBySelect = (selected: SelectableValue<string>) => {
     this.props.onChange({
       ...this.props.options,
       groupByLabel: selected.value,
     });
-  };
+  }
 
   private handleFirstColumnWidthChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
@@ -65,7 +66,7 @@ export default class CommonOptions extends Component<Props> {
       ...this.props.options,
       firstColumnSize: Number.isNaN(widthNumber) ? undefined : widthNumber,
     });
-  };
+  }
 
   private handleColumnWidthChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
@@ -76,7 +77,7 @@ export default class CommonOptions extends Component<Props> {
       ...this.props.options,
       minColumnSizePx: Number.isNaN(widthNumber) ? undefined : widthNumber,
     });
-  };
+  }
 
   // public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
   //   return (
@@ -86,9 +87,9 @@ export default class CommonOptions extends Component<Props> {
   //   );
   // }
 
-  private renderInfo(text: string, error?: boolean) {
+  private renderInfo(theme: GrafanaTheme, text: string, error?: boolean) {
     return (
-      <span style={error ? ERROR_INFO_STYLE : WARN_INFO_STYLE}>
+      <span style={error ? ERROR_INFO_STYLE(theme) : WARN_INFO_STYLE(theme)}>
         <i className="fa fa-exclamation-triangle" style={ICON_STYLE} />
         {text}
       </span>
@@ -128,7 +129,11 @@ export default class CommonOptions extends Component<Props> {
                       />
                     }
                   />
-                  {loading ? this.renderInfo('Loading series') : labels.length === 0 && this.renderInfo('No series provided', true)}
+                  <ThemeContext.Consumer>
+                    {theme =>
+                      loading ? this.renderInfo(theme, 'Loading series') : labels.length === 0 && this.renderInfo(theme, 'No series provided', true)
+                    }
+                  </ThemeContext.Consumer>
                 </div>
                 <div className="gf-form">
                   <FormField
