@@ -9,6 +9,7 @@ export interface ColumnOption {
   colors?: string[];
   column?: string;
   thresholds?: number[];
+  discreteColors: boolean;
   type: ReducerID;
   rangeMap?: RangeMap;
   rawDataType?: 'string' | 'number' | 'date';

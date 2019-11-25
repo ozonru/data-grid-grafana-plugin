@@ -7,6 +7,7 @@ export class ColumnSetting implements ColumnOption {
   public static copyWith(
     option: ColumnSetting,
     column?: string,
+    discreteColors?: boolean,
     type?: ReducerID,
     unit?: string,
     addUnitToTitle?: boolean,
@@ -25,6 +26,7 @@ export class ColumnSetting implements ColumnOption {
     return new ColumnSetting(
       type || option.type,
       unit || option.unit,
+      discreteColors || option.discreteColors,
       column || option.column,
       decimals || option.decimals,
       rawDataType || option.rawDataType,
@@ -42,6 +44,7 @@ export class ColumnSetting implements ColumnOption {
   constructor(
     public type: ReducerID,
     public unit: string,
+    public discreteColors: boolean,
     public column?: string,
     public decimals?: number,
     public rawDataType?: ColumnOption['rawDataType'],

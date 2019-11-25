@@ -18,11 +18,13 @@
     "@grafana/toolkit": "^.6.4.4",
     "@grafana/ui": "^6.4.4",
     "@types/classnames": "^2.2.9",
+    "@types/d3-scale": "^2.1.1",
     "@types/grafana": "github:CorpGlory/types-grafana.git",
     "prettier": "1.19.1",
     "tslint": "^5.20.1"
   },
   "dependencies": {
-    "classnames": "^2.2.6"
+    "classnames": "^2.2.6",
+    "d3-scale": "^3.2.1"
   }
 }

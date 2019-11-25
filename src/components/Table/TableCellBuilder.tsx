@@ -1,5 +1,6 @@
 // Libraries
 import _ from 'lodash';
+import { scaleLinear, ScaleLinear } from 'd3-scale';
 import React, { ReactElement } from 'react';
 import { GridCellProps } from 'react-virtualized';
 import { ValueFormatter, getValueFormat, getColorFromHexRgbOrName, GrafanaTheme, getDecimalsForValue } from '@grafana/ui';
@@ -92,26 +93,48 @@ export function getCellBuilder(schema: Field['config'], style: ColumnStyle | nul
 }
 
 class CellBuilderWithStyle {
+  private scales: { [k: string]: ScaleLinear<string, string> } = {};
+
   constructor(private mapper: ValueMapper, private style: ColumnStyle, private theme: GrafanaTheme, private fmt?: ValueFormatter) {}
 
   public getColorForValue = (value: any): string | null => {
     const { thresholds, colors } = this.style;
+    const returnFirst = () => getColorFromHexRgbOrName(_.first(colors), this.theme.type);
     if (!colors) {
       return null;
     }
 
     if (!thresholds || thresholds.length === 0) {
-      return getColorFromHexRgbOrName(_.first(colors), this.theme.type);
+      return returnFirst();
     }
 
     for (let i = thresholds.length; i > 0; i--) {
       if (value >= thresholds[i - 1]) {
-        return getColorFromHexRgbOrName(colors[i], this.theme.type);
+        if (i === thresholds.length) {
+          return getColorFromHexRgbOrName(_.last(colors), this.theme.type);
+        }
+
+        let scale = this.scales[thresholds[i - 1]];
+
+        if (scale) {
+          return scale(value);
+        }
+
+        const colors1 = getColorFromHexRgbOrName(colors[i - 1], this.theme.type);
+        const colors2 = getColorFromHexRgbOrName(colors[i], this.theme.type);
+
+        scale = scaleLinear<string>()
+          .domain([thresholds[i - 1], thresholds[i]])
+          .range([colors1, colors2]);
+
+        this.scales[thresholds[i - 1]] = scale;
+
+        return scale(value);
       }
     }
 
-    return getColorFromHexRgbOrName(_.first(colors), this.theme.type);
-  };
+    return returnFirst();
+  }
 
   public build = (cell: TableCellBuilderOptions) => {
     let { props } = cell;
@@ -151,5 +174,5 @@ class CellBuilderWithStyle {
     }
 
     return simpleCellBuilder({ value: valueMapper(value, this.style), props });
-  };
+  }
 }
