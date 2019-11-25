@@ -1,7 +1,8 @@
 import { ColumnOption, Options } from './types';
 import { ArrayVector, DataFrame, Field, FieldType, MappingType, reduceField } from '@grafana/data';
 import { ColumnStyle } from '@grafana/ui/components/Table/TableCellBuilder';
-import { ColorDefinition, getColorByName, getColorForTheme, GrafanaTheme } from '@grafana/ui';
+import { getColorByName, getColorForTheme, GrafanaTheme } from '@grafana/ui';
+import { CSS_COLORS } from './consts';
 
 const EMPTY_RESULT = {
   columns: [],
@@ -48,7 +49,13 @@ function mapColors(theme: GrafanaTheme, color: string): string {
     return color;
   }
 
-  return getColorForTheme(getColorByName(color) as ColorDefinition, theme.type);
+  const definition = getColorByName(color);
+
+  if (definition) {
+    getColorForTheme(definition, theme.type);
+  }
+
+  return CSS_COLORS[color] || color;
 }
 
 function columnOptionToStyle(

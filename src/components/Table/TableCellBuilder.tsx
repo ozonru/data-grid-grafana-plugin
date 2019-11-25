@@ -69,8 +69,7 @@ export function getCellBuilder(schema: Field['config'], style: ColumnStyle | nul
         return v;
       },
       style,
-      theme,
-      schema
+      theme
     ).build;
   }
 
@@ -85,7 +84,6 @@ export function getCellBuilder(schema: Field['config'], style: ColumnStyle | nul
       },
       style,
       theme,
-      schema,
       valueFormatter
     ).build;
   }
@@ -94,19 +92,16 @@ export function getCellBuilder(schema: Field['config'], style: ColumnStyle | nul
 }
 
 class CellBuilderWithStyle {
-  constructor(
-    private mapper: ValueMapper,
-    private style: ColumnStyle,
-    private theme: GrafanaTheme,
-    // @ts-ignore
-    private column: Field['config'],
-    private fmt?: ValueFormatter
-  ) {}
+  constructor(private mapper: ValueMapper, private style: ColumnStyle, private theme: GrafanaTheme, private fmt?: ValueFormatter) {}
 
   public getColorForValue = (value: any): string | null => {
     const { thresholds, colors } = this.style;
-    if (!thresholds || !colors) {
+    if (!colors) {
       return null;
+    }
+
+    if (!thresholds || thresholds.length === 0) {
+      return getColorFromHexRgbOrName(_.first(colors), this.theme.type);
     }
 
     for (let i = thresholds.length; i > 0; i--) {
@@ -114,6 +109,7 @@ class CellBuilderWithStyle {
         return getColorFromHexRgbOrName(colors[i], this.theme.type);
       }
     }
+
     return getColorFromHexRgbOrName(_.first(colors), this.theme.type);
   }
 
