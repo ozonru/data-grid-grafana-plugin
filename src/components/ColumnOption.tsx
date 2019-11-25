@@ -68,11 +68,11 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option[key] = value;
     this.props.onChange(option);
-  };
+  }
 
   private handleStatChange = (stat: string | string[]) => {
     this.changeWith('type', ([] as ReducerID[]).concat(stat as ReducerID)[0]);
-  };
+  }
 
   private handleDecimalsChange = (event: React.SyntheticEvent) => {
     // @ts-ignore
@@ -84,24 +84,24 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.changeWith('decimals', decimals);
-  };
+  }
 
   private handleUnitChange = (item: SelectableValue<string>) => {
     this.changeWith('unit', item.value || 'none');
-  };
+  }
 
   private handleDataTypeChange = (item: SelectableValue<RawDataType>) => {
     this.changeWith('rawDataType', item.value);
-  };
+  }
 
   private handleColorModeChange = (item: SelectableValue<ColorModeType>) => {
     this.changeWith('colorMode', item.value);
-  };
+  }
 
   private handleNoValueChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
     this.changeWith('noValue', e.target.value);
-  };
+  }
 
   private handleWidthChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
@@ -113,7 +113,7 @@ export default class ColumnOptionComponent extends Component<Props> {
     } else {
       this.changeWith('width', num);
     }
-  };
+  }
 
   private handleValueMapChange = (value: string) => {
     let rangeMap: undefined | boolean = undefined;
@@ -182,7 +182,7 @@ export default class ColumnOptionComponent extends Component<Props> {
     }
 
     this.props.onChange(option);
-  };
+  }
 
   private handleThresholdChange = (value: string) => {
     const splitted = value.split(',');
@@ -202,7 +202,7 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option.thresholds = Array.from(thresholds);
     this.props.onChange(option);
-  };
+  }
 
   private handleColorsChange = (value: string) => {
     const splitted = value.split(',');
@@ -228,7 +228,7 @@ export default class ColumnOptionComponent extends Component<Props> {
 
     option.colors = colors;
     this.props.onChange(option);
-  };
+  }
 
   private handleTitleChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
@@ -242,7 +242,7 @@ export default class ColumnOptionComponent extends Component<Props> {
       delete option.title;
     }
     this.props.onChange(option);
-  };
+  }
 
   private handleDiscreteFlagChange = (e?: React.SyntheticEvent<HTMLInputElement>) => {
     // @ts-ignore
@@ -253,7 +253,7 @@ export default class ColumnOptionComponent extends Component<Props> {
     option.discreteColors = checked;
 
     this.props.onChange(option);
-  };
+  }
 
   public render() {
     const { option: option, visible, onDelete, restColumns, onCopy, isDefault } = this.props;

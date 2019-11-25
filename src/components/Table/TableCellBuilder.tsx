@@ -153,7 +153,7 @@ class CellBuilderWithStyle {
       // For numeric values set the color
       const { colorMode } = this.style;
       if (colorMode) {
-        const color = this.getColorForValue(Number(value));
+        const color = this.getColorForValue(parseFloat(value));
         if (color) {
           if (colorMode === 'cell') {
             props = {

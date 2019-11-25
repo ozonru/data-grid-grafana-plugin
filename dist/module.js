@@ -24852,7 +24852,7 @@ function () {
         var colorMode = _this.style.colorMode;
 
         if (colorMode) {
-          var color = _this.getColorForValue(Number(value));
+          var color = _this.getColorForValue(parseFloat(value));
 
           if (color) {
             if (colorMode === 'cell') {
