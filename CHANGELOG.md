@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.5.0
+
+- Feat: add ability to render color from continuous range
+- Remove showHeaders parameter for table
+
 ## 0.4.0
 
 - Feat: add ability to colorify column without thresholds
