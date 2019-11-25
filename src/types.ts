@@ -22,7 +22,6 @@ export interface ColumnOption {
 export interface Options {
   defaultColumnOption: ColumnOption;
   options: ColumnOption[];
-  showHeaders: boolean;
   showLabelColumn: boolean;
   groupByLabel?: string;
   firstColumnSize?: number;

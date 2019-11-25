@@ -34,14 +34,6 @@ const ICON_STYLE = {
 };
 
 export default class CommonOptions extends Component<Props> {
-  private handleShowHeadersChange = (e?: React.SyntheticEvent) => {
-    this.props.onChange({
-      ...this.props.options,
-      // @ts-ignore
-      showHeaders: e ? e.target.checked : false,
-    });
-  }
-
   private handleShowLabelsColumnChange = (e?: React.SyntheticEvent) => {
     this.props.onChange({
       ...this.props.options,
@@ -156,9 +148,6 @@ export default class CommonOptions extends Component<Props> {
                     value={options.minColumnSizePx}
                     onChange={this.handleColumnWidthChange}
                   />
-                </div>
-                <div className="gf-form">
-                  <Switch label="Show headers" labelClass={switchLabelClass} onChange={this.handleShowHeadersChange} checked={options.showHeaders} />
                 </div>
                 <div className="gf-form">
                   <Switch

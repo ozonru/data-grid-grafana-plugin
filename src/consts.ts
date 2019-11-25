@@ -17,7 +17,6 @@ export const defaults: Options = {
   firstColumnSize: 150,
   groupByLabel: undefined,
   options: [],
-  showHeaders: true,
   showLabelColumn: true,
 };
 

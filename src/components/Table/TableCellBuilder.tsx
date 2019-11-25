@@ -111,7 +111,7 @@ class CellBuilderWithStyle {
     }
 
     return getColorFromHexRgbOrName(_.first(colors), this.theme.type);
-  }
+  };
 
   public build = (cell: TableCellBuilderOptions) => {
     let { props } = cell;
@@ -151,5 +151,5 @@ class CellBuilderWithStyle {
     }
 
     return simpleCellBuilder({ value: valueMapper(value, this.style), props });
-  }
+  };
 }

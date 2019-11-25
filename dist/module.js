@@ -16595,12 +16595,12 @@ function (_super) {
         columns = _c.columns;
 
     return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_components_Table__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      showHeader: true,
       theme: theme,
       width: width,
       height: height,
       styles: columns,
       data: frame,
-      showHeader: options.showHeaders,
       fixedColumnsWidth: options.options.reduce(function (acc, _a) {
         var w = _a.width,
             column = _a.column;
@@ -17147,13 +17147,6 @@ function (_super) {
   function CommonOptions() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
 
-    _this.handleShowHeadersChange = function (e) {
-      _this.props.onChange(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, _this.props.options, {
-        // @ts-ignore
-        showHeaders: e ? e.target.checked : false
-      }));
-    };
-
     _this.handleShowLabelsColumnChange = function (e) {
       _this.props.onChange(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, _this.props.options, {
         // @ts-ignore
@@ -17274,13 +17267,6 @@ function (_super) {
       inputWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["FORM_ELEMENT_WIDTH"],
       value: options.minColumnSizePx,
       onChange: this.handleColumnWidthChange
-    })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "gf-form"
-    }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["Switch"], {
-      label: "Show headers",
-      labelClass: switchLabelClass,
-      onChange: this.handleShowHeadersChange,
-      checked: options.showHeaders
     })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "gf-form"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["Switch"], {
@@ -17930,7 +17916,6 @@ var defaults = {
   firstColumnSize: 150,
   groupByLabel: undefined,
   options: [],
-  showHeaders: true,
   showLabelColumn: true
 };
 var CSS_COLORS = {

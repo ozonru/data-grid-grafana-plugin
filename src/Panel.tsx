@@ -28,12 +28,12 @@ class Panel extends PureComponent<Props> {
 
     return (
       <Table
+        showHeader
         theme={theme}
         width={width}
         height={height}
         styles={columns}
         data={frame}
-        showHeader={options.showHeaders}
         fixedColumnsWidth={options.options.reduce(
           (acc: { [k: string]: number }, { width: w, column }) => {
             if (column && _.isNumber(w)) {
