@@ -23913,6 +23913,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var THRESHOLDS_TOOLTIP = _consts__WEBPACK_IMPORTED_MODULE_3__["THRESHOLDS_COUNT_DOES_NOT_FIT"] + ". Comparing with raw data";
 var COPY_VALUE = {
   label: 'Copy for..',
   value: ''
@@ -24285,7 +24286,7 @@ function (_super) {
       className: "gf-form"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_InputOnBlur__WEBPACK_IMPORTED_MODULE_6__["default"], {
       label: "Thresholds",
-      tooltip: _consts__WEBPACK_IMPORTED_MODULE_3__["THRESHOLDS_COUNT_DOES_NOT_FIT"],
+      tooltip: THRESHOLDS_TOOLTIP,
       placeholder: "50, 80",
       labelWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["LABEL_WIDTH"],
       inputWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["FORM_ELEMENT_WIDTH"],
@@ -24843,16 +24844,11 @@ function () {
       var value = _this.mapper(cell.value);
 
       if (lodash__WEBPACK_IMPORTED_MODULE_1___default.a.isNumber(value)) {
-        if (_this.fmt) {
-          var decimals = Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_4__["getDecimalsForValue"])(value, _this.style.decimals).decimals;
-          value = _this.fmt(value, decimals);
-        } // For numeric values set the color
-
-
+        // For numeric values set the color
         var colorMode = _this.style.colorMode;
 
         if (colorMode) {
-          var color = _this.getColorForValue(parseFloat(value));
+          var color = _this.getColorForValue(value);
 
           if (color) {
             if (colorMode === 'cell') {
@@ -24870,6 +24866,11 @@ function () {
               });
             }
           }
+        }
+
+        if (_this.fmt) {
+          var decimals = Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_4__["getDecimalsForValue"])(value, _this.style.decimals).decimals;
+          value = _this.fmt(value, decimals);
         }
       }
 

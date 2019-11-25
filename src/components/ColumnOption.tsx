@@ -21,6 +21,7 @@ type RawDataType = ColumnOption['rawDataType'];
 type ColorModeType = ColumnOption['colorMode'];
 type RangeOrValueMap = RangeMap | ValueMap;
 
+const THRESHOLDS_TOOLTIP = `${THRESHOLDS_COUNT_DOES_NOT_FIT}. Comparing with raw data`;
 const COPY_VALUE: SelectableValue<string> = { label: 'Copy for..', value: '' };
 const RANGE_MAP_REGEX = /(.+)-(.+)=(.+)/;
 const VALUE_MAP_REGEX = /(.+)=(.+)/;
@@ -366,7 +367,7 @@ export default class ColumnOptionComponent extends Component<Props> {
               <div className="gf-form">
                 <InputOnBlur<number[]>
                   label="Thresholds"
-                  tooltip={THRESHOLDS_COUNT_DOES_NOT_FIT}
+                  tooltip={THRESHOLDS_TOOLTIP}
                   placeholder="50, 80"
                   labelWidth={LABEL_WIDTH}
                   inputWidth={FORM_ELEMENT_WIDTH}

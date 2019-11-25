@@ -145,15 +145,10 @@ class CellBuilderWithStyle {
     let value = this.mapper(cell.value);
 
     if (_.isNumber(value)) {
-      if (this.fmt) {
-        const { decimals } = getDecimalsForValue(value, this.style.decimals);
-        value = this.fmt(value, decimals);
-      }
-
       // For numeric values set the color
       const { colorMode } = this.style;
       if (colorMode) {
-        const color = this.getColorForValue(parseFloat(value));
+        const color = this.getColorForValue(value);
         if (color) {
           if (colorMode === 'cell') {
             props = {
@@ -174,6 +169,11 @@ class CellBuilderWithStyle {
             };
           }
         }
+      }
+
+      if (this.fmt) {
+        const { decimals } = getDecimalsForValue(value, this.style.decimals);
+        value = this.fmt(value, decimals);
       }
     }
 
