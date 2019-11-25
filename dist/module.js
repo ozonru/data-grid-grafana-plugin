@@ -24316,7 +24316,7 @@ function (_super) {
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["Switch"], {
       label: "Discrete color range",
       labelClass: "width-" + _consts__WEBPACK_IMPORTED_MODULE_3__["LABEL_WIDTH"],
-      checked: option.discreteColors,
+      checked: !!option.discreteColors,
       onChange: this.handleDiscreteFlagChange
     })))), !isDefault && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["PanelOptionsGroup"], {
       title: "Column"
@@ -24812,6 +24812,10 @@ function () {
 
       for (var i = thresholds.length; i > 0; i--) {
         if (value >= thresholds[i - 1]) {
+          if (_this.style.discreteColors) {
+            return Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_4__["getColorFromHexRgbOrName"])(colors[i], _this.theme.type);
+          }
+
           if (i === thresholds.length) {
             return Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_4__["getColorFromHexRgbOrName"])(lodash__WEBPACK_IMPORTED_MODULE_1___default.a.last(colors), _this.theme.type);
           }
@@ -24822,9 +24826,9 @@ function () {
             return scale(value);
           }
 
-          var colors1 = Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_4__["getColorFromHexRgbOrName"])(colors[i - 1], _this.theme.type);
-          var colors2 = Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_4__["getColorFromHexRgbOrName"])(colors[i], _this.theme.type);
-          scale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_2__["scaleLinear"])().domain([thresholds[i - 1], thresholds[i]]).range([colors1, colors2]);
+          var color1 = Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_4__["getColorFromHexRgbOrName"])(colors[i - 1], _this.theme.type);
+          var color2 = Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_4__["getColorFromHexRgbOrName"])(colors[i], _this.theme.type);
+          scale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_2__["scaleLinear"])().domain([thresholds[i - 1], thresholds[i]]).range([color1, color2]);
           _this.scales[thresholds[i - 1]] = scale;
           return scale(value);
         }
@@ -25448,13 +25452,15 @@ function columnOptionToStyle(theme, _a) {
       colors = _a.colors,
       column = _a.column,
       thresholds = _a.thresholds,
-      unit = _a.unit;
+      unit = _a.unit,
+      discreteColors = _a.discreteColors;
   var result = {
     colorMode: colorMode,
     colors: colors && colors.length > 0 ? colors.map(function (color) {
       return mapColors(theme, color);
     }) : undefined,
     decimals: decimals,
+    discreteColors: discreteColors,
     pattern: column || '',
     thresholds: thresholds && thresholds.length > 0 ? thresholds : undefined,
     type: rawDataType,

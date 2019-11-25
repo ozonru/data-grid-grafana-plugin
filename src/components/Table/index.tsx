@@ -2,10 +2,10 @@
 import React, { Component, ReactElement } from 'react';
 import { CellMeasurer, CellMeasurerCache, GridCellProps, Index, MultiGrid, SortDirectionType, SortIndicator } from 'react-virtualized';
 import { GrafanaTheme, Themeable } from '@grafana/ui';
-import { ColumnStyle } from '@grafana/ui/components/Table/TableCellBuilder';
 import { ArrayVector, DataFrame, sortDataFrame, stringToJsRegex } from '@grafana/data';
 
 import { getCellBuilder, simpleCellBuilder, TableCellBuilder, TableCellBuilderOptions } from './TableCellBuilder';
+import { CustomColumnStyle } from '../../types';
 
 export interface Props extends Themeable {
   data: DataFrame;
@@ -14,7 +14,7 @@ export interface Props extends Themeable {
   showHeader: boolean;
   fixedHeader: boolean;
   fixedColumns: number;
-  styles: ColumnStyle[];
+  styles: CustomColumnStyle[];
   fixedColumnsWidth: { [k: string]: number };
   width: number;
   height: number;
@@ -103,7 +103,7 @@ export class Table extends Component<Props, State> {
 
     return data.fields.map((col, index) => {
       let title = col.name;
-      let style: ColumnStyle | null = null; // ColumnStyle
+      let style: CustomColumnStyle | null = null; // ColumnStyle
 
       // Find the style based on the text
       for (let i = 0; i < styles.length; i++) {

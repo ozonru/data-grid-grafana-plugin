@@ -1,4 +1,5 @@
 import { ReducerID } from '@grafana/data';
+import { ColumnStyle } from '@grafana/ui/components/Table/TableCellBuilder';
 
 export type ValueMap = [number | string, number | string][];
 export type RangeMap = [number, number, number | string][];
@@ -28,3 +29,5 @@ export interface Options {
   firstColumnSize?: number;
   minColumnSizePx?: number;
 }
+
+export type CustomColumnStyle = ColumnStyle & { discreteColors: boolean };

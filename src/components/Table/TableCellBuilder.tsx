@@ -5,7 +5,7 @@ import React, { ReactElement } from 'react';
 import { GridCellProps } from 'react-virtualized';
 import { ValueFormatter, getValueFormat, getColorFromHexRgbOrName, GrafanaTheme, getDecimalsForValue } from '@grafana/ui';
 import { Field, RangeMap, ValueMap } from '@grafana/data';
-import { ColumnStyle } from '@grafana/ui/components/Table/TableCellBuilder';
+import { CustomColumnStyle } from '../../types';
 
 type ValueMapper = (value: any) => any;
 export interface TableCellBuilderOptions {
@@ -30,7 +30,7 @@ export const simpleCellBuilder: TableCellBuilder = (cell: TableCellBuilderOption
   );
 };
 
-function valueMapper(value: number | string, style: ColumnStyle) {
+function valueMapper(value: number | string, style: CustomColumnStyle) {
   if (style.valueMaps && style.valueMaps.length > 0) {
     for (let i = 0; i < style.valueMaps.length; i++) {
       const mapper = style.valueMaps[i] as ValueMap;
@@ -52,7 +52,7 @@ function valueMapper(value: number | string, style: ColumnStyle) {
   return value;
 }
 
-export function getCellBuilder(schema: Field['config'], style: ColumnStyle | null, theme: GrafanaTheme): TableCellBuilder {
+export function getCellBuilder(schema: Field['config'], style: CustomColumnStyle | null, theme: GrafanaTheme): TableCellBuilder {
   if (!style) {
     return simpleCellBuilder;
   }
@@ -95,7 +95,7 @@ export function getCellBuilder(schema: Field['config'], style: ColumnStyle | nul
 class CellBuilderWithStyle {
   private scales: { [k: string]: ScaleLinear<string, string> } = {};
 
-  constructor(private mapper: ValueMapper, private style: ColumnStyle, private theme: GrafanaTheme, private fmt?: ValueFormatter) {}
+  constructor(private mapper: ValueMapper, private style: CustomColumnStyle, private theme: GrafanaTheme, private fmt?: ValueFormatter) {}
 
   public getColorForValue = (value: any): string | null => {
     const { thresholds, colors } = this.style;
@@ -110,6 +110,10 @@ class CellBuilderWithStyle {
 
     for (let i = thresholds.length; i > 0; i--) {
       if (value >= thresholds[i - 1]) {
+        if (this.style.discreteColors) {
+          return getColorFromHexRgbOrName(colors[i], this.theme.type);
+        }
+
         if (i === thresholds.length) {
           return getColorFromHexRgbOrName(_.last(colors), this.theme.type);
         }
@@ -120,12 +124,12 @@ class CellBuilderWithStyle {
           return scale(value);
         }
 
-        const colors1 = getColorFromHexRgbOrName(colors[i - 1], this.theme.type);
-        const colors2 = getColorFromHexRgbOrName(colors[i], this.theme.type);
+        const color1 = getColorFromHexRgbOrName(colors[i - 1], this.theme.type);
+        const color2 = getColorFromHexRgbOrName(colors[i], this.theme.type);
 
         scale = scaleLinear<string>()
           .domain([thresholds[i - 1], thresholds[i]])
-          .range([colors1, colors2]);
+          .range([color1, color2]);
 
         this.scales[thresholds[i - 1]] = scale;
 

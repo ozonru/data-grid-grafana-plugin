@@ -1,6 +1,5 @@
-import { ColumnOption, Options } from './types';
+import { ColumnOption, CustomColumnStyle, Options } from './types';
 import { ArrayVector, DataFrame, Field, FieldType, MappingType, reduceField } from '@grafana/data';
-import { ColumnStyle } from '@grafana/ui/components/Table/TableCellBuilder';
 import { getColorByName, getColorForTheme, GrafanaTheme } from '@grafana/ui';
 import { CSS_COLORS } from './consts';
 
@@ -60,12 +59,13 @@ function mapColors(theme: GrafanaTheme, color: string): string {
 
 function columnOptionToStyle(
   theme: GrafanaTheme,
-  { decimals, rangeMap, valueMap, rawDataType, colorMode, colors, column, thresholds, unit }: ColumnOption
-): ColumnStyle {
-  const result: ColumnStyle = {
+  { decimals, rangeMap, valueMap, rawDataType, colorMode, colors, column, thresholds, unit, discreteColors }: ColumnOption
+): CustomColumnStyle {
+  const result: CustomColumnStyle = {
     colorMode,
     colors: colors && colors.length > 0 ? colors.map(color => mapColors(theme, color)) : undefined,
     decimals,
+    discreteColors,
     pattern: column || '',
     thresholds: thresholds && thresholds.length > 0 ? thresholds : undefined,
     type: rawDataType,
@@ -86,8 +86,8 @@ function columnOptionToStyle(
 }
 
 function createColumnStylesHandler(theme: GrafanaTheme, option: Options) {
-  const styles = new Map<string, ColumnStyle>();
-  const defaultStyle: ColumnStyle = columnOptionToStyle(theme, option.defaultColumnOption);
+  const styles = new Map<string, CustomColumnStyle>();
+  const defaultStyle = columnOptionToStyle(theme, option.defaultColumnOption);
 
   return {
     getAll: () => Array.from(styles.values()),
@@ -125,7 +125,7 @@ export default function getDerivedDataFrame(
   theme: GrafanaTheme,
   series: DataFrame[],
   options: Options
-): { frame: DataFrame; columns: ColumnStyle[] } {
+): { frame: DataFrame; columns: CustomColumnStyle[] } {
   if (series.length === 0) {
     return EMPTY_RESULT;
   }
