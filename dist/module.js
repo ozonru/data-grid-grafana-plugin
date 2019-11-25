@@ -16716,6 +16716,7 @@ function (_super) {
 
     _this.unitFormats = Object(_utils__WEBPACK_IMPORTED_MODULE_5__["loadFormats"])();
     _this.colors = Object(_utils__WEBPACK_IMPORTED_MODULE_5__["loadColors"])();
+    _this.colorsString = "Theme colors: " + Object(_utils__WEBPACK_IMPORTED_MODULE_5__["loadColors"])().join(',\n');
 
     _this.changeWith = function (key, value) {
       var option = _utils__WEBPACK_IMPORTED_MODULE_5__["ColumnSetting"].copyWith(_this.props.option);
@@ -16861,26 +16862,26 @@ function (_super) {
 
     _this.handleColorsChange = function (value) {
       var splitted = value.split(',');
-      var colors = new Set();
+      var colors = [];
 
       for (var i = 0; i < splitted.length; i++) {
         var str = splitted[i].trim();
 
         if (str[0] === '#') {
-          colors.add(str);
+          colors.push(str);
         } else {
           var existsInTheme = _this.colors.indexOf(str);
 
-          if (existsInTheme === -1) {
+          if (existsInTheme === -1 && !_consts__WEBPACK_IMPORTED_MODULE_3__["CSS_COLORS"][str]) {
             continue;
           }
 
-          colors.add(str);
+          colors.push(str);
         }
       }
 
       var option = _utils__WEBPACK_IMPORTED_MODULE_5__["ColumnSetting"].copyWith(_this.props.option);
-      option.colors = Array.from(colors);
+      option.colors = colors;
 
       _this.props.onChange(option);
     };
@@ -17004,6 +17005,7 @@ function (_super) {
       className: "gf-form"
     }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_InputOnBlur__WEBPACK_IMPORTED_MODULE_6__["default"], {
       label: "Colors",
+      tooltip: this.colorsString,
       placeholder: "#0f0, semi-dark-orange, red",
       labelWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["LABEL_WIDTH"],
       inputWidth: _consts__WEBPACK_IMPORTED_MODULE_3__["FORM_ELEMENT_WIDTH"],
@@ -18099,6 +18101,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _grafana_data__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_grafana_data__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _grafana_ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @grafana/ui */ "@grafana/ui");
 /* harmony import */ var _grafana_ui__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./consts */ "./consts.ts");
+
 
 
 
@@ -18144,7 +18148,13 @@ function mapColors(theme, color) {
     return color;
   }
 
-  return Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["getColorForTheme"])(Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["getColorByName"])(color), theme.type);
+  var definition = Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["getColorByName"])(color);
+
+  if (definition) {
+    return Object(_grafana_ui__WEBPACK_IMPORTED_MODULE_2__["getColorForTheme"])(definition, theme.type);
+  }
+
+  return _consts__WEBPACK_IMPORTED_MODULE_3__["CSS_COLORS"][color] || color;
 }
 
 function columnOptionToStyle(theme, _a) {

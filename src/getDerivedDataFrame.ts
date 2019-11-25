@@ -52,7 +52,7 @@ function mapColors(theme: GrafanaTheme, color: string): string {
   const definition = getColorByName(color);
 
   if (definition) {
-    getColorForTheme(definition, theme.type);
+    return getColorForTheme(definition, theme.type);
   }
 
   return CSS_COLORS[color] || color;
