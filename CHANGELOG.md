@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.5.2
+
+- Feat(Table): compare thresholds with raw data instead of formatted
+
 ## 0.5.1
 
 - Fix(Table): parse formatted value to float instead of Number cast
