@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.4.0
+
+- Feat: add ability to colorify column without thresholds
+- Feat(Editor): remove filtering only unique colors
+- Feat(Editor): support all css color names
+
 ## 0.3.0
 
 - Feat(Editor): add column width option
