@@ -1,3 +1,4 @@
+/* tslint:disable */
 import React, { Component } from 'react';
 import { Options } from 'types';
 import { Switch, Select, FormField, GrafanaTheme, ThemeContext } from '@grafana/ui';
@@ -40,14 +41,14 @@ export default class CommonOptions extends Component<Props> {
       // @ts-ignore
       showLabelColumn: e ? e.target.checked : false,
     });
-  }
+  };
 
   private handleGroupBySelect = (selected: SelectableValue<string>) => {
     this.props.onChange({
       ...this.props.options,
       groupByLabel: selected.value,
     });
-  }
+  };
 
   private handleFirstColumnWidthChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
@@ -58,7 +59,7 @@ export default class CommonOptions extends Component<Props> {
       ...this.props.options,
       firstColumnSize: Number.isNaN(widthNumber) ? undefined : widthNumber,
     });
-  }
+  };
 
   private handleColumnWidthChange = (e: React.SyntheticEvent) => {
     // @ts-ignore
@@ -69,7 +70,7 @@ export default class CommonOptions extends Component<Props> {
       ...this.props.options,
       minColumnSizePx: Number.isNaN(widthNumber) ? undefined : widthNumber,
     });
-  }
+  };
 
   // public shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
   //   return (

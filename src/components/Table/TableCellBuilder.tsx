@@ -1,4 +1,4 @@
-// Libraries
+/* tslint:disable */
 import _ from 'lodash';
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 import React, { ReactElement } from 'react';
@@ -138,7 +138,7 @@ class CellBuilderWithStyle {
     }
 
     return returnFirst();
-  }
+  };
 
   public build = (cell: TableCellBuilderOptions) => {
     let { props } = cell;
@@ -178,5 +178,5 @@ class CellBuilderWithStyle {
     }
 
     return simpleCellBuilder({ value: valueMapper(value, this.style), props });
-  }
+  };
 }
