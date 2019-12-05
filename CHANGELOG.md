@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.5.4
+
+- Fix: value mapping does not block value formatting
+
 ## 0.5.3
 
 - Publish production build
