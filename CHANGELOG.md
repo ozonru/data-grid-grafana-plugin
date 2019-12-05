@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.5.3
+
+- Publish production build
+
 ## 0.5.2
 
 - Feat(Table): compare thresholds with raw data instead of formatted
