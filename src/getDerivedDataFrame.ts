@@ -74,11 +74,9 @@ function columnOptionToStyle(
 
   if (valueMap && valueMap.length > 0) {
     result.mappingType = MappingType.ValueToText;
-    result.type = 'string';
     result.valueMaps = valueMap.map(([value, to]) => ({ value, text: to.toString() }));
   } else if (rangeMap && rangeMap.length > 0) {
     result.mappingType = MappingType.RangeToText;
-    result.type = 'string';
     result.rangeMaps = rangeMap.map(([from, to, text]) => ({ from, to, text }));
   }
 
