@@ -143,6 +143,7 @@ class CellBuilderWithStyle {
   public build = (cell: TableCellBuilderOptions) => {
     let { props } = cell;
     let value = this.mapper(cell.value);
+    let formatted;
 
     if (_.isNumber(value)) {
       // For numeric values set the color
@@ -173,10 +174,14 @@ class CellBuilderWithStyle {
 
       if (this.fmt) {
         const { decimals } = getDecimalsForValue(value, this.style.decimals);
-        value = this.fmt(value, decimals);
+        formatted = this.fmt(value, decimals);
+      } else {
+        formatted = value;
       }
     }
 
-    return simpleCellBuilder({ value: valueMapper(value, this.style), props });
+    const mapped = valueMapper(value, this.style);
+
+    return simpleCellBuilder({ value: mapped === value ? formatted : mapped, props });
   };
 }
