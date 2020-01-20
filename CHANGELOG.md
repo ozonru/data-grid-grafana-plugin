@@ -6,6 +6,10 @@ All notable changes to this project are documented in this file.
 
 - Fix: using mapped value instead of formatted, if possible
 
+## 0.6.0
+
+- Fix: support Grafana 6.5.x
+
 ## 0.5.4
 
 - Fix: value mapping does not block value formatting
