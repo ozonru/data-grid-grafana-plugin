@@ -1,27 +1,23 @@
 {
   "name": "grouped-series-grid-panel",
-  "version": "0.5.5",
+  "version": "0.6.0",
   "description": "Grid for grouped series",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
-    "watch": "grafana-toolkit plugin:dev --watch",
-    "prettier:check": "prettier --check \"src/**/*.ts\"",
-    "prettier:fix": "prettier --write \"src/**/*.ts\""
+    "watch": "grafana-toolkit plugin:dev --watch"
   },
-  "author": "OZON frontend infrastructure team",
+  "author": "OZON team",
   "license": "MIT",
   "devDependencies": {
-    "@grafana/data": "~6.4.4",
-    "@grafana/runtime": "~6.4.4",
-    "@grafana/toolkit": "~6.4.4",
-    "@grafana/ui": "~6.4.4",
+    "@grafana/data": "^6.5.3",
+    "@grafana/runtime": "^6.5.3",
+    "@grafana/toolkit": "^6.5.3",
+    "@grafana/ui": "^6.5.3",
     "@types/classnames": "^2.2.9",
     "@types/d3-scale": "^2.1.1",
-    "@types/grafana": "github:CorpGlory/types-grafana.git",
-    "prettier": "1.19.1",
-    "tslint": "^5.20.1"
+    "@types/grafana": "github:CorpGlory/types-grafana.git"
   },
   "dependencies": {
     "classnames": "^2.2.6",

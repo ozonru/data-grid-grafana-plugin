@@ -6,7 +6,7 @@
   "info": {
     "description": "Grid for grouped series",
     "author": {
-      "name": "OZON frontend infrastructure team"
+      "name": "OZON team"
     },
     "keywords": ["Grid", "Table", "Grouped metrics", "Labels"],
     "logos": {
@@ -23,7 +23,7 @@
   },
 
   "dependencies": {
-    "grafanaVersion": "6.3.x",
+    "grafanaVersion": "6.5.x",
     "plugins": []
   }
 }

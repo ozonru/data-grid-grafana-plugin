@@ -1,4 +1,4 @@
-import { PanelPlugin } from '@grafana/ui';
+import { PanelPlugin } from '@grafana/data';
 import { Options } from './types';
 import Panel from './Panel';
 import Editor from './Editor';

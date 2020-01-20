@@ -6,7 +6,7 @@
   "info": {
     "description": "Grid for grouped series",
     "author": {
-      "name": "OZON frontend infrastructure team"
+      "name": "OZON team"
     },
     "keywords": ["Grid", "Table", "Grouped metrics", "Labels"],
     "logos": {
@@ -18,12 +18,12 @@
       {"name": "License", "url": "https://github.com/ozonru/data-grid-grafana-plugin/blob/master/LICENSE"}
     ],
     "screenshots": [],
-    "version": "0.5.5",
-    "updated": "2019-12-06"
+    "version": "0.6.0",
+    "updated": "2020-01-20"
   },
 
   "dependencies": {
-    "grafanaVersion": "6.3.x",
+    "grafanaVersion": "6.5.x",
     "plugins": []
   }
 }

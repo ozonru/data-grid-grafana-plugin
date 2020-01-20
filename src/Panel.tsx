@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
-import { PanelProps, Alert, ThemeContext, GrafanaTheme } from '@grafana/ui';
+import { PanelProps, GrafanaTheme } from '@grafana/data';
+import { Alert, ThemeContext } from '@grafana/ui';
 import Table from './components/Table';
 import { Options } from 'types';
 import getDerivedDataFrame from './getDerivedDataFrame';

@@ -1,7 +1,7 @@
 import { ColumnOption, RangeMap, ValueMap } from './types';
 import kbn from 'grafana/app/core/utils/kbn';
 import { ReducerID } from '@grafana/data';
-import { getNamedColorPalette } from '@grafana/ui';
+import { getNamedColorPalette } from '@grafana/data';
 
 export class ColumnSetting implements ColumnOption {
   public static copyWith(

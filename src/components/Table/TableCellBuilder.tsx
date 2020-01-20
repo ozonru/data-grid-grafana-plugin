@@ -3,8 +3,16 @@ import _ from 'lodash';
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 import React, { ReactElement } from 'react';
 import { GridCellProps } from 'react-virtualized';
-import { ValueFormatter, getValueFormat, getColorFromHexRgbOrName, GrafanaTheme, getDecimalsForValue } from '@grafana/ui';
-import { Field, RangeMap, ValueMap } from '@grafana/data';
+import {
+  Field,
+  RangeMap,
+  ValueMap,
+  ValueFormatter,
+  getValueFormat,
+  getColorFromHexRgbOrName,
+  GrafanaTheme,
+  getDecimalsForValue,
+} from '@grafana/data';
 import { CustomColumnStyle } from '../../types';
 
 type ValueMapper = (value: any) => any;

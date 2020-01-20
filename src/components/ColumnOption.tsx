@@ -33,7 +33,10 @@ const rawTypeOptions: SelectableValue<RawDataType>[] = [
   { label: 'Date', value: 'date' },
 ];
 
-const colorModeOptions: SelectableValue<ColorModeType>[] = [{ label: 'Value', value: 'value' }, { label: 'Cell', value: 'cell' }];
+const colorModeOptions: SelectableValue<ColorModeType>[] = [
+  { label: 'Value', value: 'value' },
+  { label: 'Cell', value: 'cell' },
+];
 
 const actionsStyle = {
   display: 'flex',

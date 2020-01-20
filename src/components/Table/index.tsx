@@ -1,8 +1,8 @@
 /* tslint:disable */
 import React, { Component, ReactElement } from 'react';
 import { CellMeasurer, CellMeasurerCache, GridCellProps, Index, MultiGrid, SortDirectionType, SortIndicator } from 'react-virtualized';
-import { GrafanaTheme, Themeable } from '@grafana/ui';
-import { ArrayVector, DataFrame, sortDataFrame, stringToJsRegex } from '@grafana/data';
+import { Themeable } from '@grafana/ui';
+import { GrafanaTheme, ArrayVector, DataFrame, sortDataFrame, stringToJsRegex } from '@grafana/data';
 
 import { getCellBuilder, simpleCellBuilder, TableCellBuilder, TableCellBuilderOptions } from './TableCellBuilder';
 import { CustomColumnStyle } from '../../types';

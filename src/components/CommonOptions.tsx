@@ -1,9 +1,9 @@
 /* tslint:disable */
 import React, { Component } from 'react';
 import { Options } from 'types';
-import { Switch, Select, FormField, GrafanaTheme, ThemeContext } from '@grafana/ui';
+import { Switch, Select, FormField, ThemeContext } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
-import { SelectableValue } from '@grafana/data';
+import { GrafanaTheme, SelectableValue } from '@grafana/data';
 import EditorTab from './EditorTab';
 
 type ICommonOptions = Omit<Options, 'options'>;

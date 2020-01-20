@@ -1,6 +1,16 @@
 import { ColumnOption, CustomColumnStyle, Options } from './types';
-import { ArrayVector, DataFrame, Field, FieldType, MappingType, reduceField } from '@grafana/data';
-import { getColorByName, getColorForTheme, GrafanaTheme } from '@grafana/ui';
+import {
+  ArrayVector,
+  DataFrame,
+  Field,
+  FieldType,
+  MappingType,
+  reduceField,
+  getColorByName,
+  getColorForTheme,
+  GrafanaTheme,
+  Labels,
+} from '@grafana/data';
 import { CSS_COLORS } from './consts';
 
 const EMPTY_RESULT = {
@@ -119,6 +129,22 @@ function createColumnStylesHandler(theme: GrafanaTheme, option: Options) {
   };
 }
 
+export function getLabels(frame: DataFrame): Labels {
+  const labels: Labels = {};
+
+  if (frame.fields.length > 0) {
+    frame.fields.forEach(({ labels: fieldLabels }) => {
+      if (!fieldLabels) {
+        return;
+      }
+
+      Object.assign(labels, fieldLabels);
+    });
+  }
+
+  return labels;
+}
+
 export default function getDerivedDataFrame(
   theme: GrafanaTheme,
   series: DataFrame[],
@@ -149,7 +175,8 @@ export default function getDerivedDataFrame(
   }
 
   for (let i = 0; i < series.length; i++) {
-    const { name, fields, labels = {} } = series[i];
+    const { name, fields } = series[i];
+    const labels = getLabels(series[i]);
 
     if (!labels[groupByLabel] || !name) {
       continue;

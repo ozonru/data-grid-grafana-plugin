@@ -1,14 +1,15 @@
 /* tslint:disable */
 import cs from 'classnames';
 import React, { PureComponent } from 'react';
-import { PanelData, PanelEditorProps, Select } from '@grafana/ui';
+import { Select } from '@grafana/ui';
+import { LoadingState, SelectableValue, PanelData, PanelEditorProps } from '@grafana/data';
 
 import ColumnOptionComponent from './components/ColumnOption';
 import CommonOptions from './components/CommonOptions';
 import { ColumnOption, Options } from './types';
 import { ADD_COLUMN_OPTION_INDEX, DEFAULT_COLUMN_OPTIONS, COMMON_OPTIONS_INDEX, COLUMNS_INDEX } from './consts';
-import { LoadingState, SelectableValue } from '@grafana/data';
 import { ColumnSetting } from './utils';
+import { getLabels } from './getDerivedDataFrame';
 
 type EditorState = {
   activeTab: number;
@@ -48,9 +49,9 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
         columns.add(serie.name);
       }
 
-      if (serie.labels) {
-        Object.keys(serie.labels).forEach(label => labels.add(label));
-      }
+      const serieLabels = getLabels(serie);
+
+      Object.keys(serieLabels).forEach(label => labels.add(label));
     }
 
     return { labels: Array.from(labels), columns: Array.from(columns).map(cl => ({ value: cl, label: cl })) };
