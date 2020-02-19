@@ -162,6 +162,7 @@ export default function getDerivedDataFrame(
 
   const indexCache: { [k: string]: number } = Object.create(null);
   const labelsSet = new Set<string>();
+  const labelsOrder = new Map<Field<string, ArrayVector<string>>, string[]>();
   const styles = createColumnStylesHandler(theme, options);
   const frame: DataFrame = {
     fields: [],
@@ -182,6 +183,7 @@ export default function getDerivedDataFrame(
       continue;
     }
 
+    const label = labels[groupByLabel];
     const fieldIndex = indexCache[name];
     const [newIndex, fieldInResultedFrame] =
       fieldIndex !== undefined
@@ -198,12 +200,45 @@ export default function getDerivedDataFrame(
     const mapResult = data => data[option.type];
 
     fieldInResultedFrame.values.add(mapResult(reduceField(reducerData)));
-    labelsSet.add(labels[groupByLabel]);
+
+    let order = labelsOrder.get(fieldInResultedFrame);
+
+    if (order) {
+      order.push(label);
+    } else {
+      order = [label];
+      labelsOrder.set(fieldInResultedFrame, order);
+    }
+
+    labelsSet.add(label);
     styles.getFor(name);
   }
 
-  labelColumn.values = new ArrayVector<string>(Array.from(labelsSet));
+  const labelsArr = Array.from(labelsSet);
+
+  labelColumn.values = new ArrayVector<string>(labelsArr);
   frame.length = labelColumn.values.length;
+
+  for (let i = 1; i < frame.fields.length; i++) {
+    const field = (frame.fields[i] as unknown) as Field<string, ArrayVector<any>>;
+    const order = labelsOrder.get(field)!;
+
+    for (let j = 0; j < labelsArr.length; j++) {
+      const realPos = order.indexOf(labelsArr[j]);
+
+      if (realPos === j) {
+        continue;
+      }
+
+      const tmp1 = field.values.get(realPos)!;
+      const tmp2 = order[realPos];
+
+      order[realPos] = order[j];
+      order[j] = tmp2;
+      field.values.set(realPos, field.values.get(j)!);
+      field.values.set(j, tmp1);
+    }
+  }
 
   return frame.fields.length === 0 ? EMPTY_RESULT : { columns: styles.getAll(), frame };
 }

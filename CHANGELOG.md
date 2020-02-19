@@ -2,13 +2,17 @@
 
 All notable changes to this project are documented in this file.
 
-## 0.5.5
+## 0.7.0
 
-- Fix: using mapped value instead of formatted, if possible
+- Fix: sorting raws
 
 ## 0.6.0
 
 - Fix: support Grafana 6.5.x
+
+## 0.5.5
+
+- Fix: using mapped value instead of formatted, if possible
 
 ## 0.5.4
 
