@@ -16,7 +16,11 @@ type EditorState = {
 };
 
 function createColumnOption(name: string, defaultColumn: ColumnOption): ColumnOption {
-  return ColumnSetting.copyWith(defaultColumn, name);
+  const option = ColumnSetting.copy(defaultColumn);
+
+  option.column = name;
+
+  return option;
 }
 
 const optionStyle = { marginRight: '7px' };
@@ -92,8 +96,10 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
   private handleOptionCopy = (newCol: SelectableValue<string>) => {
     const i = this.state.activeTab;
     const options = this.props.options.options.slice();
+    const option = ColumnSetting.copy(options[i]);
 
-    options.push(ColumnSetting.copyWith(options[i], newCol.value));
+    option.column = newCol.value;
+    options.push(option);
     this.props.onOptionsChange({ ...this.props.options, options });
     this.setState({
       ...this.state,

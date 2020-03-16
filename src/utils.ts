@@ -4,40 +4,23 @@ import { ReducerID } from '@grafana/data';
 import { getNamedColorPalette } from '@grafana/data';
 
 export class ColumnSetting implements ColumnOption {
-  public static copyWith(
-    option: ColumnSetting,
-    column?: string,
-    discreteColors?: boolean,
-    type?: ReducerID,
-    unit?: string,
-    addUnitToTitle?: boolean,
-    decimals?: number,
-    filterable?: boolean,
-    rawDataType?: ColumnOption['rawDataType'],
-    colorMode?: ColumnOption['colorMode'],
-    colorsOption?: string[],
-    thresholds?: number[],
-    noValue?: string,
-    width?: number,
-    valueMap?: ValueMap,
-    rangeMap?: RangeMap,
-    title?: string
-  ): ColumnOption {
+  public static copy(option: ColumnOption): ColumnOption {
     return new ColumnSetting(
-      type || option.type,
-      unit || option.unit,
-      discreteColors || option.discreteColors,
-      column || option.column,
-      decimals || option.decimals,
-      rawDataType || option.rawDataType,
-      colorMode || option.colorMode,
-      colorsOption || option.colors,
-      thresholds || option.thresholds,
-      noValue || option.noValue,
-      width || option.width,
-      valueMap || option.valueMap,
-      rangeMap || option.rangeMap,
-      title || option.title
+      option.type,
+      option.unit,
+      option.discreteColors,
+      option.column,
+      option.decimals,
+      option.rawDataType,
+      option.colorMode,
+      option.colors,
+      option.thresholds,
+      option.noValue,
+      option.width,
+      option.valueMap,
+      option.rangeMap,
+      option.title,
+      option.viewLabel
     );
   }
 
@@ -55,7 +38,8 @@ export class ColumnSetting implements ColumnOption {
     public width?: number,
     public valueMap?: ValueMap,
     public rangeMap?: RangeMap,
-    public title?: string
+    public title?: string,
+    public viewLabel?: string
   ) {}
 }
 

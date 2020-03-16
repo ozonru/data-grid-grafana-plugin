@@ -88,7 +88,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
   }
 
   private changeWith: <T extends keyof ColumnOption>(key: T, value: ColumnOption[T]) => void = (key, value) => {
-    const option = ColumnSetting.copyWith(this.props.option);
+    const option = ColumnSetting.copy(this.props.option);
 
     option[key] = value;
     this.props.onChange(option);
@@ -195,7 +195,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
       }
     }
 
-    const option = ColumnSetting.copyWith(this.props.option);
+    const option = ColumnSetting.copy(this.props.option);
 
     if (isRangeMap(result)) {
       option.rangeMap = result;
@@ -222,7 +222,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
       thresholds.add(num);
     }
 
-    const option = ColumnSetting.copyWith(this.props.option);
+    const option = ColumnSetting.copy(this.props.option);
 
     option.thresholds = Array.from(thresholds);
     this.props.onChange(option);
@@ -248,7 +248,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
       }
     }
 
-    const option = ColumnSetting.copyWith(this.props.option);
+    const option = ColumnSetting.copy(this.props.option);
 
     option.colors = colors;
     this.props.onChange(option);
@@ -258,7 +258,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
     // @ts-ignore
     const title = e.target.value;
 
-    const option = ColumnSetting.copyWith(this.props.option);
+    const option = ColumnSetting.copy(this.props.option);
 
     if (title) {
       option.title = title;
@@ -272,7 +272,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
     // @ts-ignore
     const checked = !!e.target.checked;
 
-    const option = ColumnSetting.copyWith(this.props.option);
+    const option = ColumnSetting.copy(this.props.option);
 
     option.discreteColors = checked;
 
@@ -280,7 +280,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
   };
 
   private handleValueSourceChange = ({ value }: SelectableValue<string>) => {
-    const option = ColumnSetting.copyWith(this.props.option);
+    const option = ColumnSetting.copy(this.props.option);
 
     if (value === SERIES_VALUE) {
       delete option.viewLabel;
