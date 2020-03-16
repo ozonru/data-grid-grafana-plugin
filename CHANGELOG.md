@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.8.1
+
+- Refactor: column options
+
 ## 0.8.0
 
 - Feature: add ability to choose column value source
