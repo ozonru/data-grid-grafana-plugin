@@ -47,7 +47,7 @@ function createField(frame: DataFrame, name: string, getColumnOption?: GetColumn
       : {},
     name,
     type: option && option.viewLabel === undefined ? FieldType.number : FieldType.string,
-    values: new ArrayVector(),
+    values: new ArrayVector(new Array(frame.length).fill(null)),
   };
   frame.fields.push(field);
 
@@ -161,9 +161,7 @@ export default function getDerivedDataFrame(
     return EMPTY_RESULT;
   }
 
-  const indexCache: { [k: string]: number } = Object.create(null);
   const labelsSet = new Set<string>();
-  const labelsOrder = new Map<Field<string, ArrayVector<string>>, string[]>();
   const styles = createColumnStylesHandler(theme, options);
   const frame: DataFrame = {
     fields: [],
@@ -176,74 +174,57 @@ export default function getDerivedDataFrame(
     frame.fields = [];
   }
 
+  const buckets = new Map<string, DataFrame[]>();
+
   for (let i = 0; i < series.length; i++) {
-    const { name, fields } = series[i];
+    const { name } = series[i];
     const labels = getLabels(series[i]);
 
     if (!labels[groupByLabel] || !name) {
       continue;
     }
 
-    const label = labels[groupByLabel];
-    const fieldIndex = indexCache[name];
-    const [newIndex, fieldInResultedFrame] =
-      fieldIndex !== undefined
-        ? [fieldIndex, frame.fields[fieldIndex] as Field<string, ArrayVector<string>>]
-        : [frame.fields.length, createField(frame, name, getColumnOption)];
+    let bucket = buckets.get(name);
 
-    indexCache[name] = newIndex;
-
-    const option = getColumnOption(name);
-
-    if (option.viewLabel === undefined) {
-      const reducerData = {
-        field: fields[0],
-        reducers: [option.type],
-      };
-      const mapResult = data => data[option.type];
-
-      fieldInResultedFrame.values.add(mapResult(reduceField(reducerData)));
+    if (bucket) {
+      bucket.push(series[i]);
     } else {
-      const val = labels[option.viewLabel];
-      fieldInResultedFrame.values.add(typeof val !== 'undefined' ? val : option.noValue || EMPTY_LABEL);
+      bucket = [series[i]];
+      buckets.set(name, bucket);
     }
 
-    let order = labelsOrder.get(fieldInResultedFrame);
-
-    if (order) {
-      order.push(label);
-    } else {
-      order = [label];
-      labelsOrder.set(fieldInResultedFrame, order);
-    }
-
-    labelsSet.add(label);
+    labelsSet.add(labels[groupByLabel]);
     styles.getFor(name);
   }
 
   const labelsArr = Array.from(labelsSet);
-
+  const index = new Map(labelsArr.map((label, i) => [label, i]));
   labelColumn.values = new ArrayVector<string>(labelsArr);
   frame.length = labelColumn.values.length;
 
-  for (let i = 1; i < frame.fields.length; i++) {
-    const field = (frame.fields[i] as unknown) as Field<string, ArrayVector<any>>;
-    const order = labelsOrder.get(field)!;
+  for (const [name, bucketSeries] of buckets) {
+    const field = createField(frame, name, getColumnOption);
+    const option = getColumnOption(name);
 
-    for (let j = 0; j < labelsArr.length; j++) {
-      const realPos = order.indexOf(labelsArr[j]);
+    for (let i = 0; i < bucketSeries.length; i++) {
+      const labels = getLabels(bucketSeries[i]);
+      const label = labels[groupByLabel];
+      let value: any;
 
-      if (realPos === j) {
-        continue;
+      if (option.viewLabel === undefined) {
+        const reducerData = {
+          field: bucketSeries[i].fields[0],
+          reducers: [option.type],
+        };
+        const mapResult = data => data[option.type];
+
+        value = mapResult(reduceField(reducerData));
+      } else {
+        const val = labels[option.viewLabel];
+        value = typeof val !== 'undefined' ? val : option.noValue || EMPTY_LABEL;
       }
 
-      const tmp1 = field.values.get(realPos)!;
-      const tmp2 = order[realPos];
-
-      order[realPos] = order[j];
-      order[j] = tmp2;
-      field.values.set(realPos, field.values.get(j)!);
-      field.values.set(j, tmp1);
+      field.values.set(index.get(label)!, value);
     }
   }
 
