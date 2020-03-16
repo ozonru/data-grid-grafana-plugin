@@ -282,7 +282,11 @@ export default class ColumnOptionComponent extends Component<Props, State> {
   private handleValueSourceChange = ({ value }: SelectableValue<string>) => {
     const option = ColumnSetting.copyWith(this.props.option);
 
-    option.viewLabel = value === SERIES_VALUE ? undefined : value;
+    if (value === SERIES_VALUE) {
+      delete option.viewLabel;
+    } else {
+      option.viewLabel = value;
+    }
 
     this.props.onChange(option);
   };
