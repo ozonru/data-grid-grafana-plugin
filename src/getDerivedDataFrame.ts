@@ -13,6 +13,9 @@ import {
 } from '@grafana/data';
 import { CSS_COLORS } from './consts';
 
+type GetColumnOptions = (name: string) => ColumnOption;
+
+const EMPTY_LABEL = 'NO_LABEL_VAlUE';
 const EMPTY_RESULT = {
   columns: [],
   frame: {
@@ -20,8 +23,6 @@ const EMPTY_RESULT = {
     length: 0,
   },
 };
-
-type GetColumnOptions = (name: string) => ColumnOption;
 
 function createColumnHandler(options: Options): GetColumnOptions {
   const columns = {};
@@ -45,7 +46,7 @@ function createField(frame: DataFrame, name: string, getColumnOption?: GetColumn
         }
       : {},
     name,
-    type: option ? FieldType.number : FieldType.string,
+    type: option && option.viewLabel === undefined ? FieldType.number : FieldType.string,
     values: new ArrayVector(),
   };
   frame.fields.push(field);
@@ -193,13 +194,19 @@ export default function getDerivedDataFrame(
     indexCache[name] = newIndex;
 
     const option = getColumnOption(name);
-    const reducerData = {
-      field: fields[0],
-      reducers: [option.type],
-    };
-    const mapResult = data => data[option.type];
 
-    fieldInResultedFrame.values.add(mapResult(reduceField(reducerData)));
+    if (option.viewLabel === undefined) {
+      const reducerData = {
+        field: fields[0],
+        reducers: [option.type],
+      };
+      const mapResult = data => data[option.type];
+
+      fieldInResultedFrame.values.add(mapResult(reduceField(reducerData)));
+    } else {
+      const val = labels[option.viewLabel];
+      fieldInResultedFrame.values.add(typeof val !== 'undefined' ? val : option.noValue || EMPTY_LABEL);
+    }
 
     let order = labelsOrder.get(fieldInResultedFrame);
 

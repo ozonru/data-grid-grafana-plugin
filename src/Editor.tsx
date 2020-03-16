@@ -185,6 +185,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
           </ul>
         </aside>
         <ColumnOptionComponent
+          labels={labels}
           visible={isColumnOptionActive}
           option={columnOption || options.defaultColumnOption}
           isDefault={isDefaultColumn}

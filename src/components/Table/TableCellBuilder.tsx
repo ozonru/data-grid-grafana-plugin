@@ -151,7 +151,7 @@ class CellBuilderWithStyle {
   public build = (cell: TableCellBuilderOptions) => {
     let { props } = cell;
     let value = this.mapper(cell.value);
-    let formatted;
+    let formatted = value;
 
     if (_.isNumber(value)) {
       // For numeric values set the color

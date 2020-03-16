@@ -19,6 +19,7 @@ export interface ColumnOption {
   noValue?: string;
   unit: string;
   width?: number;
+  viewLabel?: string;
 }
 
 export interface Options {

@@ -9,6 +9,7 @@ import { ReducerID, SelectableValue } from '@grafana/data';
 import InputOnBlur from './InputOnBlur';
 
 interface Props {
+  labels: string[];
   visible?: boolean;
   isDefault: boolean;
   option: ColumnOption;
@@ -18,10 +19,15 @@ interface Props {
   onCopy: (item: SelectableValue<string>) => void;
 }
 
+interface State {
+  labels: Array<SelectableValue<string>>;
+}
+
 type RawDataType = ColumnOption['rawDataType'];
 type ColorModeType = ColumnOption['colorMode'];
 type RangeOrValueMap = RangeMap | ValueMap;
 
+const SERIES_VALUE = 'Serie value';
 const THRESHOLDS_TOOLTIP = `${THRESHOLDS_COUNT_DOES_NOT_FIT}. Comparing with raw data`;
 const COPY_VALUE: SelectableValue<string> = { label: 'Copy for..', value: '' };
 const RANGE_MAP_REGEX = /(.+)-(.+)=(.+)/;
@@ -63,10 +69,23 @@ function mapValueMappers(mapper: RangeOrValueMap): string {
   }
 }
 
-export default class ColumnOptionComponent extends Component<Props> {
+export default class ColumnOptionComponent extends Component<Props, State> {
   private unitFormats = loadFormats();
   private colors = loadColors();
   private colorsString = `Theme colors: ${loadColors().join(',\n')}`;
+  public state: State;
+
+  public static getDerivedStateFromProps(props: Props): State {
+    return {
+      labels: [{ label: SERIES_VALUE, value: SERIES_VALUE }].concat(props.labels.map(value => ({ label: value, value }))),
+    };
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state = ColumnOptionComponent.getDerivedStateFromProps(props);
+  }
 
   private changeWith: <T extends keyof ColumnOption>(key: T, value: ColumnOption[T]) => void = (key, value) => {
     const option = ColumnSetting.copyWith(this.props.option);
@@ -260,12 +279,43 @@ export default class ColumnOptionComponent extends Component<Props> {
     this.props.onChange(option);
   };
 
+  private handleValueSourceChange = ({ value }: SelectableValue<string>) => {
+    const option = ColumnSetting.copyWith(this.props.option);
+
+    option.viewLabel = value === SERIES_VALUE ? undefined : value;
+
+    this.props.onChange(option);
+  };
+
   public render() {
     const { option: option, visible, onDelete, restColumns, onCopy, isDefault } = this.props;
 
     return (
       <EditorTab visible={visible}>
         <div>
+          <PanelOptionsGroup title="Value">
+            <div className="section">
+              <div className="gf-form">
+                <FormField
+                  label="Show value from"
+                  tooltip="Select which value to show. Either series' value, either label from serie. If label selected, only 'title' and 'no value' appearance settings applied."
+                  labelWidth={LABEL_WIDTH}
+                  inputEl={
+                    <Select<string>
+                      placeholder="Select value source.. Series value by default"
+                      isClearable={false}
+                      isSearchable
+                      isMulti={false}
+                      width={FORM_ELEMENT_WIDTH}
+                      onChange={this.handleValueSourceChange}
+                      value={{ label: option.viewLabel || SERIES_VALUE, value: option.viewLabel || SERIES_VALUE }}
+                      options={this.state.labels}
+                    />
+                  }
+                />
+              </div>
+            </div>
+          </PanelOptionsGroup>
           <PanelOptionsGroup title="Appearance: General">
             <div className="section">
               <div className="gf-form">
