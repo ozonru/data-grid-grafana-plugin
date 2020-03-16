@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.8.2
+
+- Fix: bug with incorrect values when series have different length
+
 ## 0.8.1
 
 - Refactor: column options
