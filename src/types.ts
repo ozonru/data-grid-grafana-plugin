@@ -1,8 +1,28 @@
 import { ReducerID } from '@grafana/data';
-import { ColumnStyle } from '@grafana/ui/components/Table/TableCellBuilder';
 
-export type ValueMap = [number | string, number | string][];
-export type RangeMap = [number, number, number | string][];
+export interface ColumnStyle {
+  pattern: string;
+  alias?: string;
+  colorMode?: 'cell' | 'value';
+  colors?: any[];
+  decimals?: number;
+  thresholds?: any[];
+  type?: 'date' | 'number' | 'string' | 'hidden';
+  unit?: string;
+  dateFormat?: string;
+  sanitize?: boolean;
+  mappingType?: any;
+  valueMaps?: any;
+  rangeMaps?: any;
+  link?: any;
+  linkUrl?: any;
+  linkTooltip?: any;
+  linkTargetBlank?: boolean;
+  preserveFormat?: boolean;
+}
+
+export type ValueMap = Array<[number | string, number | string]>;
+export type RangeMap = Array<[number, number, number | string]>;
 
 export interface ColumnOption {
   decimals?: number;

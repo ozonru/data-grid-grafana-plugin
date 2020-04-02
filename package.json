@@ -1,6 +1,6 @@
 {
   "name": "grouped-series-grid-panel",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "Grid for grouped series",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
@@ -11,16 +11,17 @@
   "author": "OZON team",
   "license": "MIT",
   "devDependencies": {
-    "@grafana/data": "^6.5.3",
-    "@grafana/runtime": "^6.5.3",
-    "@grafana/toolkit": "^6.5.3",
-    "@grafana/ui": "^6.5.3",
+    "@grafana/data": "~6.7.2",
+    "@grafana/runtime": "~6.7.2",
+    "@grafana/toolkit": "~6.7.2",
+    "@grafana/ui": "~6.7.2",
     "@types/classnames": "^2.2.9",
     "@types/d3-scale": "^2.1.1",
     "@types/grafana": "github:CorpGlory/types-grafana.git"
   },
   "dependencies": {
     "classnames": "^2.2.6",
-    "d3-scale": "^3.2.1"
+    "d3-scale": "^3.2.1",
+    "react-virtualized": "^9.21.2"
   }
 }
