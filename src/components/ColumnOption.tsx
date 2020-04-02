@@ -13,7 +13,7 @@ interface Props {
   visible?: boolean;
   isDefault: boolean;
   option: ColumnOption;
-  restColumns: SelectableValue<string>[];
+  restColumns: Array<SelectableValue<string>>;
   onChange: (template: ColumnOption) => void;
   onDelete: () => void;
   onCopy: (item: SelectableValue<string>) => void;
@@ -33,13 +33,13 @@ const COPY_VALUE: SelectableValue<string> = { label: 'Copy for..', value: '' };
 const RANGE_MAP_REGEX = /(.+)-(.+)=(.+)/;
 const VALUE_MAP_REGEX = /(.+)=(.+)/;
 const EMPTY_ARRAY = [];
-const rawTypeOptions: SelectableValue<RawDataType>[] = [
+const rawTypeOptions: Array<SelectableValue<RawDataType>> = [
   { label: 'Number', value: 'number' },
   { label: 'String', value: 'string' },
   { label: 'Date', value: 'date' },
 ];
 
-const colorModeOptions: SelectableValue<ColorModeType>[] = [
+const colorModeOptions: Array<SelectableValue<ColorModeType>> = [
   { label: 'Value', value: 'value' },
   { label: 'Cell', value: 'cell' },
 ];

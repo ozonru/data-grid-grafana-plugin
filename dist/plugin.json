@@ -18,12 +18,12 @@
       {"name": "License", "url": "https://github.com/ozonru/data-grid-grafana-plugin/blob/master/LICENSE"}
     ],
     "screenshots": [],
-    "version": "0.8.1",
-    "updated": "2020-03-16"
+    "version": "0.9.0",
+    "updated": "2020-04-02"
   },
 
   "dependencies": {
-    "grafanaVersion": "6.5.x",
+    "grafanaVersion": "6.7.x",
     "plugins": []
   }
 }

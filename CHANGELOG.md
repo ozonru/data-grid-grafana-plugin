@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.9.0
+
+- Support grafana 6.7.x
+
 ## 0.8.2
 
 - Fix: bug with incorrect values when series have different length

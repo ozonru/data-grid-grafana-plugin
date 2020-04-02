@@ -38,7 +38,7 @@ const SELECT_VALUE = { label: 'Customize Column' };
 const COLUMN_SELECT_NO_OPTION = () => 'All columns already customized';
 
 export default class Editor extends PureComponent<PanelEditorProps<Options>, EditorState> {
-  public static getColumnsAndLabels(data: PanelData): { labels: string[]; columns: SelectableValue<string>[] } {
+  public static getColumnsAndLabels(data: PanelData): { labels: string[]; columns: Array<SelectableValue<string>> } {
     if (data.series.length === 0) {
       return { labels: [], columns: [] };
     }
