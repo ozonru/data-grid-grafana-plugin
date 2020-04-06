@@ -83,7 +83,13 @@ export function getCellBuilder(schema: Field['config'], style: CustomColumnStyle
   }
 
   if (style.type === 'number') {
-    const valueFormatter = getValueFormat(style.unit || schema.unit || 'none');
+    const baseFormatter = getValueFormat(style.unit || schema.unit || 'none');
+    const valueFormatter = (...args) => {
+      // @ts-ignore
+      const { text, suffix } = (baseFormatter(...args) as unknown) as { text: string; suffix: string };
+
+      return text + suffix;
+    };
     return new CellBuilderWithStyle(
       (v: any) => {
         if (v === null || v === undefined) {
