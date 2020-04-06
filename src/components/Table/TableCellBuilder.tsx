@@ -88,7 +88,7 @@ export function getCellBuilder(schema: Field['config'], style: CustomColumnStyle
       // @ts-ignore
       const { text, suffix } = (baseFormatter(...args) as unknown) as { text: string; suffix: string };
 
-      return text + '' + suffix || '';
+      return (text || '') + (suffix || '');
     };
     return new CellBuilderWithStyle(
       (v: any) => {

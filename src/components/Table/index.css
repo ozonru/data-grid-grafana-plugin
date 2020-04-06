@@ -6,11 +6,12 @@
 }
 
 .gf-table-header-custom {
+  background: linear-gradient(315deg,#2f2f32,#262628);
   background: -webkit-linear-gradient(315deg,#2f2f32,#262628);
-  background: -o-linear-gradient(315deg,#2f2f32,#262628);
   border-top: 2px solid #161719;
   cursor: pointer;
   color: #33b5e5;
+  overflow: hidden;
 }
 
 .gf-table-cell-custom, .gf-table-header-custom {
