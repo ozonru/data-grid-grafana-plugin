@@ -1,6 +1,6 @@
 {
   "name": "grouped-series-grid-panel",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Grid for grouped series",
   "scripts": {
     "build": "grafana-toolkit plugin:build",

@@ -99,6 +99,7 @@ export function getCellBuilder(schema: Field['config'], style: CustomColumnStyle
       },
       style,
       theme,
+      // @ts-ignore
       valueFormatter
     ).build;
   }

@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.9.1
+
+- Fix TableCellBuilder
+
 ## 0.9.0
 
 - Support grafana 6.7.x
