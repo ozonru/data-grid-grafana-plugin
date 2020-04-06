@@ -32,7 +32,7 @@ export const simpleCellBuilder: TableCellBuilder = (cell: TableCellBuilderOption
   const { style } = props;
 
   return (
-    <div style={style} className={'gf-table-cell ' + className}>
+    <div style={style} className={'gf-table-cell-custom ' + className}>
       {value}
     </div>
   );
@@ -88,7 +88,7 @@ export function getCellBuilder(schema: Field['config'], style: CustomColumnStyle
       // @ts-ignore
       const { text, suffix } = (baseFormatter(...args) as unknown) as { text: string; suffix: string };
 
-      return text + suffix;
+      return text + '' + suffix || '';
     };
     return new CellBuilderWithStyle(
       (v: any) => {

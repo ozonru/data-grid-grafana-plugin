@@ -6,6 +6,7 @@ import { GrafanaTheme, ArrayVector, DataFrame, sortDataFrame, stringToJsRegex } 
 
 import { getCellBuilder, simpleCellBuilder, TableCellBuilder, TableCellBuilderOptions } from './TableCellBuilder';
 import { CustomColumnStyle } from '../../types';
+import './index.css';
 
 export interface Props extends Themeable {
   data: DataFrame;
@@ -167,7 +168,7 @@ export class Table extends Component<Props, State> {
     const sorting = sortBy === column;
 
     return (
-      <div className="gf-table-header" style={style} onClick={() => this.onCellClick(rowIndex, columnIndex)}>
+      <div className="gf-table-header-custom" style={style} onClick={() => this.onCellClick(rowIndex, columnIndex)}>
         {col.config.title || col.name}
         {sorting && <SortIndicator sortDirection={sortDirection} />}
       </div>
