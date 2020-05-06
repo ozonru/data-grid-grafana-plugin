@@ -1,11 +1,12 @@
 /* tslint:disable */
 import React, { Component, ReactElement } from 'react';
-import { CellMeasurer, CellMeasurerCache, GridCellProps, Index, MultiGrid, SortDirectionType, SortIndicator } from 'react-virtualized';
+import { CellMeasurer, CellMeasurerCache, GridCellProps, Index, MultiGrid, SortDirectionType } from 'react-virtualized';
 import { Themeable } from '@grafana/ui';
 import { GrafanaTheme, ArrayVector, DataFrame, sortDataFrame, stringToJsRegex } from '@grafana/data';
 
 import { getCellBuilder, simpleCellBuilder, TableCellBuilder, TableCellBuilderOptions } from './TableCellBuilder';
 import { CustomColumnStyle } from '../../types';
+import { ColumnHeader } from './ColumnHeader';
 import './index.css';
 
 export interface Props extends Themeable {
@@ -168,10 +169,13 @@ export class Table extends Component<Props, State> {
     const sorting = sortBy === column;
 
     return (
-      <div className="gf-table-header-custom" style={style} onClick={() => this.onCellClick(rowIndex, columnIndex)}>
-        {col.config.title || col.name}
-        {sorting && <SortIndicator sortDirection={sortDirection} />}
-      </div>
+      <ColumnHeader
+        onClick={() => this.onCellClick(rowIndex, columnIndex)}
+        style={style}
+        text={col.config.title || col.name}
+        sorting={sorting}
+        sortDirection={sortDirection}
+      />
     );
   };
 
