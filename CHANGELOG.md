@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented in this file.
 
+## 1.0.1
+
+- Feature: title for cells
+
 ## 1.0.0
 
 - Feature: added tooltip to header

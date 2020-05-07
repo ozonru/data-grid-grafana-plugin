@@ -32,7 +32,7 @@ export const simpleCellBuilder: TableCellBuilder = (cell: TableCellBuilderOption
   const { style } = props;
 
   return (
-    <div style={style} className={'gf-table-cell-custom ' + className}>
+    <div title={value} style={style} className={'gf-table-cell-custom ' + className}>
       {value}
     </div>
   );
