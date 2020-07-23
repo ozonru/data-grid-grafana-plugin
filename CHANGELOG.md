@@ -5,6 +5,7 @@ All notable changes to this project are documented in this file.
 ## 1.0.2
 
 - Fix: correct sorting for nullable values in field.type === "string"
+
 ## 1.0.1
 
 - Feature: title for cells
