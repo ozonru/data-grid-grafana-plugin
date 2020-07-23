@@ -35,7 +35,7 @@ const asideStyle = {
 };
 
 const SELECT_VALUE = { label: 'Customize Column' };
-const COLUMN_SELECT_NO_OPTION = () => 'All columns already customized';
+const COLUMN_SELECT_NO_OPTION = 'All columns already customized';
 
 export default class Editor extends PureComponent<PanelEditorProps<Options>, EditorState> {
   public static getColumnsAndLabels(data: PanelData): { labels: string[]; columns: Array<SelectableValue<string>> } {
@@ -89,7 +89,7 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
     this.props.onOptionsChange({ ...this.props.options, options });
     this.setState({
       ...this.state,
-      activeTab: options.length === 0 ? -1 : i - 1,
+      activeTab: options.length === 0 ? -1 : Math.max(i - 1, 0),
     });
   };
 
@@ -132,7 +132,10 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
     this.handleChangeTab(i);
     this.props.onOptionsChange({
       ...this.props.options,
-      options: [...this.props.options.options, createColumnOption(selected.value as string, this.props.options.defaultColumnOption)],
+      options: [
+        ...this.props.options.options,
+        createColumnOption(selected.value as string, this.props.options.defaultColumnOption),
+      ],
     });
   };
 
@@ -145,6 +148,11 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
     const isColumnOptionActive = this.state.activeTab >= DEFAULT_COLUMN_OPTIONS;
     const isDefaultColumn = this.state.activeTab === DEFAULT_COLUMN_OPTIONS;
     const columnOption = options.options[this.state.activeTab];
+
+    if (!this.props.data) {
+      return null;
+    }
+
     const { labels, columns } = Editor.getColumnsAndLabels(this.props.data); // TODO add memoize
     const restColumns = columns.filter(({ value }) => !options.options.find(({ column: name }) => name === value));
 

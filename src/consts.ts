@@ -13,7 +13,18 @@ export const THRESHOLDS_COUNT_DOES_NOT_FIT = 'Number of thresholds must be less 
 export const NO_GROUPBY_LABEL = `Please, add at least one query and choose "Group by label" in panel settings`;
 
 export const defaults: Options = {
-  defaultColumnOption: new ColumnSetting(ReducerID.last, 'none', true, undefined, undefined, 'number', 'cell', undefined, undefined, 'No data'),
+  defaultColumnOption: new ColumnSetting(
+    ReducerID.last,
+    'none',
+    true,
+    undefined,
+    undefined,
+    'number',
+    'cell',
+    undefined,
+    undefined,
+    'No data'
+  ),
   firstColumnSize: 150,
   groupByLabel: undefined,
   options: [],

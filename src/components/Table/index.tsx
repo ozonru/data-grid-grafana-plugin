@@ -71,7 +71,9 @@ export class Table extends Component<Props, State> {
     const { sortBy, sortDirection } = this.state;
     const dataChanged = data !== prevProps.data;
     const configsChanged =
-      showHeader !== prevProps.showHeader || this.props.fixedColumns !== prevProps.fixedColumns || this.props.fixedHeader !== prevProps.fixedHeader;
+      showHeader !== prevProps.showHeader ||
+      this.props.fixedColumns !== prevProps.fixedColumns ||
+      this.props.fixedHeader !== prevProps.fixedHeader;
 
     // Reset the size cache
     if (dataChanged || configsChanged) {
@@ -172,7 +174,7 @@ export class Table extends Component<Props, State> {
       <ColumnHeader
         onClick={() => this.onCellClick(rowIndex, columnIndex)}
         style={style}
-        text={col.config.title || col.name}
+        text={col.config.displayName || col.name}
         sorting={sorting}
         sortDirection={sortDirection}
       />

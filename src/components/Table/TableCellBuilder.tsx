@@ -60,7 +60,11 @@ function valueMapper(value: number | string, style: CustomColumnStyle) {
   return value;
 }
 
-export function getCellBuilder(schema: Field['config'], style: CustomColumnStyle | null, theme: GrafanaTheme): TableCellBuilder {
+export function getCellBuilder(
+  schema: Field['config'],
+  style: CustomColumnStyle | null,
+  theme: GrafanaTheme
+): TableCellBuilder {
   if (!style) {
     return simpleCellBuilder;
   }
@@ -110,7 +114,12 @@ export function getCellBuilder(schema: Field['config'], style: CustomColumnStyle
 class CellBuilderWithStyle {
   private scales: { [k: string]: ScaleLinear<string, string> } = {};
 
-  constructor(private mapper: ValueMapper, private style: CustomColumnStyle, private theme: GrafanaTheme, private fmt?: ValueFormatter) {}
+  constructor(
+    private mapper: ValueMapper,
+    private style: CustomColumnStyle,
+    private theme: GrafanaTheme,
+    private fmt?: ValueFormatter
+  ) {}
 
   public getColorForValue = (value: any): string | null => {
     const { thresholds, colors } = this.style;

@@ -46,7 +46,7 @@ export interface Options {
   defaultColumnOption: ColumnOption;
   options: ColumnOption[];
   showLabelColumn: boolean;
-  groupByLabel?: string;
+  groupByLabel?: string | null;
   firstColumnSize?: number;
   minColumnSizePx?: number;
 }

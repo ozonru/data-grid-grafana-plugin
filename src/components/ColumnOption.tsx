@@ -1,7 +1,7 @@
 /* tslint:disable */
 import React, { Component } from 'react';
 import { ColumnOption, RangeMap, ValueMap } from 'types';
-import { Button, ButtonSelect, FormField, PanelOptionsGroup, Select, StatsPicker, Switch } from '@grafana/ui';
+import { Button, ButtonSelect, PanelOptionsGroup, Select, StatsPicker, Switch, LegacyForms } from '@grafana/ui';
 import { CSS_COLORS, FORM_ELEMENT_WIDTH, LABEL_WIDTH, THRESHOLDS_COUNT_DOES_NOT_FIT } from '../consts';
 import EditorTab from './EditorTab';
 import { ColumnSetting, loadColors, loadFormats } from '../utils';
@@ -77,7 +77,9 @@ export default class ColumnOptionComponent extends Component<Props, State> {
 
   public static getDerivedStateFromProps(props: Props): State {
     return {
-      labels: [{ label: SERIES_VALUE, value: SERIES_VALUE }].concat(props.labels.map(value => ({ label: value, value }))),
+      labels: [{ label: SERIES_VALUE, value: SERIES_VALUE }].concat(
+        props.labels.map(value => ({ label: value, value }))
+      ),
     };
   }
 
@@ -110,8 +112,8 @@ export default class ColumnOptionComponent extends Component<Props, State> {
     this.changeWith('decimals', decimals);
   };
 
-  private handleUnitChange = (item: SelectableValue<string>) => {
-    this.changeWith('unit', item.value || 'none');
+  private handleUnitChange = (item: SelectableValue<string> | null) => {
+    this.changeWith('unit', item ? item.value || 'none' : 'none');
   };
 
   private handleDataTypeChange = (item: SelectableValue<RawDataType>) => {
@@ -300,7 +302,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
           <PanelOptionsGroup title="Value">
             <div className="section">
               <div className="gf-form">
-                <FormField
+                <LegacyForms.FormField
                   label="Show value from"
                   tooltip="Select which value to show. Either series' value, either label from serie. If label selected, only 'title' and 'no value' appearance settings applied."
                   labelWidth={LABEL_WIDTH}
@@ -308,7 +310,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
                     <Select<string>
                       placeholder="Select value source.. Series value by default"
                       isClearable={false}
-                      isSearchable
+                      isSearchable={false}
                       isMulti={false}
                       width={FORM_ELEMENT_WIDTH}
                       onChange={this.handleValueSourceChange}
@@ -323,7 +325,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
           <PanelOptionsGroup title="Appearance: General">
             <div className="section">
               <div className="gf-form">
-                <FormField
+                <LegacyForms.FormField
                   label="Title"
                   tooltip="Will be displayed as column header"
                   placeholder="Query legend will be default title"
@@ -334,7 +336,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
                 />
               </div>
               <div className="gf-form">
-                <FormField
+                <LegacyForms.FormField
                   label="Unit format"
                   labelWidth={LABEL_WIDTH}
                   inputEl={
@@ -365,7 +367,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
                 />
               </div>
               <div className="gf-form">
-                <FormField
+                <LegacyForms.FormField
                   label="Decimals"
                   placeholder="auto"
                   labelWidth={LABEL_WIDTH}
@@ -376,7 +378,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
                 />
               </div>
               <div className="gf-form">
-                <FormField
+                <LegacyForms.FormField
                   label="No Value"
                   placeholder="Enter text for null value"
                   labelWidth={LABEL_WIDTH}
@@ -389,7 +391,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
             </div>
             <div className="section">
               <div className="gf-form">
-                <FormField
+                <LegacyForms.FormField
                   label="Data Type"
                   tooltip="Type of raw data returned from source (e.g. Prometheus), in most cases Number"
                   labelWidth={LABEL_WIDTH}
@@ -397,10 +399,15 @@ export default class ColumnOptionComponent extends Component<Props, State> {
                     <Select<RawDataType>
                       placeholder="Select raw data type"
                       isClearable={false}
+                      isSearchable={false}
                       isMulti={false}
                       width={FORM_ELEMENT_WIDTH}
                       onChange={this.handleDataTypeChange}
-                      value={option.rawDataType ? rawTypeOptions.find(({ value }) => value === option.rawDataType) : undefined}
+                      value={
+                        option.rawDataType
+                          ? rawTypeOptions.find(({ value }) => value === option.rawDataType)
+                          : undefined
+                      }
                       options={rawTypeOptions}
                     />
                   }
@@ -437,28 +444,34 @@ export default class ColumnOptionComponent extends Component<Props, State> {
             </div>
             <div className="section">
               <div className="gf-form">
-                <FormField
+                <LegacyForms.FormField
                   label="Color mode"
                   labelWidth={LABEL_WIDTH}
                   inputEl={
                     <Select<ColorModeType>
                       placeholder="Select color mode"
                       isClearable={false}
+                      isSearchable={false}
                       isMulti={false}
                       width={FORM_ELEMENT_WIDTH}
                       onChange={this.handleColorModeChange}
-                      value={option.colorMode ? colorModeOptions.find(({ value }) => value === option.colorMode) : undefined}
+                      value={
+                        option.colorMode ? colorModeOptions.find(({ value }) => value === option.colorMode) : undefined
+                      }
                       options={colorModeOptions}
                     />
                   }
                 />
               </div>
               <div className="gf-form">
-                <Switch
+                <LegacyForms.FormField
                   label="Discrete color range"
-                  labelClass={`width-${LABEL_WIDTH}`}
-                  checked={!!option.discreteColors}
-                  onChange={this.handleDiscreteFlagChange}
+                  labelWidth={LABEL_WIDTH}
+                  inputEl={
+                    <div className="o3-form-field-switch-patch">
+                      <Switch checked={!!option.discreteColors} onChange={this.handleDiscreteFlagChange} />
+                    </div>
+                  }
                 />
               </div>
             </div>
@@ -467,7 +480,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
             <PanelOptionsGroup title="Column">
               <div className="section">
                 <div className="gf-form">
-                  <FormField
+                  <LegacyForms.FormField
                     type="text"
                     label="Width (px)"
                     placeholder="auto"
@@ -483,14 +496,14 @@ export default class ColumnOptionComponent extends Component<Props, State> {
           <PanelOptionsGroup title="Stat">
             <div className="section">
               <div className="gf-form">
-                <FormField
+                <LegacyForms.FormField
                   label="Stat Type"
                   labelWidth={LABEL_WIDTH}
                   inputEl={
                     <StatsPicker
                       allowMultiple={false}
                       placeholder="Select unit"
-                      width={FORM_ELEMENT_WIDTH}
+                      className={`width-${FORM_ELEMENT_WIDTH}`}
                       onChange={this.handleStatChange}
                       stats={option.type ? [option.type] : EMPTY_ARRAY}
                     />
@@ -500,12 +513,12 @@ export default class ColumnOptionComponent extends Component<Props, State> {
             </div>
           </PanelOptionsGroup>
           <div style={actionsStyle}>
-            <Button onClick={onDelete} size="xs" variant="danger">
+            <Button onClick={onDelete} size="xs" variant="destructive">
               Delete
             </Button>
             {restColumns.length > 0 && (
               <div className="width-15">
-                <ButtonSelect<string> className="width-15" options={restColumns} value={COPY_VALUE} onChange={onCopy} label={COPY_VALUE.label} />
+                <ButtonSelect<string> className="width-15" options={restColumns} value={COPY_VALUE} onChange={onCopy} />
               </div>
             )}
           </div>

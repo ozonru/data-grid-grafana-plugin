@@ -1,7 +1,7 @@
 /* tslint:disable */
 import React, { Component } from 'react';
 import { Options } from 'types';
-import { Switch, Select, FormField, ThemeContext } from '@grafana/ui';
+import { Switch, Select, LegacyForms, ThemeContext } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
 import { GrafanaTheme, SelectableValue } from '@grafana/data';
 import EditorTab from './EditorTab';
@@ -18,18 +18,18 @@ type Props = {
 
 const COMMON_OPTIONS_LABEL_WIDTH = LABEL_WIDTH + 4;
 
-const ERROR_INFO_STYLE = (theme: GrafanaTheme) => ({
+const ERROR_INFO_STYLE = {
   alignSelf: 'center',
-  color: theme.colors.critical,
+  color: 'rgb(191, 27, 0)',
   flex: 1,
   fontSize: '14px',
   marginLeft: '7px',
-});
+};
 
-const WARN_INFO_STYLE = (theme: GrafanaTheme) => ({
+const WARN_INFO_STYLE = {
   ...ERROR_INFO_STYLE,
-  color: theme.colors.warn,
-});
+  color: 'rgb(191, 106, 48)',
+};
 const ICON_STYLE = {
   marginRight: '7px',
 };
@@ -43,10 +43,10 @@ export default class CommonOptions extends Component<Props> {
     });
   };
 
-  private handleGroupBySelect = (selected: SelectableValue<string>) => {
+  private handleGroupBySelect = (selected: SelectableValue<string> | null) => {
     this.props.onChange({
       ...this.props.options,
-      groupByLabel: selected.value,
+      groupByLabel: selected && selected.value,
     });
   };
 
@@ -82,7 +82,7 @@ export default class CommonOptions extends Component<Props> {
 
   private renderInfo(theme: GrafanaTheme, text: string, error?: boolean) {
     return (
-      <span style={error ? ERROR_INFO_STYLE(theme) : WARN_INFO_STYLE(theme)}>
+      <span style={error ? ERROR_INFO_STYLE : WARN_INFO_STYLE}>
         <i className="fa fa-exclamation-triangle" style={ICON_STYLE} />
         {text}
       </span>
@@ -96,7 +96,6 @@ export default class CommonOptions extends Component<Props> {
       label: options.groupByLabel || '',
       value: options.groupByLabel || '',
     };
-    const switchLabelClass = `width-${COMMON_OPTIONS_LABEL_WIDTH}`;
 
     return (
       <EditorTab visible={visible}>
@@ -105,7 +104,7 @@ export default class CommonOptions extends Component<Props> {
             <div className="gf-form">
               <div className="gr-form-inline">
                 <div className="gf-form">
-                  <FormField
+                  <LegacyForms.FormField
                     label="Group by label"
                     labelWidth={COMMON_OPTIONS_LABEL_WIDTH}
                     tooltip="This option is required to select rows for table"
@@ -124,12 +123,14 @@ export default class CommonOptions extends Component<Props> {
                   />
                   <ThemeContext.Consumer>
                     {theme =>
-                      loading ? this.renderInfo(theme, 'Loading series') : labels.length === 0 && this.renderInfo(theme, 'No series provided', true)
+                      loading
+                        ? this.renderInfo(theme, 'Loading series')
+                        : labels.length === 0 && this.renderInfo(theme, 'No series provided', true)
                     }
                   </ThemeContext.Consumer>
                 </div>
                 <div className="gf-form">
-                  <FormField
+                  <LegacyForms.FormField
                     type="number"
                     label="First Column width (px)"
                     placeholder="Fixed size"
@@ -140,7 +141,7 @@ export default class CommonOptions extends Component<Props> {
                   />
                 </div>
                 <div className="gf-form">
-                  <FormField
+                  <LegacyForms.FormField
                     type="number"
                     label="Min Column width (px)"
                     placeholder="Default is 150px"
@@ -151,11 +152,18 @@ export default class CommonOptions extends Component<Props> {
                   />
                 </div>
                 <div className="gf-form">
-                  <Switch
+                  <LegacyForms.FormField
                     label="Show Labels"
-                    labelClass={switchLabelClass}
-                    onChange={this.handleShowLabelsColumnChange}
-                    checked={options.showLabelColumn}
+                    labelWidth={COMMON_OPTIONS_LABEL_WIDTH}
+                    inputEl={
+                      <div className="o3-form-field-switch-patch">
+                        <Switch
+                          className="o3-form-field-switch-patch"
+                          onChange={this.handleShowLabelsColumnChange}
+                          checked={options.showLabelColumn}
+                        />
+                      </div>
+                    }
                   />
                 </div>
               </div>

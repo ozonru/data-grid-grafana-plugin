@@ -43,7 +43,9 @@ class Panel extends PureComponent<Props> {
 
             return acc;
           },
-          _.isNumber(options.firstColumnSize) ? { [options.groupByLabel as string]: options.firstColumnSize as number } : {}
+          _.isNumber(options.firstColumnSize)
+            ? { [options.groupByLabel as string]: options.firstColumnSize as number }
+            : {}
         )}
         minColumnWidth={options.minColumnSizePx}
       />

@@ -2,7 +2,12 @@ import { ColumnOption, Options } from './types';
 import { NO_GROUPBY_LABEL, THRESHOLDS_COUNT_DOES_NOT_FIT } from './consts';
 
 function validateColumnOption(option: ColumnOption): string | null {
-  if (option.thresholds && option.colors && option.thresholds.length > 0 && option.colors.length < option.thresholds.length + 1) {
+  if (
+    option.thresholds &&
+    option.colors &&
+    option.thresholds.length > 0 &&
+    option.colors.length < option.thresholds.length + 1
+  ) {
     return THRESHOLDS_COUNT_DOES_NOT_FIT;
   }
 

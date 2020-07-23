@@ -1,6 +1,6 @@
 /* tslint:disable */
 import React, { Component } from 'react';
-import { FormField } from '@grafana/ui';
+import { LegacyForms } from '@grafana/ui';
 
 interface Props<T> {
   label: string;
@@ -65,7 +65,7 @@ export default class InputOnBlur<T> extends Component<Props<T>, State> {
     const { label, labelWidth, inputWidth, placeholder, tooltip } = this.props;
 
     return (
-      <FormField
+      <LegacyForms.FormField
         type="text"
         label={label}
         tooltip={tooltip}

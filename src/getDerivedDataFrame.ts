@@ -43,7 +43,7 @@ function createField(frame: DataFrame, name: string, getColumnOption?: GetColumn
     config: option
       ? {
           noValue: option.noValue,
-          title: option.title,
+          displayName: option.title,
         }
       : {},
     name,
@@ -71,7 +71,18 @@ function mapColors(theme: GrafanaTheme, color: string): string {
 
 function columnOptionToStyle(
   theme: GrafanaTheme,
-  { decimals, rangeMap, valueMap, rawDataType, colorMode, colors, column, thresholds, unit, discreteColors }: ColumnOption
+  {
+    decimals,
+    rangeMap,
+    valueMap,
+    rawDataType,
+    colorMode,
+    colors,
+    column,
+    thresholds,
+    unit,
+    discreteColors,
+  }: ColumnOption
 ): CustomColumnStyle {
   const result: CustomColumnStyle = {
     colorMode,
