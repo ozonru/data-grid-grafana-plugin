@@ -72,7 +72,7 @@ export function getCellBuilder(schema: Field['config'], style: CustomColumnStyle
           v = v.join(', ');
         }
 
-        if (v === null || v === undefined) {
+        if (v === null || v === undefined || v === '') {
           return schema.noValue || EMPTY_VALUE;
         }
         return v;

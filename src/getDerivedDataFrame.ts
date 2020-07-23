@@ -4,12 +4,12 @@ import {
   DataFrame,
   Field,
   FieldType,
-  MappingType,
-  reduceField,
   getColorByName,
   getColorForTheme,
   GrafanaTheme,
   Labels,
+  MappingType,
+  reduceField,
 } from '@grafana/data';
 import { CSS_COLORS } from './consts';
 
@@ -38,6 +38,7 @@ function createColumnHandler(options: Options): GetColumnOptions {
 
 function createField(frame: DataFrame, name: string, getColumnOption?: GetColumnOptions) {
   const option = getColumnOption ? getColumnOption(name) : undefined;
+  const type = option && option.viewLabel === undefined ? FieldType.number : FieldType.string;
   const field: Field<string, ArrayVector<string>> = {
     config: option
       ? {
@@ -46,8 +47,8 @@ function createField(frame: DataFrame, name: string, getColumnOption?: GetColumn
         }
       : {},
     name,
-    type: option && option.viewLabel === undefined ? FieldType.number : FieldType.string,
-    values: new ArrayVector(new Array(frame.length).fill(null)),
+    type,
+    values: new ArrayVector(new Array(frame.length).fill(type === FieldType.string ? '' : null)),
   };
   frame.fields.push(field);
 
