@@ -225,7 +225,7 @@ export default function getDerivedDataFrame(
 
       if (option.viewLabel === undefined) {
         const reducerData = {
-          field: bucketSeries[i].fields[0],
+          field: bucketSeries[i].fields.find(f => f.name === 'Value') || createField(frame, name, getColumnOption),
           reducers: [option.type],
         };
         const mapResult = data => data[option.type];

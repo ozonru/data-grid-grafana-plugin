@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented in this file.
 
+## 1.1.1
+
+- Fix: correct series value mapping
+
 ## 1.1.0
 
 - Feature: support grafana 7.0.x
