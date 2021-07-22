@@ -91,7 +91,7 @@ export default class CommonOptions extends Component<Props> {
 
   public render() {
     const { options, labels = [], loading, visible } = this.props;
-    const selectOptions: Array<SelectableValue<string>> = labels.map(label => ({ value: label, label }));
+    const selectOptions: Array<SelectableValue<string>> = labels.map((label) => ({ value: label, label }));
     const selected: SelectableValue<string> = {
       label: options.groupByLabel || '',
       value: options.groupByLabel || '',
@@ -122,7 +122,7 @@ export default class CommonOptions extends Component<Props> {
                     }
                   />
                   <ThemeContext.Consumer>
-                    {theme =>
+                    {(theme) =>
                       loading
                         ? this.renderInfo(theme, 'Loading series')
                         : labels.length === 0 && this.renderInfo(theme, 'No series provided', true)

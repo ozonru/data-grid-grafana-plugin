@@ -14,7 +14,7 @@ function validateColumnOption(option: ColumnOption): string | null {
   return null;
 }
 
-export default function(options: Options): string | null {
+export default function (options: Options): string | null {
   if (!options.groupByLabel) {
     return NO_GROUPBY_LABEL;
   }

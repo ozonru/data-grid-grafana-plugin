@@ -9,11 +9,29 @@ import {
   ValueMap,
   ValueFormatter,
   getValueFormat,
-  getColorFromHexRgbOrName,
+  getColorForTheme,
   GrafanaTheme,
-  getDecimalsForValue,
 } from '@grafana/data';
 import { CustomColumnStyle } from '../../types';
+
+function getDecimalsForValue(value: number, decSelected = 0): number {
+  const log10 = Math.floor(Math.log(Math.abs(value)) / Math.LN10);
+  let dec = -log10 + 1;
+  const magn = Math.pow(10, -dec);
+  const norm = value / magn; // norm is between 1.0 and 10.0
+
+  // special case for 2.5, requires an extra decimal
+  if (norm > 2.25) {
+    ++dec;
+  }
+
+  if (value % 1 === 0) {
+    dec = 0;
+  }
+
+  const decimals = Math.max(decSelected, dec);
+  return decimals;
+}
 
 type ValueMapper = (value: any) => any;
 export interface TableCellBuilderOptions {
@@ -90,7 +108,7 @@ export function getCellBuilder(
     const baseFormatter = getValueFormat(style.unit || schema.unit || 'none');
     const valueFormatter = (...args) => {
       // @ts-ignore
-      const { text, suffix } = (baseFormatter(...args) as unknown) as { text: string; suffix: string };
+      const { text, suffix } = baseFormatter(...args) as unknown as { text: string; suffix: string };
 
       return (text || '') + (suffix || '');
     };
@@ -123,7 +141,7 @@ class CellBuilderWithStyle {
 
   public getColorForValue = (value: any): string | null => {
     const { thresholds, colors } = this.style;
-    const returnFirst = () => getColorFromHexRgbOrName(_.first(colors), this.theme.type);
+    const returnFirst = () => getColorForTheme(_.first(colors), this.theme);
     if (!colors) {
       return null;
     }
@@ -135,11 +153,11 @@ class CellBuilderWithStyle {
     for (let i = thresholds.length; i > 0; i--) {
       if (value >= thresholds[i - 1]) {
         if (this.style.discreteColors) {
-          return getColorFromHexRgbOrName(colors[i], this.theme.type);
+          return getColorForTheme(colors[i], this.theme);
         }
 
         if (i === thresholds.length) {
-          return getColorFromHexRgbOrName(_.last(colors), this.theme.type);
+          return getColorForTheme(_.last(colors), this.theme);
         }
 
         let scale = this.scales[thresholds[i - 1]];
@@ -148,8 +166,8 @@ class CellBuilderWithStyle {
           return scale(value);
         }
 
-        const color1 = getColorFromHexRgbOrName(colors[i - 1], this.theme.type);
-        const color2 = getColorFromHexRgbOrName(colors[i], this.theme.type);
+        const color1 = getColorForTheme(colors[i - 1], this.theme);
+        const color2 = getColorForTheme(colors[i], this.theme);
 
         scale = scaleLinear<string>()
           .domain([thresholds[i - 1], thresholds[i]])
@@ -197,7 +215,7 @@ class CellBuilderWithStyle {
       }
 
       if (this.fmt) {
-        const { decimals } = getDecimalsForValue(value, this.style.decimals);
+        const decimals = getDecimalsForValue(value, this.style.decimals);
         formatted = this.fmt(value, decimals);
       } else {
         formatted = value;

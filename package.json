@@ -11,10 +11,10 @@
   "author": "OZON team",
   "license": "MIT",
   "devDependencies": {
-    "@grafana/data": "~7.0.5",
-    "@grafana/runtime": "~7.0.5",
-    "@grafana/toolkit": "~7.0.5",
-    "@grafana/ui": "~7.0.5",
+    "@grafana/data": "~7.5.1",
+    "@grafana/runtime": "~7.5.1",
+    "@grafana/toolkit": "~7.5.1",
+    "@grafana/ui": "~7.5.1",
     "@types/classnames": "^2.2.9",
     "@types/d3-scale": "^2.1.1",
     "@types/grafana": "github:CorpGlory/types-grafana.git"

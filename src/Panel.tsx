@@ -54,5 +54,5 @@ class Panel extends PureComponent<Props> {
 }
 
 export default function PanelWithTheme(props) {
-  return <ThemeContext.Consumer>{theme => <Panel {...props} theme={theme} />}</ThemeContext.Consumer>;
+  return <ThemeContext.Consumer>{(theme) => <Panel {...props} theme={theme} />}</ThemeContext.Consumer>;
 }

@@ -1,10 +1,11 @@
 import { ColumnOption, CustomColumnStyle, Options } from './types';
 import {
   ArrayVector,
+  Color,
   DataFrame,
   Field,
   FieldType,
-  getColorByName,
+  getColorDefinitionByName,
   getColorForTheme,
   GrafanaTheme,
   Labels,
@@ -60,10 +61,10 @@ function mapColors(theme: GrafanaTheme, color: string): string {
     return color;
   }
 
-  const definition = getColorByName(color);
+  const definition = getColorDefinitionByName(color as Color);
 
   if (definition) {
-    return getColorForTheme(definition, theme.type);
+    return getColorForTheme(definition.name, theme);
   }
 
   return CSS_COLORS[color] || color;
@@ -86,7 +87,7 @@ function columnOptionToStyle(
 ): CustomColumnStyle {
   const result: CustomColumnStyle = {
     colorMode,
-    colors: colors && colors.length > 0 ? colors.map(color => mapColors(theme, color)) : undefined,
+    colors: colors && colors.length > 0 ? colors.map((color) => mapColors(theme, color)) : undefined,
     decimals,
     discreteColors,
     pattern: column || '',
@@ -225,10 +226,10 @@ export default function getDerivedDataFrame(
 
       if (option.viewLabel === undefined) {
         const reducerData = {
-          field: bucketSeries[i].fields.find(f => f.name === 'Value') || createField(frame, name, getColumnOption),
+          field: bucketSeries[i].fields.find((f) => f.name === 'Value') || createField(frame, name, getColumnOption),
           reducers: [option.type],
         };
-        const mapResult = data => data[option.type];
+        const mapResult = (data) => data[option.type];
 
         value = mapResult(reduceField(reducerData));
       } else {

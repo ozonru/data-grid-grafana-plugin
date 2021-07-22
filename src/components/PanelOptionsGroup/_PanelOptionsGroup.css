@@ -1,0 +1,34 @@
+.panel-options-group {
+  border-bottom: 1px solid #202226;
+}
+
+.panel-options-group__header {
+  padding: 8px 16px 8px 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  color: #9fa7b3;
+}
+
+.panel-options-group__header:hover {
+    color: #464c54;
+}
+
+.panel-options-group__icon {
+  color: #464c54;
+}
+
+.panel-options-group__icon {
+  color: #7b8087;
+  margin-right: 8px;
+}
+
+.panel-options-group__title {
+  position: relative;
+}
+
+.panel-options-group__body {
+  padding: 8px 16px 16px 32px;
+}

@@ -10,7 +10,7 @@ interface Props {
   onClick: () => void;
 }
 
-export const ColumnHeader: React.FC<Props> = function({ sortDirection, style, sorting, onClick, text }) {
+export const ColumnHeader: React.FC<Props> = function ({ sortDirection, style, sorting, onClick, text }) {
   return (
     <Tooltip content={text}>
       <div className="gf-table-header-custom" style={style} onClick={onClick}>

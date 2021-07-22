@@ -55,10 +55,10 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
 
       const serieLabels = getLabels(serie);
 
-      Object.keys(serieLabels).forEach(label => labels.add(label));
+      Object.keys(serieLabels).forEach((label) => labels.add(label));
     }
 
-    return { labels: Array.from(labels), columns: Array.from(columns).map(cl => ({ value: cl, label: cl })) };
+    return { labels: Array.from(labels), columns: Array.from(columns).map((cl) => ({ value: cl, label: cl })) };
   }
 
   constructor(props, ctx) {
