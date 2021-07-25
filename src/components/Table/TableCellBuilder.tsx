@@ -14,25 +14,6 @@ import {
 } from '@grafana/data';
 import { CustomColumnStyle } from '../../types';
 
-function getDecimalsForValue(value: number, decSelected = 0): number {
-  const log10 = Math.floor(Math.log(Math.abs(value)) / Math.LN10);
-  let dec = -log10 + 1;
-  const magn = Math.pow(10, -dec);
-  const norm = value / magn; // norm is between 1.0 and 10.0
-
-  // special case for 2.5, requires an extra decimal
-  if (norm > 2.25) {
-    ++dec;
-  }
-
-  if (value % 1 === 0) {
-    dec = 0;
-  }
-
-  const decimals = Math.max(decSelected, dec);
-  return decimals;
-}
-
 type ValueMapper = (value: any) => any;
 export interface TableCellBuilderOptions {
   value: any;
@@ -215,7 +196,7 @@ class CellBuilderWithStyle {
       }
 
       if (this.fmt) {
-        const decimals = getDecimalsForValue(value, this.style.decimals);
+        const decimals = this.style.decimals || 0;
         formatted = this.fmt(value, decimals);
       } else {
         formatted = value;
