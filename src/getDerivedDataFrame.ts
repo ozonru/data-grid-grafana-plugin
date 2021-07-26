@@ -1,12 +1,9 @@
 import { ColumnOption, CustomColumnStyle, Options } from './types';
 import {
   ArrayVector,
-  Color,
   DataFrame,
   Field,
   FieldType,
-  getColorDefinitionByName,
-  getColorForTheme,
   GrafanaTheme,
   Labels,
   MappingType,
@@ -61,10 +58,10 @@ function mapColors(theme: GrafanaTheme, color: string): string {
     return color;
   }
 
-  const definition = getColorDefinitionByName(color as Color);
+  const clr = theme.visualization.getColorByName(color);
 
-  if (definition) {
-    return getColorForTheme(definition.name, theme);
+  if (clr) {
+    return clr;
   }
 
   return CSS_COLORS[color] || color;

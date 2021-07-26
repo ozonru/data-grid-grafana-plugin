@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Options } from 'types';
 import { Switch, Select, LegacyForms, ThemeContext } from '@grafana/ui';
 import { FORM_ELEMENT_WIDTH, LABEL_WIDTH } from '../consts';
-import { GrafanaTheme, SelectableValue } from '@grafana/data';
+import { GrafanaTheme2, SelectableValue } from '@grafana/data';
 import EditorTab from './EditorTab';
 
 type ICommonOptions = Omit<Options, 'options'>;
@@ -80,7 +80,7 @@ export default class CommonOptions extends Component<Props> {
   //   );
   // }
 
-  private renderInfo(theme: GrafanaTheme, text: string, error?: boolean) {
+  private renderInfo(theme: GrafanaTheme2, text: string, error?: boolean) {
     return (
       <span style={error ? ERROR_INFO_STYLE : WARN_INFO_STYLE}>
         <i className="fa fa-exclamation-triangle" style={ICON_STYLE} />
@@ -158,6 +158,7 @@ export default class CommonOptions extends Component<Props> {
                     inputEl={
                       <div className="o3-form-field-switch-patch">
                         <Switch
+                          css=""
                           className="o3-form-field-switch-patch"
                           onChange={this.handleShowLabelsColumnChange}
                           checked={options.showLabelColumn}

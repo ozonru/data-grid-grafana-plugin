@@ -471,7 +471,7 @@ export default class ColumnOptionComponent extends Component<Props, State> {
                   labelWidth={LABEL_WIDTH}
                   inputEl={
                     <div className="o3-form-field-switch-patch">
-                      <Switch checked={!!option.discreteColors} onChange={this.handleDiscreteFlagChange} />
+                      <Switch css="" checked={!!option.discreteColors} onChange={this.handleDiscreteFlagChange} />
                     </div>
                   }
                 />

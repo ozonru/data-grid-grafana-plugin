@@ -130,12 +130,11 @@ export default class Editor extends PureComponent<PanelEditorProps<Options>, Edi
     const i = this.props.options.options.length;
 
     this.handleChangeTab(i);
+    const options = this.props.options.options.slice();
+    options.push(createColumnOption(selected.value as string, this.props.options.defaultColumnOption));
     this.props.onOptionsChange({
       ...this.props.options,
-      options: [
-        ...this.props.options.options,
-        createColumnOption(selected.value as string, this.props.options.defaultColumnOption),
-      ],
+      options,
     });
   };
 

@@ -3,15 +3,7 @@ import _ from 'lodash';
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 import React, { ReactElement } from 'react';
 import { GridCellProps } from 'react-virtualized';
-import {
-  Field,
-  RangeMap,
-  ValueMap,
-  ValueFormatter,
-  getValueFormat,
-  getColorForTheme,
-  GrafanaTheme,
-} from '@grafana/data';
+import { Field, RangeMap, ValueMap, ValueFormatter, getValueFormat, GrafanaTheme } from '@grafana/data';
 import { CustomColumnStyle } from '../../types';
 
 type ValueMapper = (value: any) => any;
@@ -42,7 +34,9 @@ function valueMapper(value: number | string, style: CustomColumnStyle) {
     for (let i = 0; i < style.valueMaps.length; i++) {
       const mapper = style.valueMaps[i] as ValueMap;
 
+      // @ts-ignore
       if (mapper.value === value) {
+        // @ts-ignore
         return mapper.text;
       }
     }
@@ -50,7 +44,9 @@ function valueMapper(value: number | string, style: CustomColumnStyle) {
     for (let i = 0; i < style.rangeMaps.length; i++) {
       const mapper = style.rangeMaps[i] as RangeMap;
 
+      // @ts-ignore
       if (mapper.from <= value && mapper.to >= value) {
+        // @ts-ignore
         return mapper.text;
       }
     }
@@ -87,9 +83,10 @@ export function getCellBuilder(
 
   if (style.type === 'number') {
     const baseFormatter = getValueFormat(style.unit || schema.unit || 'none');
+
     const valueFormatter = (...args) => {
       // @ts-ignore
-      const { text, suffix } = baseFormatter(...args) as unknown as { text: string; suffix: string };
+      const { text, suffix } = baseFormatter.apply(null, args);
 
       return (text || '') + (suffix || '');
     };
@@ -122,7 +119,7 @@ class CellBuilderWithStyle {
 
   public getColorForValue = (value: any): string | null => {
     const { thresholds, colors } = this.style;
-    const returnFirst = () => getColorForTheme(_.first(colors), this.theme);
+    const returnFirst = () => this.theme.visualization.getColorByName(_.first(colors));
     if (!colors) {
       return null;
     }
@@ -134,11 +131,11 @@ class CellBuilderWithStyle {
     for (let i = thresholds.length; i > 0; i--) {
       if (value >= thresholds[i - 1]) {
         if (this.style.discreteColors) {
-          return getColorForTheme(colors[i], this.theme);
+          return this.theme.visualization.getColorByName(colors[i]);
         }
 
         if (i === thresholds.length) {
-          return getColorForTheme(_.last(colors), this.theme);
+          return this.theme.visualization.getColorByName(_.last(colors));
         }
 
         let scale = this.scales[thresholds[i - 1]];
@@ -147,8 +144,8 @@ class CellBuilderWithStyle {
           return scale(value);
         }
 
-        const color1 = getColorForTheme(colors[i - 1], this.theme);
-        const color2 = getColorForTheme(colors[i], this.theme);
+        const color1 = this.theme.visualization.getColorByName(colors[i - 1]);
+        const color2 = this.theme.visualization.getColorByName(colors[i]);
 
         scale = scaleLinear<string>()
           .domain([thresholds[i - 1], thresholds[i]])
